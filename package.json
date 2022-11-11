@@ -1,0 +1,90 @@
+{
+  "name": "EMGTrigno",
+  "version": "1.0.0",
+  "description": "Application to process EMG Trigno data",
+  "main": "src/views/index.html",
+  "type": "module",
+  "scripts": {
+    "lint": "eslint ./src --ext .js,.json && stylelint ./src/**/*.css",
+    "start": "nw .",
+    "build:win": "build --tasks mac-x64 --concurrent --mirror https://dl.nwjs.io/ .",
+    "build:mac": "build --tasks win-x86,win-x64 --concurrent --mirror https://dl.nwjs.io/ .",
+    "commit": "git-cz",
+    "release": "standard-version",
+    "git:publish": "git push --follow-tags"
+  },
+  "author": "FlorentinTh",
+  "license": "MIT",
+  "chromium-args": "--disable-raf-throttling",
+  "pre-commit": [
+    "lint"
+  ],
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "build": {
+    "appId": "ca.liaralab.emgtrigno",
+    "nwVersion": "0.70.1",
+    "packed": true,
+    "targets": [
+      "zip",
+      "nsis7z"
+    ],
+    "strippedProperties": [
+      "build",
+      "devDependencies",
+      "scripts"
+    ],
+    "outputPattern": "${NAME} ${VERSION} ${PLATFORM} ${ARCH}",
+    "excludes": [
+      "dist/**/*",
+      "package-lock.json"
+    ],
+    "ffmpegIntegration": false,
+    "win": {
+      "productName": "EMGTrigno",
+      "companyName": "LIARA Lab.",
+      "copyright": "Copyright LIARA Lab.",
+      "icon": "./src/assets/icons/win/app.ico"
+    },
+    "nsis": {
+      "installDirectory": "$PROGRAMFILES\\${_COMPANYNAME}\\${_APPNAME}"
+    },
+    "mac": {
+      "displayName": "EMGTrigno",
+      "copyright": "LIARA Lab.",
+      "icon": "./src/assets/icons/mac/app.icns",
+      "plistStrings": {
+        "CFBundleIdentifier": "ca.liaralab.emgtrigno",
+        "CFBundleDocumentTypes": []
+      }
+    }
+  },
+  "window": {
+    "title": "EMG Trigno",
+    "icon": "./src/assets/icons/app.png",
+    "height": 720,
+    "width": 1280,
+    "resizable": true,
+    "position": "center"
+  },
+  "devDependencies": {
+    "cz-conventional-changelog": "^3.3.0",
+    "eslint": "^8.27.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-json": "^3.1.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "nw": "^0.70.1-sdk",
+    "nw-builder": "^4.0.0-rc.8",
+    "nwjs-builder-phoenix": "^1.15.0",
+    "pre-commit": "^1.2.2",
+    "prettier": "^2.7.1",
+    "standard-version": "^9.5.0",
+    "stylelint": "^14.14.1",
+    "stylelint-config-prettier": "^9.0.4",
+    "stylelint-config-standard": "^29.0.0"
+  }
+}

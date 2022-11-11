@@ -1,0 +1,29 @@
+{
+    "files.autoSave": "afterDelay",
+    "files.autoSaveDelay": 10000,
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true,
+      "source.fixAll.stylelint": true
+    },
+    "eslint.validate": [
+      "javascript"
+    ],
+    "files.encoding": "utf8",
+    "search.exclude": {
+      "**/node_modules": true,
+    },
+    "[css]": {
+      "editor.formatOnSave": true,
+      "editor.formatOnPaste": true
+    },
+    "[javascript]": {
+      "editor.formatOnSave": true,
+      "editor.formatOnPaste": true,
+      "editor.wordBasedSuggestions": false
+    },
+    "[markdown]": {
+      "editor.formatOnSave": true,
+      "editor.renderWhitespace": "all",
+      "editor.acceptSuggestionOnEnter": "off"
+    }
+}
