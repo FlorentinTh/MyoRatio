@@ -50,11 +50,23 @@ windowSizeInput.addEventListener('input', event => {
   }
 });
 
+const dataFolderPathSession = sessionStorage.getItem('data-path');
+
+if (!(dataFolderPathSession === null)) {
+  folderMsg.innerHTML = `selected folder path is <br> ${dataFolderPathSession}`;
+  if (submitBtn.disabled) {
+    submitBtn.removeAttribute('disabled');
+  }
+}
+
+console.log(sessionStorage.getItem('data-path'));
+
 folderInput.addEventListener('change', event => {
   if (event && event.target.files.length > 0) {
     const folder = event.target.files[0];
 
     folderMsg.innerHTML = `selected folder path is <br> ${folder.path}`;
+    sessionStorage.setItem('data-path', folder.path);
 
     if (
       submitBtn.disabled &&
@@ -65,6 +77,10 @@ folderInput.addEventListener('change', event => {
     }
   } else {
     folderMsg.innerHTML = `or drag and drop the folder here`;
+
+    if (!(dataFolderPathSession === null)) {
+      sessionStorage.removeItem('data-path');
+    }
 
     if (!submitBtn.disabled) {
       submitBtn.setAttribute('disabled', '');
@@ -77,9 +93,7 @@ submitBtn.addEventListener('click', () => {
     LoaderOverlay.toggle();
 
     setTimeout(() => {
-      Router.switchPage('angle-selection.html');
-      // window.history.pushState('', '', window.location.href);
-      // window.location.replace(decodeURI('angle-selection.html'));
-    }, 5000);
+      Router.switchPage('participants-selection.html');
+    }, 2000);
   }
 });

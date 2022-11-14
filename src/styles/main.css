@@ -13,7 +13,13 @@ body {
   overflow-x: hidden;
 }
 
-textarea:focus, input:focus{outline: none;
+select,
+select:focus,
+textarea,
+textarea:focus,
+input,
+input:focus{
+  outline: none;
 }
 
 input::-webkit-outer-spin-button,
@@ -256,7 +262,6 @@ nav ul li a:hover {
 .wrapper {
   min-height: 100vh;
   padding: 50px 40px 25px;
-  transition: ease-in-out .5s;
 }
 
 .content.open {
@@ -296,7 +301,8 @@ nav ul li a:hover {
   padding-left: 20px;
 }
 
-.label p {
+.label p,
+.label label {
   font-size: .9em;
   background-color: #EDEDED;
   z-index: 1;
@@ -394,6 +400,54 @@ nav ul li a:hover {
   height: 100px;
 }
 
+.input-container .switch {
+  margin: 0 50px;
+  width: 100%;
+  display: flex;
+  overflow: hidden;
+  justify-content: center;
+}
+
+.switch input {
+  position: absolute !important;
+  clip: rect(0, 0, 0, 0);
+  height: 1px;
+  width: 1px;
+  border: 0;
+  overflow: hidden;
+}
+
+.switch label {
+  text-transform: uppercase;
+  background-color: #232323dd;
+  color: #EDEDED;
+  font-size: 1em;
+  line-height: 2.49em;
+  text-align: center;
+  padding: 0 7%;
+  height: 2.5em;
+  margin-right: -1px;
+  border: 1px solid #232323;
+  transition: all .25s ease-in-out;
+}
+
+.switch label:hover {
+  cursor: pointer;
+  background-color: #232323;
+}
+
+.switch label:first-of-type {
+  border-radius: 30px 0 0 30px;
+}
+
+.switch label:last-of-type {
+  border-radius: 0 30px 30px 0;
+}
+
+.switch input:checked+label {
+  background-color: #16A085;
+}
+
 .input-container > .unit {
   background-color: #232323dd;
   color: #EDEDED;
@@ -475,5 +529,15 @@ nav ul li a:hover {
 @media only screen and (max-width: 980px) {
   main section.wrapper {
     padding-top: 140px;
+  }
+}
+
+@media only screen and (max-width: 730px) {
+  .input-container {
+    padding: 50px 5px;
+  }
+
+  .input-container .switch {
+    margin: 0;
   }
 }
