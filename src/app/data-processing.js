@@ -59,8 +59,6 @@ if (!(dataFolderPathSession === null)) {
   }
 }
 
-console.log(sessionStorage.getItem('data-path'));
-
 folderInput.addEventListener('change', event => {
   if (event && event.target.files.length > 0) {
     const folder = event.target.files[0];

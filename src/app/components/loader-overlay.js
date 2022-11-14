@@ -6,6 +6,7 @@ class LoaderOverlay {
   }
 
   toggle() {
+    document.querySelector('body').classList.toggle('hide-overflow');
     this.#loaderElement.classList.toggle('not-visible');
     this.#loaderElement.classList.toggle('overlay-animate');
   }
