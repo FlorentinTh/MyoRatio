@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>EMG Trigno</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link rel="stylesheet" href="../styles/main.css">
+</head>
+
+<body>
+  <div id="loader-overlay" class="not-visible">
+    <div class="loader-wrapper">
+      <div class="loader graph-animate"></div>
+      <svg class="spinner" height="155" width="155">
+        <circle class="loader-rotate" cx="76" cy="77" r="75" stroke="transparent" stroke-width="2" fill="transparent" />
+      </svg>
+    </div>
+    <div class="loading-msg">
+      <p>Processing Data...</p>
+    </div>
+  </div>
+  <div class="app">
+    <nav class="menu">
+      <ul>
+        <li><a id="home" href="data-processing.html">Data Processing</a></li>
+        <li><a id="hpf-converter" href="#">HPF Converter</a> </li>
+        <li><a id="file-organizer" class="disabled" href="#">File Organizer</a> </li>
+        <li><a id="settings" href="#">Settings</a></li>
+      </ul>
+    </nav>
+
+    <div class="toggle-nav-btn">
+      <div class="icon"></div>
+    </div>
+
+    <main class="content">
+      <section class="wrapper">
+        <h1>EMG Trigno</h1>
+        <h2>Data Processing</h2>
+        <div class="group">
+          <div class="label">
+            <p>Input data folder</p>
+          </div>
+          <div class="folder-drop-area">
+            <span class="choose-btn">Choose a folder</span>
+            <span class="folder-msg">or drag and drop the folder here</span>
+            <input class="folder-input" type="file" nwdirectory>
+          </div>
+        </div>
+        <div class="group">
+          <div class="label">
+            <p>Type of Analysis</p>
+          </div>
+          <div class="input-container">
+            <!-- <select name="" id=""></select> -->
+          </div>
+        </div>
+        <div class="group">
+          <div class="label">
+            <p>Size of the window</p>
+          </div>
+          <div class="input-container">
+            <span class="unit">Sec.</span>
+            <input id="window-size" step="0.01" class="input-text" type="number" value="0.2">
+          </div>
+        </div>
+        <div class="group">
+          <div class="button-container">
+            <button type="submit" disabled>Start Processing</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script type="module" src="../app/data-processing.js" defer></script>
+</body>
+
+</html>

@@ -1,51 +1,12 @@
+import LoaderOverlay from './components/loader-overlay.js';
+import Menu from './components/menu.js';
+import Router from './utils/router.js';
+
 // eslint-disable-next-line no-undef
 const os = nw.require('os');
-// eslint-disable-next-line no-undef
-const path = nw.require('path');
-// eslint-disable-next-line no-undef
-const exec = nw.require('child_process').execFile;
 
-const loaderOverlay = document.getElementById('loader-overlay');
-
-function toggleLoaderOverlay() {
-  loaderOverlay.classList.toggle('not-visible');
-  loaderOverlay.classList.toggle('overlay-animate');
-}
-
-const openNavBtn = document.querySelector('.open-nav');
-
-function toggleMenu() {
-  document.querySelector('body').classList.toggle('nav-open');
-  document.querySelector('nav').classList.toggle('open');
-  document.querySelector('.content').classList.toggle('open');
-  openNavBtn.classList.toggle('open');
-}
-
-openNavBtn.addEventListener('click', () => {
-  toggleMenu();
-});
-
-// ----------------------
-
-const hpfConverterLink = document.getElementById('hpf-converter');
-const basePath = process.cwd();
-const delsysExecutablePath = path.join(basePath, 'bin', 'DelsysFileUtil.exe');
-
-hpfConverterLink.addEventListener('click', () => {
-  toggleMenu();
-
-  exec(delsysExecutablePath, (err, data) => {
-    if (err) {
-      console.error(err);
-    }
-
-    if (data) {
-      console.log(data);
-    }
-  });
-});
-
-// ---------------------
+const menu = new Menu();
+menu.init();
 
 const folderInput = document.querySelector('.folder-input');
 const dropArea = document.querySelector('.folder-drop-area');
@@ -113,11 +74,12 @@ folderInput.addEventListener('change', event => {
 
 submitBtn.addEventListener('click', () => {
   if (!submitBtn.disabled) {
-    toggleLoaderOverlay();
+    LoaderOverlay.toggle();
 
     setTimeout(() => {
-      window.history.pushState('', '', window.location.href);
-      window.location.replace(decodeURI('data.html'));
+      Router.switchPage('angle-selection.html');
+      // window.history.pushState('', '', window.location.href);
+      // window.location.replace(decodeURI('angle-selection.html'));
     }, 5000);
   }
 });
