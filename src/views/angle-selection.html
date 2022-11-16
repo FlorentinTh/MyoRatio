@@ -10,13 +10,27 @@
   <link rel="stylesheet" href="../styles/components/loader.css">
   <link rel="stylesheet" href="../styles/components/menu.css">
   <link rel="stylesheet" href="../styles/main.css">
+  <link rel="stylesheet" href="../styles/angles.css">
+
+  <script src="https://cdn.plot.ly/plotly-2.16.1.min.js"></script>
 </head>
 
 <body>
+  <div id="loader-overlay" class="not-visible">
+    <div class="loader-wrapper">
+      <div class="loader graph-animate"></div>
+      <svg class="spinner" height="155" width="155">
+        <circle class="loader-rotate" cx="76" cy="77" r="75" stroke="transparent" stroke-width="2" fill="transparent" />
+      </svg>
+    </div>
+    <div class="loading-msg">
+      <p>Preparing results...</p>
+    </div>
+  </div>
   <div class="app">
     <nav class="menu">
       <ul>
-        <li><a id="home" href="data-processing.html">Data Processing</a></li>
+        <li><a class="active" id="home" href="data-discovering.html">Data Processing</a></li>
         <li><a id="hpf-converter" href="#">HPF Converter</a></li>
         <li><a id="file-organizer" class="disabled" href="#">File Organizer</a></li>
         <li><a id="settings" href="settings.html">Settings</a></li>
@@ -27,10 +41,34 @@
       <div class="icon"></div>
     </div>
 
+    <div class="auto-angles-btn">
+      <i class="fas fa-magic"></i>
+    </div>
+
     <main class="content">
       <section class="wrapper">
         <h1>EMG Trigno</h1>
         <h2>Angle Selection</h2>
+        <div class="infos">
+          <span id="participant">Participant</span>
+          <span>-</span>
+          <span id="analysis">Analysis</span>
+          <span>-</span>
+          <span id="iteration">Iter. #</span>
+        </div>
+        <div class="plot-wrapper">
+          <div id="plot"></div>
+        </div>
+        <div class="pager">
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+        </div>
+        <div class="group">
+          <div class="button-container">
+            <button type="submit">Next</button>
+          </div>
+        </div>
       </section>
     </main>
   </div>
