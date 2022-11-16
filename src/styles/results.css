@@ -1,0 +1,41 @@
+.export-pdf-btn {
+  top: 110px;
+}
+
+.export-xls-btn {
+  top: 190px;
+}
+
+.export-pdf-btn,
+.export-xls-btn {
+  left: 42px;
+  transition-duration: .5s;
+  transition-timing-function: swing;
+  width: 90px;
+  height: 50px;
+  background-color: #16A085;
+  position: fixed;
+  z-index: 9;
+  border-radius: 60px;
+  box-shadow: 6px 6px 15px -3px rgb(0 0 0 / 60%);
+}
+
+.export-pdf-btn:hover,
+.export-xls-btn:hover {
+  cursor: pointer;
+  background-color: #232323dd;
+}
+
+.export-pdf-btn.open,
+.export-xls-btn.open {
+  transform: translateX(250px);
+}
+
+.export-pdf-btn i,
+.export-xls-btn i {
+  position: absolute;
+  top: 12px;
+  left: 35px;
+  font-size: 1.65em;
+  color: #EDEDED;
+}
