@@ -15,6 +15,27 @@ const folderMsg = document.querySelector('.folder-msg');
 
 folderInput.setAttribute('nwworkingdir', os.homedir());
 
+const storedAnalysis = sessionStorage.getItem('analysis');
+let radios = [...document.querySelector('.switch').children];
+radios = radios.filter(item => item.nodeName === 'INPUT');
+
+if (storedAnalysis === null) {
+  sessionStorage.setItem('analysis', radios[0].value);
+  radios[0].checked = true;
+} else {
+  for (const radio of radios) {
+    if (radio.value === storedAnalysis) {
+      radio.checked = true;
+    }
+  }
+}
+
+for (const radio of radios) {
+  radio.addEventListener('change', event => {
+    sessionStorage.setItem('analysis', radio.value);
+  });
+}
+
 function toggleDropAreaActive() {
   dropArea.classList.toggle('is-active');
   chooseBtn.classList.toggle('is-active');

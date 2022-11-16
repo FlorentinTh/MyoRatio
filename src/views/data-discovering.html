@@ -21,13 +21,13 @@
       </svg>
     </div>
     <div class="loading-msg">
-      <p>Processing Data...</p>
+      <p>Discovering data...</p>
     </div>
   </div>
   <div class="app">
     <nav class="menu">
       <ul>
-        <li><a id="home" href="data-processing.html">Data Processing</a></li>
+        <li><a class="active" id="home" href="data-discovering.html">Data Processing</a></li>
         <li><a id="hpf-converter" href="#">HPF Converter</a></li>
         <li><a id="file-organizer" class="disabled" href="#">File Organizer</a></li>
         <li><a id="settings" href="settings.html">Settings</a></li>
@@ -41,7 +41,7 @@
     <main class="content">
       <section class="wrapper">
         <h1>EMG Trigno</h1>
-        <h2>Data Processing</h2>
+        <h2>Data Discovering</h2>
         <div class="group">
           <div class="label">
             <p>Input data folder</p>
@@ -58,9 +58,9 @@
           </div>
           <div class="input-container">
             <div class="switch">
-              <input type="radio" id="radio-opt1" name="switch-analysis" value="ext" checked>
+              <input type="radio" id="radio-opt1" name="switch-analysis" value="extension">
               <label for="radio-opt1">Extension</label>
-              <input type="radio" id="radio-opt2" name="switch-analysis" value="flex">
+              <input type="radio" id="radio-opt2" name="switch-analysis" value="flexion">
               <label for="radio-opt2">Flexion</label>
               <input type="radio" id="radio-opt3" name="switch-analysis" value="sit-stand">
               <label for="radio-opt3">Sit-Stand</label>
@@ -78,13 +78,13 @@
         </div>
         <div class="group">
           <div class="button-container">
-            <button type="submit" disabled>Start Processing</button>
+            <button type="submit" disabled>Discover Data</button>
           </div>
         </div>
       </section>
     </main>
   </div>
-  <script type="module" src="../app/data-processing.js" defer></script>
+  <script type="module" src="../app/data-discovering.js" defer></script>
 </body>
 
 </html>
