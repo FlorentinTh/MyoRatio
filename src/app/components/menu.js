@@ -5,15 +5,19 @@ const exec = nw.require('child_process').execFile;
 
 class Menu {
   #toggleNavBtn;
+  #additionalBtns;
 
   constructor() {
     this.#toggleNavBtn = document.querySelector('.toggle-nav-btn');
+    this.#additionalBtns = null;
   }
 
-  init() {
+  init(buttons = []) {
     this.#toggleNavBtn.addEventListener('click', () => {
       this.#toggle();
     });
+
+    this.#additionalBtns = buttons;
 
     this.#setHPFConverterItem();
   }
@@ -22,6 +26,13 @@ class Menu {
     document.querySelector('body').classList.toggle('nav-open');
     document.querySelector('nav').classList.toggle('open');
     document.querySelector('.content').classList.toggle('open');
+
+    if (this.#additionalBtns.length > 0) {
+      for (const btn of this.#additionalBtns) {
+        btn.classList.toggle('open');
+      }
+    }
+
     this.#toggleNavBtn.classList.toggle('open');
   }
 
