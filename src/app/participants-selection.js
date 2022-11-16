@@ -42,7 +42,7 @@ const participantList = document.querySelector('ul.list').children;
 
 let isAllSelected = false;
 
-dataPath.innerText += ` ${sessionStorage.getItem('data-path') || 'ERROR'}`;
+dataPath.innerHTML += ` ${sessionStorage.getItem('data-path') || 'ERROR'}`;
 toggleSubmitBtn();
 
 if (participants.length > 0 && participantList.length === participants.length) {

@@ -75,6 +75,10 @@
   margin-bottom: 30px;
 }
 
+.scroll-space {
+  padding-right: 32px;
+}
+
 .folder-drop-area {
   display: flex;
   padding: 50px 100px;
@@ -250,7 +254,6 @@
 .data-location {
   display: flex;
   width: 100%;
-  padding: 0 32px 0 16px;
   margin-bottom: 50px;
 }
 
@@ -261,6 +264,11 @@
   border: 1px solid #232323;
   border-radius: 6px;
   padding: 15px;
+}
+
+.data-location span#data-path strong {
+  text-transform: uppercase;
+  letter-spacing: -.02em;
 }
 
 .selection {
@@ -316,9 +324,9 @@
 .list-container {
   overflow-y: auto;
   overflow-x: hidden;
-  max-height: 650px;
+  max-height: 480px;
   width: 100%;
-  height: 55vh;
+  height: 100%;
   margin-bottom: 30px;
   border-radius: 6px;
 }
@@ -332,7 +340,7 @@ ul.list {
 
 ul.list > li.item {
   display: flex;
-  margin: 15px;
+  margin: 15px 15px 15px 0;
   min-width: 300px;
   border-bottom: 4px solid #16A085;
   border-radius: 6px;
