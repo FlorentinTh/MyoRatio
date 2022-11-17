@@ -2,11 +2,11 @@
   "name": "EMGTrigno",
   "version": "1.0.0",
   "description": "Application to process EMG Trigno data",
-  "main": "src/views/data-processing.html",
+  "main": "src/views/data-discovering.html",
   "type": "module",
   "scripts": {
     "lint": "eslint ./src --ext .js,.json && stylelint ./src/**/*.css && html-validate ./src/**/*.html",
-    "start": "run --x86 --mirror https://dl.nwjs.io/ .",
+    "start": "run --x64 --mirror https://dl.nwjs.io/ .",
     "build:win": "build --tasks win-x86,win-x64 --concurrent --mirror https://dl.nwjs.io/ .",
     "build:mac": "build --tasks mac-x64 --concurrent --mirror https://dl.nwjs.io/ .",
     "commit": "git-cz",
@@ -86,5 +86,8 @@
     "stylelint": "^14.14.1",
     "stylelint-config-prettier": "^9.0.4",
     "stylelint-config-standard": "^29.0.0"
+  },
+  "dependencies": {
+    "@popperjs/core": "^2.11.6"
   }
 }
