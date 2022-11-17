@@ -39,3 +39,188 @@
   font-size: 1.65em;
   color: #EDEDED;
 }
+
+.title {
+  width: 100%;
+  text-align: center;
+  padding: 15px;
+  border: 1px solid #232323dd;
+  border-radius: 6px;
+  margin-bottom: 35px;
+}
+
+.title span {
+  font-size: 1.2em;
+}
+
+.matrix-container {
+  display: flex;
+  margin-bottom: 25px;
+}
+
+.tooltip-col,
+.tooltip-row {
+  background: #3e3e3e;
+  color: #EDEDED;
+  font-weight: bold;
+  padding: 6px 10px;
+  font-size: 1rem;
+  border-radius: 6px;
+  display: none;
+}
+
+.tooltip-col {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.tooltip-col[data-show],
+.tooltip-row[data-show] {
+  display: block;
+}
+
+.arrow,
+.arrow::before {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: inherit;
+}
+
+.arrow {
+  visibility: hidden;
+}
+
+.arrow::before {
+  visibility: visible;
+  content: "";
+  transform: rotate(45deg);
+}
+
+.tooltip-col[data-popper-placement^="top"] > .arrow,
+.tooltip-row[data-popper-placement^="top"] > .arrow {
+  bottom: -4px;
+}
+
+.tooltip-col[data-popper-placement^="bottom"] > .arrow,
+.tooltip-row[data-popper-placement^="bottom"] > .arrow {
+  top: -4px;
+}
+
+.tooltip-col[data-popper-placement^="left"] > .arrow,
+.tooltip-row[data-popper-placement^="left"] > .arrow {
+  right: -4px;
+}
+
+.tooltip-col[data-popper-placement^="right"] > .arrow,
+.tooltip-row[data-popper-placement^="right"] > .arrow {
+  left: -4px;
+}
+
+#vertical-caption {
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+
+.column-hover span {
+  background-color: #16A085;
+}
+
+#vertical-caption span {
+  rotate: -90deg;
+  display: inline-flex;
+  text-transform: uppercase;
+  font-size: .9em;
+  font-weight: bold;
+  letter-spacing: .02em;
+  color: #16A085;
+}
+
+#matrix:not(:target) table {
+  border-spacing: 0;
+}
+
+#matrix:not(:target) th {
+  font-weight: 400;
+}
+
+#matrix:not(:target) th,
+#matrix:not(:target) td {
+  vertical-align: middle;
+  height: 3.5rem;
+  line-height: 3.5rem;
+  transition: ease-in-out .35s;
+  font-size: 1.35em;
+}
+
+#matrix:not(:target) thead th {
+  line-height: 1rem;
+}
+
+#matrix:not(:target) tbody td:not(:empty) {
+  width: 3.5rem;
+  text-align: center;
+}
+
+#matrix:not(:target) tbody tr td:not(:empty) {
+  border-top: 1px solid #232323dd;
+  border-right: 1px solid #232323dd;
+}
+
+#matrix:not(:target) table span {
+  color: #232323dd;
+  display: block;
+  white-space: nowrap;
+  transform-origin: 0 0;
+  margin-top: 1px;
+  transition: ease-in-out .35s;
+  width: 3.5rem;
+  font-size: .8em;
+  font-weight: bold;
+}
+
+#matrix:not(:target) tbody [scope=row]:hover,
+table thead th[scope="col"] {
+  cursor: default;
+}
+
+
+#matrix:not(:target) thead [scope=col] span {
+  line-height: 3.5rem;
+  margin-bottom: 15px;
+  border-radius: 60px;
+}
+
+#matrix:not(:target) tbody [scope=row] span {
+  height: 3.52rem;
+  line-height: 3.52rem;
+  margin-left: 15px;
+  border-radius: 60px;
+}
+
+#matrix:not(:target) tbody td:hover:not(:empty),
+#matrix:not(:target) tbody td:hover:not(:empty) ~ th span {
+  background-color: #16A085;
+  font-weight: bold;
+}
+
+#matrix:not(:target) tbody tr td:not(:empty):first-of-type {
+  border-left: 1px solid #232323dd;
+}
+
+#matrix:not(:target) tbody tr:last-of-type td:not(:empty) {
+  border-bottom: 1px solid #232323dd;
+}
+
+#matrix:not(:target) caption {
+  caption-side: bottom;
+  text-align: center;
+  margin-top: 25px;
+  text-transform: uppercase;
+  font-size: .9em;
+  font-weight: bold;
+  letter-spacing: .02em;
+  color: #16A085;
+}
