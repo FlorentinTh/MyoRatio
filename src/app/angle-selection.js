@@ -10,25 +10,20 @@ menu.init(menuBtns);
 
 const data = [
   {
-    x: [
-      Math.floor(Math.random() * 16) + 1,
-      Math.floor(Math.random() * 16) + 1,
-      Math.floor(Math.random() * 16) + 1,
-      Math.floor(Math.random() * 16) + 1,
-      Math.floor(Math.random() * 16) + 1
-    ],
+    x: [0, 2, 4, 6, 8, 10],
     y: [
-      Math.floor(Math.random() * 16) + 5,
-      Math.floor(Math.random() * 16) + 5,
-      Math.floor(Math.random() * 16) + 5,
-      Math.floor(Math.random() * 16) + 5,
-      Math.floor(Math.random() * 16) + 5
+      Math.floor(Math.random() * (100 - 90 + 1) + 90),
+      Math.floor(Math.random() * (45 - 30 + 1) + 30),
+      Math.floor(Math.random() * (45 - 30 + 1) + 30),
+      Math.floor(Math.random() * (45 - 30 + 1) + 30),
+      Math.floor(Math.random() * (100 - 90 + 1) + 90),
+      Math.floor(Math.random() * (100 - 90 + 1) + 90)
     ]
   }
 ];
 
 const layout = {
-  margin: { t: 20, r: 20, b: 20, l: 20 },
+  margin: { t: 20, r: 30, b: 20, l: 30 },
   paper_bgcolor: '#EDEDED',
   plot_bgcolor: '#EDEDED'
 };
@@ -80,9 +75,10 @@ Plotly.newPlot(plotElement, data, layout, config);
 submitBtn.addEventListener('click', () => {
   if (submitBtn.classList.contains('completed')) {
     LoaderOverlay.toggle();
+    sessionStorage.setItem('results-available', true);
 
     setTimeout(() => {
-      Router.switchPage('results.html');
+      Router.switchPage('participants-selection.html');
     }, 2000);
   } else {
     // eslint-disable-next-line no-undef
@@ -90,19 +86,14 @@ submitBtn.addEventListener('click', () => {
       plotElement,
       [
         {
-          x: [
-            Math.floor(Math.random() * 16) + 1,
-            Math.floor(Math.random() * 16) + 1,
-            Math.floor(Math.random() * 16) + 1,
-            Math.floor(Math.random() * 16) + 1,
-            Math.floor(Math.random() * 16) + 1
-          ],
+          x: [0, 2, 4, 6, 8, 10],
           y: [
-            Math.floor(Math.random() * 16) + 5,
-            Math.floor(Math.random() * 16) + 5,
-            Math.floor(Math.random() * 16) + 5,
-            Math.floor(Math.random() * 16) + 5,
-            Math.floor(Math.random() * 16) + 5
+            Math.floor(Math.random() * (100 - 90 + 1) + 90),
+            Math.floor(Math.random() * (45 - 30 + 1) + 30),
+            Math.floor(Math.random() * (45 - 30 + 1) + 30),
+            Math.floor(Math.random() * (45 - 30 + 1) + 30),
+            Math.floor(Math.random() * (100 - 90 + 1) + 90),
+            Math.floor(Math.random() * (100 - 90 + 1) + 90)
           ]
         }
       ],
