@@ -59,6 +59,40 @@ folderInput.addEventListener('drop', () => {
 const submitBtn = document.querySelector('button[type="submit"]');
 const windowSizeInput = document.getElementById('window-size');
 
+function toggleFolderPath(path = null) {
+  if (!(folderMsg.querySelector('.folder-path') === null)) {
+    folderMsg.querySelector('.folder-path').remove();
+  }
+
+  if (path === null) {
+    folderMsg.querySelector('#text').innerHTML = `or drag and drop the folder here`;
+  } else {
+    folderMsg.querySelector('#text').innerHTML = `selected folder path is`;
+
+    const folderPathDiv = document.createElement('div');
+    folderPathDiv.classList.add('folder-path');
+    const pathElements = path.split('\\');
+
+    for (let i = 1; i <= pathElements.length; i++) {
+      const element = pathElements[i - 1];
+
+      const folderSpan = document.createElement('span');
+      folderSpan.classList.add('folder');
+      folderSpan.appendChild(document.createTextNode(element));
+      folderPathDiv.appendChild(folderSpan);
+
+      if (i < pathElements.length) {
+        const separatorSpan = document.createElement('span');
+        separatorSpan.classList.add('separator');
+        separatorSpan.appendChild(document.createTextNode('\\'));
+        folderPathDiv.appendChild(separatorSpan);
+
+        folderMsg.appendChild(folderPathDiv);
+      }
+    }
+  }
+}
+
 windowSizeInput.addEventListener('input', event => {
   const value = event.target.value;
 
@@ -76,7 +110,7 @@ windowSizeInput.addEventListener('input', event => {
 const dataFolderPathSession = sessionStorage.getItem('data-path');
 
 if (!(dataFolderPathSession === null)) {
-  folderMsg.innerHTML = `selected folder path is <br> ${dataFolderPathSession}`;
+  toggleFolderPath(dataFolderPathSession);
   if (submitBtn.disabled) {
     submitBtn.removeAttribute('disabled');
   }
@@ -86,7 +120,7 @@ folderInput.addEventListener('change', event => {
   if (event && event.target.files.length > 0) {
     const folder = event.target.files[0];
 
-    folderMsg.innerHTML = `selected folder path is <br> ${folder.path}`;
+    toggleFolderPath(folder.path);
     sessionStorage.setItem('data-path', folder.path);
 
     if (
@@ -97,9 +131,9 @@ folderInput.addEventListener('change', event => {
       submitBtn.removeAttribute('disabled');
     }
   } else {
-    folderMsg.innerHTML = `or drag and drop the folder here`;
+    toggleFolderPath();
 
-    if (!(dataFolderPathSession === null)) {
+    if (!(sessionStorage.getItem('data-path') === null)) {
       sessionStorage.removeItem('data-path');
     }
 

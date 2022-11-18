@@ -88,7 +88,6 @@
   padding: 50px 100px;
   border: 1px dashed #232323dd;
   border-radius: 6px;
-  height: 200px;
   flex-direction: column;
 }
 
@@ -111,7 +110,35 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  color: #232323dd;
+  height: 100%;
+}
+
+.folder-msg > #text {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin: 15px 0;
+}
+
+.folder-msg > .folder-path {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.folder-msg > .folder-path > span.folder {
+  background-color: #16A085;
+  color: #EDEDED;
+  padding: 5px 8px;
+  border-radius: 6px;
+}
+
+.folder-msg > .folder-path > span.separator {
+  background-color: #232323dd;
+  color: #EDEDED;
+  padding: 5px 10px;
+  border-radius: 6px;
+  margin: 0 5px;
 }
 
 .folder-drop-area:hover,
@@ -549,5 +576,9 @@ ul.list > li.item.selected > .actions button:hover {
 
   .input-container .switch {
     margin: 0;
+  }
+
+  .folder-drop-area {
+    padding: 50px;
   }
 }
