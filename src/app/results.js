@@ -1,6 +1,8 @@
 import Menu from './components/menu.js';
 import Router from './utils/router.js';
 
+Router.disableBackButton();
+
 // eslint-disable-next-line no-undef
 const Popper = nw.require('@popperjs/core');
 

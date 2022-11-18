@@ -2,6 +2,8 @@ import LoaderOverlay from './components/loader-overlay.js';
 import Menu from './components/menu.js';
 import Router from './utils/router.js';
 
+Router.disableBackButton();
+
 // eslint-disable-next-line no-undef
 const os = nw.require('os');
 
