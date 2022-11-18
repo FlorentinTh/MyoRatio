@@ -76,7 +76,11 @@
 }
 
 .scroll-space {
-  padding-right: 32px;
+  padding-right: 32px !important;
+}
+
+.no-space {
+  padding: 0 !important;
 }
 
 .folder-drop-area {
@@ -235,34 +239,79 @@
   padding-top: 25px;
 }
 
-.button-container > button {
+.button-container > button[type="submit"],
+.button-container > button[type="reset"] {
   width: 100%;
   padding: 12px 30px;
   font-size: 1.2em;
-  color: #EDEDED;
   text-transform: uppercase;
   letter-spacing: -0.02em;
   border-radius: 30px;
-  border: 2px solid #16A085;
-  background-color: #16a084e4;
   background-size: 0 100%;
-  background-image: linear-gradient(to left, #16A085, #16A085);
   background-repeat: no-repeat;
   transition: ease-out .4s;
+}
+
+.button-container > button[type="submit"] {
+  color: #EDEDED;
+  border: 2px solid #16A085;
+  background-color: #16a084e4;
+  background-image: linear-gradient(to left, #16A085, #16A085);
+}
+
+.button-container > button[type="reset"] {
+  color: #232323dd;
+  border: 2px solid #BDBDBD;
+  background-color: #BDBDBD;
+  background-image: linear-gradient(to left, #BDBDBD, #BDBDBD);
+}
+
+.data-location-wrapper {
+  display: flex;
+  width: 100%;
 }
 
 .data-location {
   display: flex;
   width: 100%;
   margin-bottom: 50px;
+  border: 1px solid #232323;
+  border-radius: 6px;
+}
+
+.path-infos {
+  display: inline-flex;
+  justify-content: left;
+  width: 100%;
+}
+
+.change-btn-container {
+  display: inline-flex;
+  justify-content: right;
+  width: 135px;
+  padding-right: 15px;
+  align-items: center;
+}
+
+.change-btn-container > button {
+  padding: 6px 10px;
+  font-size: .9em;
+  color: #EDEDED;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  border-radius: 30px;
+  border: 1px solid #16A085;
+  background-color: #16a084e4;
+  background-size: 0 100%;
+  background-image: linear-gradient(to left, #16A085, #16A085);
+  background-repeat: no-repeat;
+  transition: ease-out .2s;
+  display: block;
 }
 
 .data-location span#data-path {
   font-size: .9em;
   letter-spacing: .02em;
-  width: 100%;
-  border: 1px solid #232323;
-  border-radius: 6px;
   padding: 15px;
 }
 
@@ -279,7 +328,7 @@
   padding: 0 32px;
 }
 
-.selection button {
+.selection > button {
   padding: 8px 15px;
   font-size: .9em;
   color: #EDEDED;
@@ -294,6 +343,14 @@
   transition: ease-out .2s;
 }
 
+.change-btn-container > button:hover {
+  background-color: #16A085;
+  background-image: linear-gradient(to right, #16A085, #16A085);
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  cursor: pointer;
+}
+
 .selection button:hover {
   background-color: #606060;
   background-image: linear-gradient(to right, #606060, #606060);
@@ -306,15 +363,25 @@
   margin-right: 15px;
 }
 
-.button-container > button:hover {
-  background-color: #16A085;
-  background-image: linear-gradient(to right, #16A085, #16A085);
-  background-repeat: no-repeat;
+.button-container > button[type="submit"]:hover,
+.button-container > button[type="reset"]:hover {
   background-size: 100% 100%;
   cursor: pointer;
 }
 
-.button-container > button:disabled {
+.button-container > button[type="submit"]:hover {
+  background-color: #16A085;
+  background-image: linear-gradient(to right, #16A085, #16A085);
+}
+
+.button-container > button[type="reset"]:hover {
+  background-color: #23232398;
+  background-image: linear-gradient(to right, #23232398, #23232398);
+  color: #EDEDED;
+}
+
+.selection button:disabled,
+.button-container > button[type="submit"]:disabled {
   background-color: #BDBDBD;
   border-color: #BDBDBD;
   cursor: default;
@@ -458,6 +525,7 @@ ul.list > li.item.selected > .actions button {
 
 ul.list > li.item > .actions button:disabled {
   display: none;
+  pointer-events: none;
 }
 
 ul.list > li.item > .actions button:hover {

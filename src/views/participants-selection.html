@@ -27,7 +27,7 @@
   <div class="app">
     <nav class="menu">
       <ul>
-        <li><a class="active" id="home" href="data-discovering.html">Data Processing</a></li>
+        <li><a class="active" id="home" href="#">Data Processing</a></li>
         <li><a id="hpf-converter" href="#">HPF Converter</a></li>
         <li><a id="file-organizer" class="disabled" href="#">File Organizer</a></li>
         <li><a id="settings" href="settings.html">Settings</a></li>
@@ -42,8 +42,15 @@
       <section class="wrapper">
         <h1>EMG Trigno</h1>
         <h2>Participants Selection</h2>
-        <div class="data-location scroll-space">
-          <span id="data-path"><strong>Data Location:</strong></span>
+        <div class="data-location-wrapper scroll-space">
+          <div class="data-location">
+            <div class="path-infos">
+              <span id="data-path"><strong>Data Location:</strong></span>
+            </div>
+            <div class="change-btn-container">
+              <button type="button" id="change-btn">change</button>
+            </div>
+          </div>
         </div>
         <div class="selection">
           <button type="button" id="btn-all">Select All</button>

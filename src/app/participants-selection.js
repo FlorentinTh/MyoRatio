@@ -7,6 +7,11 @@ Router.disableBackButton();
 const menu = new Menu();
 menu.init();
 
+const changeBtn = document.getElementById('change-btn');
+changeBtn.addEventListener('click', () => {
+  Router.switchPage('data-discovering.html');
+});
+
 let participants = sessionStorage.getItem('participants')?.split(',') || [];
 const completedParticipants =
   sessionStorage.getItem('completed-participants')?.split(',') || [];
@@ -60,6 +65,11 @@ if (!(sessionStorage.getItem('results-available') === null)) {
       if (participantItem.classList.contains('not-completed')) {
         participantItem.classList.remove('not-completed');
         participantItem.classList.add('completed');
+
+        const participantIcon = participantItem.querySelector('.content i');
+        participantIcon.classList.remove('fa-user-times');
+        participantIcon.classList.add('fa-user-check');
+
         participantItem.querySelector('.line-2').innerText = 'completed';
         participantItem.querySelector('.actions button').removeAttribute('disabled');
       }
@@ -93,6 +103,11 @@ if (!(sessionStorage.getItem('completed-participants') === null)) {
     ) {
       participantItem.classList.remove('not-completed');
       participantItem.classList.add('completed');
+
+      const participantIcon = participantItem.querySelector('.content i');
+      participantIcon.classList.remove('fa-user-times');
+      participantIcon.classList.add('fa-user-check');
+
       participantItem.querySelector('.line-2').innerText = 'completed';
       participantItem.querySelector('.actions button').removeAttribute('disabled');
     }
@@ -148,6 +163,7 @@ selectBtnAll.addEventListener('click', () => {
 
     selectBtnAll.innerHTML = 'Unselect All';
     isAllSelected = true;
+    selectBtnNotCompleted.setAttribute('disabled', '');
   } else {
     for (const participantItem of participantList) {
       participantItem.classList.toggle('selected');
@@ -156,6 +172,7 @@ selectBtnAll.addEventListener('click', () => {
 
     selectBtnAll.innerHTML = 'Select All';
     isAllSelected = false;
+    selectBtnNotCompleted.removeAttribute('disabled');
   }
 
   toggleSubmitBtn();
@@ -178,6 +195,7 @@ selectBtnNotCompleted.addEventListener('click', () => {
 
     selectBtnNotCompleted.innerHTML = 'Unselect Not Completed';
     isAllNotCompletedSelected = true;
+    selectBtnAll.setAttribute('disabled', '');
   } else {
     for (const participantItem of participantList) {
       const participantItemClasses = participantItem.classList;
@@ -193,6 +211,7 @@ selectBtnNotCompleted.addEventListener('click', () => {
 
     selectBtnNotCompleted.innerHTML = 'Select Not Completed';
     isAllNotCompletedSelected = false;
+    selectBtnAll.removeAttribute('disabled');
   }
 
   toggleSubmitBtn();
