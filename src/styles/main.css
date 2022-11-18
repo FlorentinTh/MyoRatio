@@ -295,8 +295,8 @@
 }
 
 .selection button:hover {
-  background-color: #16A085;
-  background-image: linear-gradient(to right, #16A085, #16A085);
+  background-color: #606060;
+  background-image: linear-gradient(to right, #606060, #606060);
   background-repeat: no-repeat;
   background-size: 100% 100%;
   cursor: pointer;
@@ -342,14 +342,16 @@ ul.list > li.item {
   display: flex;
   margin: 15px 15px 15px 0;
   min-width: 300px;
-  border-bottom: 4px solid #16A085;
   border-radius: 6px;
+  color: #232323dd;
+  background-color: #CFD8DC;
+  border-bottom: 4px solid #CFD8DC;
+}
+
+ul.list > li.item.selected {
+  background-color: #16A085;
+  border-color: #16A085;
   color: #EDEDED;
-  background-color: #232323dd;
-  background-size: 0 100%;
-  background-image: linear-gradient(to left, #232323dd, #232323dd);
-  background-repeat: no-repeat;
-  transition: ease-in .15s;
 }
 
 ul.list > li.item > .content {
@@ -364,50 +366,18 @@ ul.list > li.item > .content i {
   font-size: 2em;
   line-height: 56px;
   padding: 10px 19px;
-  border: 1px solid #EDEDED;
+  border: 1px solid #232323dd;
   border-radius: 60px;
 }
 
-ul.list > li.item.completed > .content i {
-  border-color: #81C784;
-  transition: all ease-in-out .4s;
-}
-
-ul.list > li.item.not-completed > .content i {
-  border-color: #E57373;
-  transition: all ease-in-out .4s;
+ul.list > li.item.selected > .content i {
+  border-color: #EDEDED;
 }
 
 ul.list > li.item > .content .text {
   flex-basis: 10%;
   align-self: center;
   letter-spacing: .08em;
-}
-
-ul.list > li.item.selected .status {
-  color: #EDEDED !important;
-  font-weight: bold;
-}
-
-ul.list > li.item > .content .status {
-  align-self: center;
-  margin: 0 auto;
-  text-transform: uppercase;
-  font-size: .8em;
-  text-align: right;
-  width: 100%;
-  padding-right: 20px;
-  letter-spacing: .05em;
-}
-
-ul.list > li.item.not-completed > .content .status {
-  color: #E57373;
-  transition: all ease-in-out .4s;
-}
-
-ul.list > li.item.completed > .content .status {
-  color: #81C784;
-  transition: all ease-in-out .4s;
 }
 
 ul.list > li.item > .content span.line-1 {
@@ -424,42 +394,84 @@ ul.list > li.item > .content span.line-2 {
 }
 
 ul.list > li.item.not-completed span.line-2 {
-  color: #E57373;
+  color: #F4511E;
 }
 
 ul.list > li.item.completed span.line-2 {
-  color: #81C784;
+  color: #689F38;
+}
+
+ul.list > li.item.selected.completed span.line-2 {
+  color: #C5E1A5;
+}
+
+ul.list > li.item.selected.not-completed span.line-2 {
+  color: #FFAB91;
 }
 
 ul.list > li.item:last-of-type {
   margin-bottom: 0;
 }
 
-ul.list > li.item:hover {
+ul.list > li.item:has(.content:hover) {
+  cursor: pointer;
+  border-color: #16A085;
+}
+
+ul.list > li.item.selected:has(.content:hover) {
+  border-color: #232323dd;
+}
+
+ul.list > li.item > .actions {
+  display: inline-flex;
+  width: 155px;
+  margin-right: 25px;
+  justify-content: right;
+  align-items: center;
+}
+
+ul.list > li.item > .actions button {
+  padding: 6px 10px;
+  font-size: .9em;
+  color: #EDEDED;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  border-radius: 30px;
+  border: 1px solid #16A085;
+  background-color: #16a084e4;
+  background-size: 0 100%;
+  background-image: linear-gradient(to left, #16A085, #16A085);
+  background-repeat: no-repeat;
+  transition: ease-out .2s;
+  display: block;
+}
+
+ul.list > li.item > .actions:has(button:disabled) {
+  width: 0;
+}
+
+ul.list > li.item.selected > .actions button {
+  background-color: #232323dd;
+  border-color: #232323dd;
+  background-image: linear-gradient(to left, #232323dd, #232323dd);
+}
+
+ul.list > li.item > .actions button:disabled {
+  display: none;
+}
+
+ul.list > li.item > .actions button:hover {
   background-color: #16A085;
+  background-image: linear-gradient(to right, #16A085, #16A085);
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
   cursor: pointer;
 }
 
-ul.list > li.item.completed:hover .status,
-ul.list > li.item.not-completed:hover .status,
-ul.list > li.item:hover span.line-2 {
-  color: #EDEDED;
-}
-
-ul.list > li.item.completed:hover i,
-ul.list > li.item.not-completed:hover i {
-  border-color: #EDEDED;
-}
-
-ul.list > li.item.selected > .content span.line-1,
-ul.list > li.item.selected > .content span.line-2 {
-  font-weight: bold;
-}
-
-@media only screen and (max-width: 980px) {
-  main section.wrapper {
-    padding-top: 140px;
-  }
+ul.list > li.item.selected > .actions button:hover {
+  background-color: #606060;
+  border-color: #606060;
+  background-image: linear-gradient(to left, #606060, #606060);
 }
 
 @media only screen and (max-width: 730px) {

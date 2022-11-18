@@ -6,6 +6,8 @@ const menu = new Menu();
 menu.init();
 
 let participants = sessionStorage.getItem('participants')?.split(',') || [];
+const completedParticipants =
+  sessionStorage.getItem('completed-participants')?.split(',') || [];
 
 function toggleSubmitBtn() {
   if (participants.length > 0) {
@@ -27,10 +29,12 @@ function toggleParticipantStorage() {
   }
 }
 
-function createSelectedElement(participantItem) {
-  const span = document.createElement('span');
-  span.innerText = `Selected 🗸`;
-  participantItem.querySelector('.status').appendChild(span);
+function toggleCompletedParticipantStorage() {
+  if (completedParticipants.length > 0) {
+    sessionStorage.setItem('completed-participants', completedParticipants.join(','));
+  } else {
+    sessionStorage.removeItem('completed-participants');
+  }
 }
 
 const selectBtnAll = document.getElementById('btn-all');
@@ -41,41 +45,90 @@ const dataPath = document.getElementById('data-path');
 const participantList = document.querySelector('ul.list').children;
 
 let isAllSelected = false;
+let isAllNotCompletedSelected = false;
 
 dataPath.innerHTML += ` ${sessionStorage.getItem('data-path') || 'ERROR'}`;
 toggleSubmitBtn();
 
-if (participants.length > 0 && participantList.length === participants.length) {
-  selectBtnAll.innerHTML = 'Unselect All';
-  isAllSelected = true;
+if (!(sessionStorage.getItem('results-available') === null)) {
+  for (const participantItem of participantList) {
+    const participantName = participantItem.querySelector('.line-1').innerHTML;
+
+    if (
+      participants.length > 0 &&
+      participants.includes(participantName) &&
+      participantItem.classList.contains('not-completed')
+    ) {
+      participantItem.classList.remove('not-completed');
+      participantItem.classList.add('completed');
+      participantItem.querySelector('.line-2').innerText = 'completed';
+      participantItem.querySelector('.actions button').removeAttribute('disabled');
+      participants.pop();
+      completedParticipants.push(participantName);
+    }
+  }
+
+  toggleParticipantStorage();
+  toggleCompletedParticipantStorage();
+  toggleSubmitBtn();
+} else {
+  if (participants.length > 0 && participantList.length === participants.length) {
+    selectBtnAll.innerHTML = 'Unselect All';
+    isAllSelected = true;
+  }
+}
+
+if (!(sessionStorage.getItem('completed-participants') === null)) {
+  for (const participantItem of participantList) {
+    const participantName = participantItem.querySelector('.line-1').innerHTML;
+
+    if (
+      completedParticipants.length > 0 &&
+      completedParticipants.includes(participantName) &&
+      participantItem.classList.contains('not-completed')
+    ) {
+      participantItem.classList.remove('not-completed');
+      participantItem.classList.add('completed');
+      participantItem.querySelector('.line-2').innerText = 'completed';
+      participantItem.querySelector('.actions button').removeAttribute('disabled');
+    }
+  }
 }
 
 for (const participantItem of participantList) {
   const participantName = participantItem.querySelector('.line-1').innerHTML;
 
-  if (
-    participants.length > 0 &&
-    !participantItem.classList.contains('selected') &&
-    participants.includes(participantName)
-  ) {
-    participantItem.classList.toggle('selected');
-    createSelectedElement(participantItem);
-    toggleSubmitBtn();
+  if (sessionStorage.getItem('results-available') === null) {
+    if (
+      participants.length > 0 &&
+      !participantItem.classList.contains('selected') &&
+      participants.includes(participantName)
+    ) {
+      participantItem.classList.toggle('selected');
+      toggleSubmitBtn();
+    }
   }
 
-  participantItem.addEventListener('click', () => {
+  participantItem.querySelector('.content').addEventListener('click', () => {
     if (participantItem.classList.contains('selected')) {
       participants = participants.filter(participant => participant !== participantName);
-      participantItem.querySelector('.status > span').remove();
     } else {
       participants.push(participantName);
-
-      createSelectedElement(participantItem);
     }
 
     participantItem.classList.toggle('selected');
     toggleSubmitBtn();
     toggleParticipantStorage();
+  });
+
+  participantItem.querySelector('.actions > button').addEventListener('click', () => {
+    LoaderOverlay.toggle('Preparing results...');
+
+    sessionStorage.setItem('participant-result', participantName);
+
+    setTimeout(() => {
+      Router.switchPage('results.html');
+    }, 1000);
   });
 }
 
@@ -86,7 +139,6 @@ selectBtnAll.addEventListener('click', () => {
         const participantName = participantItem.querySelector('.line-1').innerHTML;
         participants.push(participantName);
         participantItem.classList.toggle('selected');
-        createSelectedElement(participantItem);
       }
     }
 
@@ -95,7 +147,6 @@ selectBtnAll.addEventListener('click', () => {
   } else {
     for (const participantItem of participantList) {
       participantItem.classList.toggle('selected');
-      participantItem.querySelector('.status > span').remove();
       participants.pop();
     }
 
@@ -108,17 +159,36 @@ selectBtnAll.addEventListener('click', () => {
 });
 
 selectBtnNotCompleted.addEventListener('click', () => {
-  for (const participantItem of participantList) {
-    const participantItemClasses = participantItem.classList;
-    if (
-      participantItemClasses.contains('not-completed') &&
-      !participantItemClasses.contains('selected')
-    ) {
-      const participantName = participantItem.querySelector('.line-1').innerHTML;
-      participants.push(participantName);
-      participantItem.classList.toggle('selected');
-      createSelectedElement(participantItem);
+  if (!isAllNotCompletedSelected) {
+    for (const participantItem of participantList) {
+      const participantItemClasses = participantItem.classList;
+      if (
+        participantItemClasses.contains('not-completed') &&
+        !participantItemClasses.contains('selected')
+      ) {
+        const participantName = participantItem.querySelector('.line-1').innerHTML;
+        participants.push(participantName);
+        participantItem.classList.toggle('selected');
+      }
     }
+
+    selectBtnNotCompleted.innerHTML = 'Unselect Not Completed';
+    isAllNotCompletedSelected = true;
+  } else {
+    for (const participantItem of participantList) {
+      const participantItemClasses = participantItem.classList;
+
+      if (
+        participantItemClasses.contains('not-completed') &&
+        participantItemClasses.contains('selected')
+      ) {
+        participantItem.classList.toggle('selected');
+        participants.pop();
+      }
+    }
+
+    selectBtnNotCompleted.innerHTML = 'Select Not Completed';
+    isAllNotCompletedSelected = false;
   }
 
   toggleSubmitBtn();
