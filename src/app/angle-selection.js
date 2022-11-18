@@ -4,6 +4,12 @@ import Router from './utils/router.js';
 
 Router.disableBackButton();
 
+const resetBtn = document.querySelector('button[type="reset"]');
+
+resetBtn.addEventListener('click', () => {
+  Router.switchPage('participants-selection.html');
+});
+
 const menuBtns = [];
 menuBtns.push(document.querySelector('.auto-angles-btn'));
 
