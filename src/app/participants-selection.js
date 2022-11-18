@@ -54,17 +54,19 @@ if (!(sessionStorage.getItem('results-available') === null)) {
   for (const participantItem of participantList) {
     const participantName = participantItem.querySelector('.line-1').innerHTML;
 
-    if (
-      participants.length > 0 &&
-      participants.includes(participantName) &&
-      participantItem.classList.contains('not-completed')
-    ) {
-      participantItem.classList.remove('not-completed');
-      participantItem.classList.add('completed');
-      participantItem.querySelector('.line-2').innerText = 'completed';
-      participantItem.querySelector('.actions button').removeAttribute('disabled');
+    if (participants.length > 0 && participants.includes(participantName)) {
+      if (participantItem.classList.contains('not-completed')) {
+        participantItem.classList.remove('not-completed');
+        participantItem.classList.add('completed');
+        participantItem.querySelector('.line-2').innerText = 'completed';
+        participantItem.querySelector('.actions button').removeAttribute('disabled');
+      }
+
+      if (!completedParticipants.includes(participantName)) {
+        completedParticipants.push(participantName);
+      }
+
       participants.pop();
-      completedParticipants.push(participantName);
     }
   }
 
