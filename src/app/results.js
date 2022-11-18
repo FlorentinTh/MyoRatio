@@ -11,6 +11,17 @@ menuBtns.push(document.querySelector('.export-xls-btn'));
 const menu = new Menu();
 menu.init(menuBtns);
 
+const title = document.querySelector('.title span');
+
+if (
+  !(sessionStorage.getItem('participant-result') === null) &&
+  !(sessionStorage.getItem('analysis') === null)
+) {
+  title.innerText += ` ${sessionStorage.getItem(
+    'analysis'
+  )}s for the ${sessionStorage.getItem('participant-result')}`;
+}
+
 const table = document.querySelector('table');
 
 const rowTooltips = document.querySelectorAll('.tooltip-row');
