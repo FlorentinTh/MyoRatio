@@ -65,8 +65,10 @@ function toggleFolderPath(path = null) {
   }
 
   if (path === null) {
+    chooseBtn.innerText = 'choose a folder';
     folderMsg.querySelector('#text').innerHTML = `or drag and drop the folder here`;
   } else {
+    chooseBtn.innerText = 'change folder';
     folderMsg.querySelector('#text').innerHTML = `selected folder path is`;
 
     const folderPathDiv = document.createElement('div');
