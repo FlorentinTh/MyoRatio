@@ -67,31 +67,16 @@ function toggleFolderPath(path = null) {
   if (path === null) {
     chooseBtn.innerText = 'choose a folder';
     folderMsg.querySelector('#text').innerHTML = `or drag and drop the folder here`;
+    folderInput.setAttribute('nwworkingdir', os.homedir());
   } else {
     chooseBtn.innerText = 'change folder';
     folderMsg.querySelector('#text').innerHTML = `selected folder path is`;
+    folderInput.setAttribute('nwworkingdir', path);
 
     const folderPathDiv = document.createElement('div');
     folderPathDiv.classList.add('folder-path');
-    const pathElements = path.split('\\');
-
-    for (let i = 1; i <= pathElements.length; i++) {
-      const element = pathElements[i - 1];
-
-      const folderSpan = document.createElement('span');
-      folderSpan.classList.add('folder');
-      folderSpan.appendChild(document.createTextNode(element));
-      folderPathDiv.appendChild(folderSpan);
-
-      if (i < pathElements.length) {
-        const separatorSpan = document.createElement('span');
-        separatorSpan.classList.add('separator');
-        separatorSpan.appendChild(document.createTextNode('\\'));
-        folderPathDiv.appendChild(separatorSpan);
-
-        folderMsg.appendChild(folderPathDiv);
-      }
-    }
+    folderPathDiv.appendChild(document.createTextNode(path));
+    folderMsg.appendChild(folderPathDiv);
   }
 }
 

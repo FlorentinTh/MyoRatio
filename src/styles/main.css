@@ -107,9 +107,6 @@
   font-size: 1em;
   font-weight: 300;
   line-height: 1.4;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
   height: 100%;
 }
 
@@ -117,28 +114,15 @@
   width: 100%;
   display: flex;
   justify-content: center;
-  margin: 15px 0;
+  margin: 15px 0 5px;
 }
 
 .folder-msg > .folder-path {
   width: 100%;
-  display: flex;
   justify-content: center;
-}
-
-.folder-msg > .folder-path > span.folder {
-  background-color: #16A085;
-  color: #EDEDED;
-  padding: 5px 8px;
-  border-radius: 6px;
-}
-
-.folder-msg > .folder-path > span.separator {
-  background-color: #232323dd;
-  color: #EDEDED;
-  padding: 5px 10px;
-  border-radius: 6px;
-  margin: 0 5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .folder-drop-area:hover,
@@ -309,7 +293,7 @@
 .path-infos {
   display: inline-flex;
   justify-content: left;
-  width: 100%;
+  width: 82%;
 }
 
 .change-btn-container {
@@ -340,6 +324,9 @@
   font-size: .9em;
   letter-spacing: .02em;
   padding: 15px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .data-location span#data-path strong {
