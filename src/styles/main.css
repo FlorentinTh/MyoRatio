@@ -389,9 +389,8 @@
 }
 
 .button-container > button[type="reset"]:hover {
-  background-color: #23232398;
-  background-image: linear-gradient(to right, #23232398, #23232398);
-  color: #EDEDED;
+  background-color: #A1A0A0;
+  background-image: linear-gradient(to right, #A1A0A0, #A1A0A0);
 }
 
 .selection button:disabled,
