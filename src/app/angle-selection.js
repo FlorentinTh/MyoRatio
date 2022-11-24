@@ -16,30 +16,6 @@ menuBtns.push(document.querySelector('.auto-angles-btn'));
 const menu = new Menu();
 menu.init(menuBtns);
 
-const data = [
-  {
-    x: [0, 2, 4, 6, 8, 10],
-    y: [
-      Math.floor(Math.random() * (100 - 90 + 1) + 90),
-      Math.floor(Math.random() * (45 - 30 + 1) + 30),
-      Math.floor(Math.random() * (45 - 30 + 1) + 30),
-      Math.floor(Math.random() * (45 - 30 + 1) + 30),
-      Math.floor(Math.random() * (100 - 90 + 1) + 90),
-      Math.floor(Math.random() * (100 - 90 + 1) + 90)
-    ]
-  }
-];
-
-const layout = {
-  margin: { t: 20, r: 30, b: 20, l: 30 },
-  paper_bgcolor: '#EDEDED',
-  plot_bgcolor: '#EDEDED'
-};
-
-const config = {
-  responsive: true
-};
-
 const participants = sessionStorage.getItem('participants').split(',');
 const analysis = sessionStorage.getItem('analysis');
 
@@ -47,10 +23,206 @@ const infoParticipant = document.getElementById('participant');
 const infoAnalysis = document.getElementById('analysis');
 const infoIter = document.getElementById('iteration');
 
-const plotElement = document.getElementById('plot');
+const chartCtx = document.getElementById('chart').getContext('2d');
 
 const dots = document.querySelector('.pager').children;
 const submitBtn = document.querySelector('button[type="submit"]');
+
+let nbSelectedPoints = 0;
+let firstElementZoom = null;
+
+const gradient = chartCtx.createLinearGradient(0, 25, 0, 300);
+gradient.addColorStop(0, 'rgba(22, 160, 133, 0.25)');
+gradient.addColorStop(0.35, 'rgba(22, 160, 133, 0.15)');
+gradient.addColorStop(1, 'rgba(22, 160, 133, 0)');
+
+const conf = {
+  type: 'scatter',
+  responsive: true,
+  maintainAspectRatio: false,
+  options: {
+    plugins: {
+      legend: {
+        display: false
+      },
+      tooltip: {
+        displayColors: false,
+        padding: 12,
+        caretPadding: 16,
+        bodyFont: {
+          size: 14
+        }
+      },
+      crosshair: {
+        sync: {
+          enabled: false
+        },
+        line: {
+          color: '#232323dd',
+          width: 1,
+          dashPattern: [4, 5],
+          greyOutBehind: true
+        },
+        zoom: {
+          enabled: false, // if true: issue with point selection onClick
+          zoomButtonText: 'Reset',
+          zoomButtonClass: 'reset-zoom'
+        },
+        callbacks: {
+          beforeZoom: () => (start, end) => {
+            firstElementZoom = allData.findIndex(value => {
+              if (value.x >= start) {
+                return true;
+              }
+
+              return false;
+            });
+
+            return true;
+          },
+          afterZoom: () => (start, end) => {
+            plot.update();
+          }
+        }
+      }
+    },
+    scales: {
+      x: {
+        display: true,
+        title: {
+          display: true,
+          text: 'Seconds',
+          padding: {
+            top: 20
+          },
+          color: '#16A085',
+          font: {
+            weight: 'bold',
+            size: 14
+          }
+        },
+        ticks: {
+          color: '#232323'
+        }
+      },
+      y: {
+        display: true,
+        beginAtZero: true,
+        title: {
+          display: true,
+          text: 'Degrees',
+          padding: {
+            bottom: 20
+          },
+          color: '#16A085',
+          font: {
+            weight: 'bold',
+            size: 14
+          }
+        },
+        ticks: {
+          color: '#232323'
+        }
+      }
+    },
+    onHover: (event, chart) => {
+      event.native.target.style.cursor = chart[0] ? 'pointer' : 'default';
+    },
+    onClick: (event, element, plot) => {
+      const activePoint = plot.getElementsAtEventForMode(
+        event,
+        'nearest',
+        { intersect: false, axis: 'x' },
+        true
+      );
+
+      const dataset = plot.data.datasets[0];
+      let point = activePoint[0].index;
+
+      if (!(firstElementZoom === null)) {
+        point = firstElementZoom + (point - 1);
+      }
+
+      // const dataX = dataset.data[point].x;
+      // const dataY = dataset.data[point].y;
+
+      // console.log({ dataX, dataY });
+
+      if (nbSelectedPoints < 2) {
+        if (dataset.pointBackgroundColor[point] === '#16A085') {
+          dataset.pointBackgroundColor[point] = '#FF5722';
+          nbSelectedPoints++;
+        } else {
+          dataset.pointBackgroundColor[point] = '#16A085';
+          nbSelectedPoints--;
+        }
+      } else {
+        if (dataset.pointBackgroundColor[point] === '#FF5722') {
+          dataset.pointBackgroundColor[point] = '#16A085';
+          nbSelectedPoints--;
+        } else {
+          const firstSelectedIndex = dataset.pointBackgroundColor.indexOf('#FF5722');
+          const secondSelectedIndex = dataset.pointBackgroundColor.lastIndexOf('#FF5722');
+          const distToFirst = Math.abs(firstSelectedIndex - point);
+          const distToSecond = Math.abs(secondSelectedIndex - point);
+
+          if (distToFirst < distToSecond) {
+            dataset.pointBackgroundColor[firstSelectedIndex] = '#16A085';
+          } else {
+            dataset.pointBackgroundColor[secondSelectedIndex] = '#16A085';
+          }
+
+          dataset.pointBackgroundColor[point] = '#FF5722';
+        }
+      }
+
+      plot.update();
+    }
+  },
+  data: {
+    datasets: [
+      {
+        pointBorderWidth: 1,
+        pointHoverRadius: 10,
+        pointBackgroundColor: '#16A085',
+        pointHoverBorderColor: '#232323dd',
+        pointHoverBorderWidth: 2,
+        pointRadius: 6,
+        borderWidth: 5,
+        pointStyle: 'circle',
+        backgroundColor: gradient,
+        borderColor: '#16A085',
+        showLine: true,
+        fill: true,
+        interpolate: true,
+        lineTension: 0,
+        data: [
+          { x: 0, y: Math.floor(Math.random() * (100 - 90 + 1) + 90) },
+          { x: 0.5, y: Math.floor(Math.random() * (100 - 90 + 1) + 90) },
+          { x: 1, y: Math.floor(Math.random() * (100 - 90 + 1) + 90) },
+          { x: 1.5, y: Math.floor(Math.random() * (100 - 90 + 1) + 90) },
+          { x: 2, y: Math.floor(Math.random() * (100 - 90 + 1) + 90) },
+          { x: 2.5, y: Math.floor(Math.random() * (100 - 90 + 1) + 90) },
+          { x: 3, y: Math.floor(Math.random() * (45 - 30 + 1) + 30) },
+          { x: 3.5, y: Math.floor(Math.random() * (45 - 30 + 1) + 30) },
+          { x: 4, y: Math.floor(Math.random() * (45 - 30 + 1) + 30) },
+          { x: 4.5, y: Math.floor(Math.random() * (45 - 30 + 1) + 30) },
+          { x: 5, y: Math.floor(Math.random() * (45 - 30 + 1) + 30) },
+          { x: 5.5, y: Math.floor(Math.random() * (45 - 30 + 1) + 30) },
+          { x: 6, y: Math.floor(Math.random() * (45 - 30 + 1) + 30) },
+          { x: 6.5, y: Math.floor(Math.random() * (45 - 30 + 1) + 30) },
+          { x: 7, y: Math.floor(Math.random() * (45 - 30 + 1) + 30) },
+          { x: 7.5, y: Math.floor(Math.random() * (45 - 30 + 1) + 30) },
+          { x: 8, y: Math.floor(Math.random() * (100 - 90 + 1) + 90) },
+          { x: 8.5, y: Math.floor(Math.random() * (100 - 90 + 1) + 90) },
+          { x: 9, y: Math.floor(Math.random() * (100 - 90 + 1) + 90) },
+          { x: 9.5, y: Math.floor(Math.random() * (100 - 90 + 1) + 90) },
+          { x: 10, y: Math.floor(Math.random() * (100 - 90 + 1) + 90) }
+        ]
+      }
+    ]
+  }
+};
 
 let currentParticipant = 0;
 let currentIteration = 0;
@@ -78,7 +250,13 @@ function updateInfos() {
 updateInfos();
 
 // eslint-disable-next-line no-undef
-Plotly.newPlot(plotElement, data, layout, config);
+const plot = new Chart(chartCtx, conf);
+
+plot.data.datasets[0].pointBackgroundColor = plot.data.datasets[0].data.map(() => {
+  return '#16A085';
+});
+
+let allData = plot.data.datasets[0].data;
 
 submitBtn.addEventListener('click', () => {
   if (submitBtn.classList.contains('completed')) {
@@ -89,25 +267,39 @@ submitBtn.addEventListener('click', () => {
       Router.switchPage('participants-selection.html');
     }, 2000);
   } else {
-    // eslint-disable-next-line no-undef
-    Plotly.newPlot(
-      plotElement,
-      [
-        {
-          x: [0, 2, 4, 6, 8, 10],
-          y: [
-            Math.floor(Math.random() * (100 - 90 + 1) + 90),
-            Math.floor(Math.random() * (45 - 30 + 1) + 30),
-            Math.floor(Math.random() * (45 - 30 + 1) + 30),
-            Math.floor(Math.random() * (45 - 30 + 1) + 30),
-            Math.floor(Math.random() * (100 - 90 + 1) + 90),
-            Math.floor(Math.random() * (100 - 90 + 1) + 90)
-          ]
-        }
-      ],
-      layout,
-      config
-    );
+    plot.data.datasets[0].pointBackgroundColor = plot.data.datasets[0].data.map(() => {
+      return '#16A085';
+    });
+
+    nbSelectedPoints = 0;
+    firstElementZoom = null;
+
+    allData = [
+      { x: 0, y: Math.floor(Math.random() * (100 - 90 + 1) + 90) },
+      { x: 0.5, y: Math.floor(Math.random() * (100 - 90 + 1) + 90) },
+      { x: 1, y: Math.floor(Math.random() * (100 - 90 + 1) + 90) },
+      { x: 1.5, y: Math.floor(Math.random() * (100 - 90 + 1) + 90) },
+      { x: 2, y: Math.floor(Math.random() * (100 - 90 + 1) + 90) },
+      { x: 2.5, y: Math.floor(Math.random() * (100 - 90 + 1) + 90) },
+      { x: 3, y: Math.floor(Math.random() * (45 - 30 + 1) + 30) },
+      { x: 3.5, y: Math.floor(Math.random() * (45 - 30 + 1) + 30) },
+      { x: 4, y: Math.floor(Math.random() * (45 - 30 + 1) + 30) },
+      { x: 4.5, y: Math.floor(Math.random() * (45 - 30 + 1) + 30) },
+      { x: 5, y: Math.floor(Math.random() * (45 - 30 + 1) + 30) },
+      { x: 5.5, y: Math.floor(Math.random() * (45 - 30 + 1) + 30) },
+      { x: 6, y: Math.floor(Math.random() * (45 - 30 + 1) + 30) },
+      { x: 6.5, y: Math.floor(Math.random() * (45 - 30 + 1) + 30) },
+      { x: 7, y: Math.floor(Math.random() * (45 - 30 + 1) + 30) },
+      { x: 7.5, y: Math.floor(Math.random() * (45 - 30 + 1) + 30) },
+      { x: 8, y: Math.floor(Math.random() * (100 - 90 + 1) + 90) },
+      { x: 8.5, y: Math.floor(Math.random() * (100 - 90 + 1) + 90) },
+      { x: 9, y: Math.floor(Math.random() * (100 - 90 + 1) + 90) },
+      { x: 9.5, y: Math.floor(Math.random() * (100 - 90 + 1) + 90) },
+      { x: 10, y: Math.floor(Math.random() * (100 - 90 + 1) + 90) }
+    ];
+
+    plot.data.datasets[0].data = allData;
+    plot.update();
 
     if (currentIteration < 2) {
       currentIteration++;

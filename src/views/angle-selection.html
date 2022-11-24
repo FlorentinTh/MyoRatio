@@ -12,7 +12,9 @@
   <link rel="stylesheet" href="../styles/main.css">
   <link rel="stylesheet" href="../styles/angles.css">
 
-  <script src="https://cdn.plot.ly/plotly-2.16.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.0.1/chart.umd.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-crosshair@1.2.0/dist/chartjs-plugin-crosshair.min.js"
+    defer></script>
 </head>
 
 <body>
@@ -56,8 +58,8 @@
           <span>-</span>
           <span id="iteration">Iter. #</span>
         </div>
-        <div class="plot-wrapper">
-          <div id="plot"></div>
+        <div class="chart-container">
+          <canvas id="chart" height="180px"></canvas>
         </div>
         <div class="pager">
           <span class="dot"></span>
