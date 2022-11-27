@@ -154,12 +154,16 @@
   opacity: 0;
 }
 
-.input-container {
+.input-container,
+.setting-container {
   display: flex;
   align-items: center;
   padding: 50px;
   border: 1px dashed #232323dd;
   border-radius: 6px;
+}
+
+.input-container {
   height: 100px;
 }
 
