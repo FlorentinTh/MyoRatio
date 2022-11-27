@@ -25,7 +25,7 @@
     }
   },
   "build": {
-    "appId": "ca.liaralab.${NAME}",
+    "appId": "ca.liaralab.emgtrigno",
     "nwVersion": "0.70.1",
     "nwFlavor": "normal",
     "packed": true,
@@ -50,9 +50,9 @@
     ],
     "ffmpegIntegration": false,
     "win": {
-      "productName": "${NAME}",
+      "productName": "EMG Trigno",
       "companyName": "LIARA Lab.",
-      "fileDescription": "${NAME}",
+      "fileDescription": "EMG Trigno",
       "copyright": "Copyright LIARA Lab.",
       "icon": "./src/assets/icons/win/app.ico"
     },
@@ -64,11 +64,11 @@
       "hashCalculation": true
     },
     "mac": {
-      "displayName": "${NAME}",
+      "displayName": "EMG Trigno",
       "copyright": "Copyright LIARA Lab.",
       "icon": "./src/assets/icons/mac/app.icns",
       "plistStrings": {
-        "CFBundleIdentifier": "ca.liaralab.${NAME}",
+        "CFBundleIdentifier": "ca.liaralab.emgtrigno",
         "CFBundleDocumentTypes": []
       }
     }
