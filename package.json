@@ -25,39 +25,50 @@
     }
   },
   "build": {
-    "appId": "ca.liaralab.emgtrigno",
+    "appId": "ca.liaralab.${NAME}",
     "nwVersion": "0.70.1",
+    "nwFlavor": "normal",
     "packed": true,
     "targets": [
       "zip",
-      "nsis7z"
+      "nsis"
     ],
     "strippedProperties": [
       "build",
       "devDependencies",
-      "scripts"
+      "scripts",
+      "pre-commit",
+      "config"
     ],
-    "outputPattern": "${NAME} ${VERSION} ${PLATFORM} ${ARCH}",
+    "outputPattern": "${NAME}-${VERSION}-${PLATFORM}${ARCH}",
     "excludes": [
       "dist/**/*",
-      "package-lock.json"
+      "package-lock.json",
+      "NOTES.md",
+      "README.md",
+      "**/node_modules/**"
     ],
     "ffmpegIntegration": false,
     "win": {
-      "productName": "EMGTrigno",
+      "productName": "${NAME}",
       "companyName": "LIARA Lab.",
+      "fileDescription": "${NAME}",
       "copyright": "Copyright LIARA Lab.",
       "icon": "./src/assets/icons/win/app.ico"
     },
     "nsis": {
-      "installDirectory": "$PROGRAMFILES\\${_COMPANYNAME}\\${_APPNAME}"
+      "icon": "./src/assets/icons/win/app.ico",
+      "unIcon": "./src/assets/icons/win/app.ico",
+      "installDirectory": "$APPDATA\\${_COMPANYNAME}\\${_APPNAME}",
+      "diffUpdaters": true,
+      "hashCalculation": true
     },
     "mac": {
-      "displayName": "EMGTrigno",
-      "copyright": "LIARA Lab.",
+      "displayName": "${NAME}",
+      "copyright": "Copyright LIARA Lab.",
       "icon": "./src/assets/icons/mac/app.icns",
       "plistStrings": {
-        "CFBundleIdentifier": "ca.liaralab.emgtrigno",
+        "CFBundleIdentifier": "ca.liaralab.${NAME}",
         "CFBundleDocumentTypes": []
       }
     }
