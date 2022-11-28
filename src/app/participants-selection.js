@@ -44,6 +44,7 @@ function toggleCompletedParticipantStorage() {
   }
 }
 
+const previewBtn = document.getElementById('btn-preview');
 const selectBtnAll = document.getElementById('btn-all');
 const selectBtnNotCompleted = document.getElementById('btn-not-completed');
 const submitBtn = document.querySelector('button[type="submit"]');
@@ -150,6 +151,16 @@ for (const participantItem of participantList) {
     }, 1000);
   });
 }
+
+previewBtn.addEventListener('click', () => {
+  if (!previewBtn.disabled) {
+    LoaderOverlay.toggle();
+
+    setTimeout(() => {
+      Router.switchPage('angles-preview.html');
+    }, 2000);
+  }
+});
 
 selectBtnAll.addEventListener('click', () => {
   if (!isAllSelected) {

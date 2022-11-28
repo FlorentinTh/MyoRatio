@@ -42,7 +42,7 @@
       <section class="wrapper">
         <h1>EMG Trigno</h1>
         <h2>Participants Selection</h2>
-        <div class="data-location-wrapper scroll-space">
+        <div class="data-location-wrapper">
           <div class="data-location">
             <div class="path-infos">
               <span id="data-path"><strong>Data Location:</strong></span>
@@ -53,17 +53,35 @@
           </div>
         </div>
         <div class="selection">
-          <button type="button" id="btn-all">Select All</button>
-          <button type="button" id="btn-not-completed">Select Not Completed</button>
+          <button type="button" id="btn-preview">Preview</button>
+          <div class="align-right">
+            <button type="button" id="btn-all">All</button>
+            <button type="button" id="btn-not-completed">Not Completed</button>
+          </div>
         </div>
+        <!-- <div class="list-container empty-list">
+          <div class="empty-content">
+            <h4>No data found</h4>
+            <span>Try to change input folder</span>
+          </div>
+        </div> -->
         <div class="list-container">
           <ul class="list">
             <li class="item not-completed">
               <div class="content">
-                <i class="fas fa-user-times"></i>
-                <div class="text">
-                  <span class="line-1">Participant#5507</span>
-                  <span class="line-2">not completed</span>
+                <div class="icon">
+                  <i class="fas fa-user-times"></i>
+                </div>
+                <div class="infos">
+                  <div class="line-1">Participant#5507</div>
+                  <div class="line-2">
+                    <span class="state"></span>
+                    <span class="text">not completed</span>
+                  </div>
+                  <div class="line-3 high">
+                    <span class="state"></span>
+                    <span class="text">high complexity</span>
+                  </div>
                 </div>
               </div>
               <div class="actions">
@@ -72,10 +90,19 @@
             </li>
             <li class="item completed">
               <div class="content">
-                <i class="fas fa-user-check"></i>
-                <div class="text">
-                  <span class="line-1">Participant#5654</span>
-                  <span class="line-2">completed</span>
+                <div class="icon">
+                  <i class="fas fa-user-check"></i>
+                </div>
+                <div class="infos">
+                  <div class="line-1">Participant#5654</div>
+                  <div class="line-2">
+                    <span class="state"></span>
+                    <span class="text">completed</span>
+                  </div>
+                  <div class="line-3 low">
+                    <span class="state"></span>
+                    <span class="text">low complexity</span>
+                  </div>
                 </div>
               </div>
               <div class="actions">
@@ -84,10 +111,19 @@
             </li>
             <li class="item not-completed">
               <div class="content">
-                <i class="fas fa-user-times"></i>
-                <div class="text">
-                  <span class="line-1">Participant#6741</span>
-                  <span class="line-2">not completed</span>
+                <div class="icon">
+                  <i class="fas fa-user-times"></i>
+                </div>
+                <div class="infos">
+                  <div class="line-1">Participant#6741</div>
+                  <div class="line-2">
+                    <span class="state"></span>
+                    <span class="text">not completed</span>
+                  </div>
+                  <div class="line-3 medium">
+                    <span class="state"></span>
+                    <span class="text">medium complexity</span>
+                  </div>
                 </div>
               </div>
               <div class="actions">
@@ -96,10 +132,19 @@
             </li>
             <li class="item not-completed">
               <div class="content">
-                <i class="fas fa-user-times"></i>
-                <div class="text">
-                  <span class="line-1">Participant#7953</span>
-                  <span class="line-2">not completed</span>
+                <div class="icon">
+                  <i class="fas fa-user-times"></i>
+                </div>
+                <div class="infos">
+                  <div class="line-1">Participant#7953</div>
+                  <div class="line-2">
+                    <span class="state"></span>
+                    <span class="text">not completed</span>
+                  </div>
+                  <div class="line-3 unknown">
+                    <span class="state"></span>
+                    <span class="text">unknown complexity</span>
+                  </div>
                 </div>
               </div>
               <div class="actions">
@@ -108,7 +153,7 @@
             </li>
           </ul>
         </div>
-        <div class="group scroll-space">
+        <div class="group group-right-space">
           <div class="button-container">
             <button type="submit" disabled>Start Processing</button>
           </div>

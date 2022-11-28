@@ -71,12 +71,12 @@
   text-align: center;
 }
 
-.group:not(:last-child) {
-  margin-bottom: 30px;
+.group.group-right-space {
+  padding-right: 15px;
 }
 
-.scroll-space {
-  padding-right: 32px !important;
+.group:not(:last-child) {
+  margin-bottom: 30px;
 }
 
 .no-space {
@@ -284,6 +284,7 @@
 .data-location-wrapper {
   display: flex;
   width: 100%;
+  padding-right: 15px;
 }
 
 .data-location {
@@ -340,13 +341,13 @@
 
 .selection {
   display: flex;
-  justify-content: right;
+  justify-content: space-between;
   margin: 0 15px 15px;
   width: 100%;
-  padding: 0 32px;
+  padding-right: 15px;
 }
 
-.selection > button {
+.selection button {
   padding: 8px 15px;
   font-size: .9em;
   color: #EDEDED;
@@ -361,7 +362,7 @@
   transition: ease-out .2s;
 }
 
-.change-btn-container > button:hover {
+.change-btn-container button:hover {
   background-color: #16A085;
   background-image: linear-gradient(to right, #16A085, #16A085);
   background-repeat: no-repeat;
@@ -375,10 +376,6 @@
   background-repeat: no-repeat;
   background-size: 100% 100%;
   cursor: pointer;
-}
-
-.selection button:first-of-type {
-  margin-right: 15px;
 }
 
 .button-container > button[type="submit"]:hover,
@@ -405,6 +402,10 @@
   pointer-events: none;
 }
 
+.selection .align-right button:first-of-type {
+  margin-right: 10px;
+}
+
 .list-container {
   overflow-y: auto;
   overflow-x: hidden;
@@ -413,6 +414,35 @@
   height: 100%;
   margin-bottom: 30px;
   border-radius: 6px;
+}
+
+.list-container.empty-list {
+  padding-right: 32px;
+}
+
+.empty-content {
+  border: 1px dashed #232323dd;
+  height: 200px;
+  border-radius: 6px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.empty-content h4 {
+  text-transform: uppercase;
+  font-size: 1em;
+}
+
+.empty-content span {
+  font-size: .9em;
+}
+
+.empty-content h4,
+.empty-content span {
+  letter-spacing: -.02em;
+  color: #232323dd;
 }
 
 ul.list {
@@ -440,16 +470,19 @@ ul.list > li.item.selected {
 
 ul.list > li.item > .content {
   display: flex;
-  height: 100px;
+  height: 115px;
   background-color: transparent;
-  padding: 10px 0 10px 20px;
-  justify-content: flex-start;
+  align-items: center;
+}
+
+ul.list > li.item > .content .icon {
+  margin-left: 25px;
 }
 
 ul.list > li.item > .content i {
-  font-size: 2em;
+  font-size: 1.5em;
   line-height: 56px;
-  padding: 10px 19px;
+  padding: 7px 20px;
   border: 1px solid #232323dd;
   border-radius: 60px;
 }
@@ -458,39 +491,113 @@ ul.list > li.item.selected > .content i {
   border-color: #EDEDED;
 }
 
-ul.list > li.item > .content .text {
-  flex-basis: 10%;
+ul.list > li.item > .content .infos {
   align-self: center;
   letter-spacing: .08em;
+  margin-left: 25px;
 }
 
-ul.list > li.item > .content span.line-1 {
+ul.list > li.item > .content div.line-1 {
   font-size: 1.2em;
   text-transform: capitalize;
-  padding-left: 20px;
 }
 
-ul.list > li.item > .content span.line-2 {
-  font-size: .8em;
-  font-style: italic;
+ul.list > li.item > .content div.line-2 {
+  padding-top: 10px;
+}
+
+ul.list > li.item > .content div.line-2,
+ul.list > li.item > .content div.line-3 {
+  display: flex;
+  justify-content: left;
+  align-items: center;
+}
+
+ul.list > li.item div.line-2 .state,
+ul.list > li.item div.line-3 .state {
+  height: 6px;
+  width: 6px;
+  border-radius: 6px;
+  margin-right: 8px;
+  transition: ease-in-out .5s;
+}
+
+ul.list > li.item > .content div.line-2 .text,
+ul.list > li.item > .content div.line-3 .text {
+  font-size: .7em;
   text-transform: uppercase;
-  padding-left: 20px;
 }
 
-ul.list > li.item.not-completed span.line-2 {
+ul.list > li.item.not-completed div.line-2 .text,
+ul.list > li.item div.line-3.high .text {
   color: #F4511E;
 }
 
-ul.list > li.item.completed span.line-2 {
+ul.list > li.item.not-completed div.line-2 .state,
+ul.list > li.item div.line-3.high .state {
+  background-color: #F4511E;
+}
+
+ul.list > li.item.completed div.line-2 .text,
+ul.list > li.item div.line-3.low .text {
   color: #689F38;
 }
 
-ul.list > li.item.selected.completed span.line-2 {
+ul.list > li.item.completed div.line-2 .state,
+ul.list > li.item div.line-3.low .state {
+  background-color: #689F38;
+}
+
+ul.list > li.item div.line-3.medium .text {
+  color: #FF8F00;
+}
+
+ul.list > li.item div.line-3.medium .state {
+  background-color: #FF8F00;
+}
+
+ul.list > li.item div.line-3.unknown .text {
+  color: #616161;
+}
+
+ul.list > li.item div.line-3.unknown .state {
+  background-color: #616161;
+}
+
+ul.list > li.item.selected.not-completed div.line-2 .text,
+ul.list > li.item.selected div.line-3.high .text {
+  color: #FFAB91;
+}
+
+ul.list > li.item.selected.not-completed div.line-2 .state,
+ul.list > li.item.selected div.line-3.high .state {
+  background-color: #FFAB91;
+}
+
+ul.list > li.item.selected.completed div.line-2 .text,
+ul.list > li.item.selected div.line-3.low .text {
   color: #C5E1A5;
 }
 
-ul.list > li.item.selected.not-completed span.line-2 {
-  color: #FFAB91;
+ul.list > li.item.selected.completed div.line-2 .state,
+ul.list > li.item.selected div.line-3.low .state {
+  background-color: #C5E1A5;
+}
+
+ul.list > li.item.selected div.line-3.medium .text {
+  color: #FFECB3;
+}
+
+ul.list > li.item.selected div.line-3.medium .state {
+  background-color: #FFECB3;
+}
+
+ul.list > li.item.selected div.line-3.unknown .text {
+  color: #E0E0E0;
+}
+
+ul.list > li.item.selected div.line-3.unknown .state {
+  background-color: #E0E0E0;
 }
 
 ul.list > li.item:last-of-type {
