@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>EMG Trigno</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link rel="stylesheet" href="../styles/reset.css">
+  <link rel="stylesheet" href="../styles/components/loader.css">
+  <link rel="stylesheet" href="../styles/components/menu.css">
+  <link rel="stylesheet" href="../styles/main.css">
+  <link rel="stylesheet" href="../styles/preview.css">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.0.1/chart.umd.min.js" defer></script>
+</head>
+
+<body>
+  <div class="app">
+    <nav class="menu">
+      <ul>
+        <li><a class="active" id="home" href="data-discovering.html">Data Processing</a></li>
+        <li><a id="hpf-converter" href="#">HPF Converter</a></li>
+        <li><a id="file-organizer" class="disabled" href="#">File Organizer</a></li>
+        <li><a id="settings" href="settings.html">Settings</a></li>
+      </ul>
+    </nav>
+
+    <div class="toggle-nav-btn">
+      <div class="icon"></div>
+    </div>
+
+    <main class="content">
+      <section class="wrapper wrapper-large">
+        <h1>EMG Trigno</h1>
+        <h2>Angles Preview</h2>
+        <div class="participant-card-container">
+          <div class="participant-card">
+            <h3>Participant#5507</h3>
+            <div class="angle-auto-select">
+              <span>Auto-select Angles</span>
+              <input type="checkbox" class="auto-switch">
+            </div>
+            <canvas id="chart-5507" height="180px"></canvas>
+            <div class="complexity-container">
+              <span>Select a complexity:</span>
+              <div class="switch">
+                <input type="radio" id="radio-opt1-5507" name="switch-complexity-5507" value="low">
+                <label for="radio-opt1-5507">Low</label>
+                <input type="radio" id="radio-opt2-5507" name="switch-complexity-5507" value="medium">
+                <label for="radio-opt2-5507">Medium</label>
+                <input type="radio" id="radio-opt3-5507" name="switch-complexity-5507" value="high" checked>
+                <label for="radio-opt3-5507">High</label>
+              </div>
+            </div>
+          </div>
+          <div class="participant-card">
+            <h3>Participant#5654</h3>
+            <div class="angle-auto-select">
+              <span>Auto-select Angles</span>
+              <input type="checkbox" class="auto-switch">
+            </div>
+            <canvas id="chart-5654" height="180px"></canvas>
+            <div class="complexity-container">
+              <span>Select a complexity:</span>
+              <div class="switch">
+                <input type="radio" id="radio-opt1-5654" name="switch-complexity-5654" value="low" checked>
+                <label for="radio-opt1-5654">Low</label>
+                <input type="radio" id="radio-opt2-5654" name="switch-complexity-5654" value="medium">
+                <label for="radio-opt2-5654">Medium</label>
+                <input type="radio" id="radio-opt3-5654" name="switch-complexity-5654" value="high">
+                <label for="radio-opt3-5654">High</label>
+              </div>
+            </div>
+          </div>
+          <div class="participant-card">
+            <h3>Participant#6741</h3>
+            <div class="angle-auto-select">
+              <span>Auto-select Angles</span>
+              <input type="checkbox" class="auto-switch">
+            </div>
+            <canvas id="chart-6741" height="180px"></canvas>
+            <div class="complexity-container">
+              <span>Select a complexity:</span>
+              <div class="switch">
+                <input type="radio" id="radio-opt1-6741" name="switch-complexity-6741" value="low">
+                <label for="radio-opt1-6741">Low</label>
+                <input type="radio" id="radio-opt2-6741" name="switch-complexity-6741" value="medium" checked>
+                <label for="radio-opt2-6741">Medium</label>
+                <input type="radio" id="radio-opt3-6741" name="switch-complexity-6741" value="high">
+                <label for="radio-opt3-6741">High</label>
+              </div>
+            </div>
+          </div>
+          <div class="participant-card">
+            <h3>Participant#7953</h3>
+            <div class="angle-auto-select">
+              <span>Auto-select Angles</span>
+              <input type="checkbox" class="auto-switch">
+            </div>
+            <canvas id="chart-7953" height="180px"></canvas>
+            <div class="complexity-container">
+              <span>Select a complexity:</span>
+              <div class="switch">
+                <input type="radio" id="radio-opt1-7953" name="switch-complexity-7953" value="low">
+                <label for="radio-opt1-7953">Low</label>
+                <input type="radio" id="radio-opt2-7953" name="switch-complexity-7953" value="medium">
+                <label for="radio-opt2-7953">Medium</label>
+                <input type="radio" id="radio-opt3-7953" name="switch-complexity-7953" value="high">
+                <label for="radio-opt3-7953">High</label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="group no-margin">
+          <div class="button-container">
+            <button type="submit" disabled>Save</button>
+          </div>
+        </div>
+        <div class="group">
+          <div class="button-container">
+            <button type="reset">Cancel</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script type="module" src="../app/angles-preview.js" defer></script>
+</body>
+
+</html>

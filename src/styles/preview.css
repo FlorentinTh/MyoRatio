@@ -1,0 +1,128 @@
+.wrapper.wrapper-large {
+  max-width: 1024px !important;
+}
+
+.participant-card-container {
+  display: grid;
+  grid-template-columns: auto auto;
+  row-gap: 35px;
+  column-gap: 35px;
+  margin-bottom: 35px;
+}
+
+.participant-card {
+  padding: 10px;
+  border: 1px solid #232323dd;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 450px;
+}
+
+.participant-card h3 {
+  color: #232323dd;
+}
+
+.angle-auto-select {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  margin: 25px 0 35px;
+  border: 1px dashed #232323dd;
+  border-radius: 6px;
+  padding: 15px 0;
+}
+
+.angle-auto-select span {
+  letter-spacing: -.02em;
+  font-size: 1.1em;
+  color: #232323dd;
+  margin-right: 15px;
+}
+
+.angle-auto-select .switch-box {
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  flex: 1;
+  background: #EDEDED;
+}
+
+input[type="checkbox"].auto-switch {
+  font-size: 1em;
+  appearance: none;
+  width: 3em;
+  height: 1.5em;
+  background: #BDBDBD;
+  border-radius: 3em;
+  position: relative;
+  cursor: pointer;
+  outline: none;
+  transition: all .2s ease-in-out;
+  margin: 0;
+}
+
+input[type="checkbox"].auto-switch:checked {
+  background: #16A085;
+}
+
+input[type="checkbox"].auto-switch::after {
+  position: absolute;
+  content: "";
+  width: 1.5em;
+  height: 1.5em;
+  border-radius: 50%;
+  background: #EDEDED;
+  box-shadow: 0 0 .25em rgb(0 0 0 / 30%);
+  transform: scale(.7);
+  left: 0;
+  transition: all .2s ease-in-out;
+}
+
+input[type="checkbox"].auto-switch:checked::after {
+  left: calc(100% - 1.5em);
+}
+
+.participant-card-container canvas {
+  border: 1px dashed #232323dd;
+  border-radius: 6px;
+  padding: 15px;
+}
+
+.complexity-container {
+  width: 100%;
+  margin: 35px 0 25px;
+  text-align: center;
+  border: 1px dashed #232323dd;
+  border-radius: 6px;
+  padding: 15px 0;
+}
+
+.complexity-container span {
+  letter-spacing: -.02em;
+  font-size: 1.1em;
+  color: #232323dd;
+}
+
+.complexity-container .switch {
+  display: flex;
+  overflow: hidden;
+  justify-content: center;
+  margin-top: 15px;
+}
+
+.complexity-container .switch label {
+  line-height: 1.99em;
+  padding: 0 24px;
+  height: 2em;
+}
+
+@media only screen and (max-width: 980px) {
+  .participant-card-container {
+    grid-template-columns: auto;
+  }
+}
