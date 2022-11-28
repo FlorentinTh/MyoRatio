@@ -5,3 +5,11 @@ Router.disableBackButton();
 
 const menu = new Menu();
 menu.init();
+
+const submitBtn = document.querySelector('button[type="submit"]');
+
+submitBtn.addEventListener('click', () => {
+  if (!submitBtn.disabled) {
+    Router.switchPage('data-discovering.html');
+  }
+});
