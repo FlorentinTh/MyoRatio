@@ -1,4 +1,4 @@
-.content {
+main.content {
   transition: ease-in-out .5s;
   background-color: #EDEDED;
   width: 100%;
@@ -11,12 +11,12 @@
   padding: 50px 40px 25px;
 }
 
-.content.open {
+main.content.open {
   transform: translateX(250px);
   box-shadow: 0 0 50px rgb(0 0 0 / 20%);
 }
 
-.content section.wrapper {
+main.content section.wrapper {
   overflow: hidden;
   max-width: 720px;
   margin: 0 auto;
@@ -25,21 +25,21 @@
   align-items: center;
 }
 
-.content section.wrapper h1 {
+main.content section.wrapper h1 {
   font-weight: normal;
   font-size: 2em;
   margin-bottom: 20px;
   text-transform: uppercase;
 }
 
-.content section.wrapper h2 {
+main.content section.wrapper h2 {
   font-weight: lighter;
   font-size: 1.35em;
   margin-bottom: 50px;
   text-transform: uppercase;
 }
 
-.content section.wrapper .label {
+main.content section.wrapper .label {
   display: flex;
   justify-content: left;
   width: 100%;
@@ -79,8 +79,8 @@
   margin-bottom: 30px;
 }
 
-.no-space {
-  padding: 0 !important;
+.no-margin {
+  margin: 0 !important;
 }
 
 .folder-drop-area {
@@ -189,13 +189,16 @@
   background-color: #232323dd;
   color: #EDEDED;
   font-size: 1em;
-  line-height: 2.49em;
   text-align: center;
+  border: 1px solid #232323;
+  transition: all .25s ease-in-out;
+}
+
+.input-container .switch label {
+  line-height: 2.49em;
   padding: 0 7%;
   height: 2.5em;
   margin-right: -1px;
-  border: 1px solid #232323;
-  transition: all .25s ease-in-out;
 }
 
 .switch label:hover {
@@ -275,10 +278,10 @@
 }
 
 .button-container > button[type="reset"] {
-  color: #232323dd;
-  border: 2px solid #BDBDBD;
-  background-color: #BDBDBD;
-  background-image: linear-gradient(to left, #BDBDBD, #BDBDBD);
+  color: #EDEDED;
+  border: 2px solid #606060;
+  background-color: #232323dd;
+  background-image: linear-gradient(to left, #232323dd, #232323dd);
 }
 
 .data-location-wrapper {
@@ -390,8 +393,8 @@
 }
 
 .button-container > button[type="reset"]:hover {
-  background-color: #A1A0A0;
-  background-image: linear-gradient(to right, #A1A0A0, #A1A0A0);
+  background-color: #606060;
+  background-image: linear-gradient(to right, #606060, #606060);
 }
 
 .selection button:disabled,
@@ -470,9 +473,11 @@ ul.list > li.item.selected {
 
 ul.list > li.item > .content {
   display: flex;
-  height: 115px;
   background-color: transparent;
   align-items: center;
+  height: 115px;
+  width: 100%;
+  transition: ease-in-out .2s;
 }
 
 ul.list > li.item > .content .icon {
@@ -519,7 +524,7 @@ ul.list > li.item div.line-3 .state {
   width: 6px;
   border-radius: 6px;
   margin-right: 8px;
-  transition: ease-in-out .5s;
+  transition: ease-in-out .2s;
 }
 
 ul.list > li.item > .content div.line-2 .text,
@@ -664,6 +669,12 @@ ul.list > li.item.selected > .actions button:hover {
   background-color: #606060;
   border-color: #606060;
   background-image: linear-gradient(to left, #606060, #606060);
+}
+
+@media only screen and (max-width: 980px) {
+  main section.wrapper {
+    padding-top: 140px;
+  }
 }
 
 @media only screen and (max-width: 730px) {
