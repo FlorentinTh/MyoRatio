@@ -7,6 +7,8 @@ Router.disableBackButton();
 const resetBtn = document.querySelector('button[type="reset"]');
 
 resetBtn.addEventListener('click', () => {
+  sessionStorage.removeItem('selected-angles');
+  sessionStorage.removeItem('participants');
   Router.switchPage('participants-selection.html');
 });
 
@@ -143,23 +145,24 @@ const conf = {
         point = firstElementZoom + (point - 1);
       }
 
-      // const dataX = dataset.data[point].x;
-      // const dataY = dataset.data[point].y;
-
-      // console.log({ dataX, dataY });
+      const dataX = dataset.data[point].x;
+      const dataY = dataset.data[point].y;
 
       if (nbSelectedPoints < 2) {
         if (dataset.pointBackgroundColor[point] === '#16A085') {
           dataset.pointBackgroundColor[point] = '#FF5722';
           nbSelectedPoints++;
+          addSessionAngle(dataX, dataY);
         } else {
           dataset.pointBackgroundColor[point] = '#16A085';
           nbSelectedPoints--;
+          sessionStorage.removeItem('selected-angles');
         }
       } else {
         if (dataset.pointBackgroundColor[point] === '#FF5722') {
           dataset.pointBackgroundColor[point] = '#16A085';
           nbSelectedPoints--;
+          removeSessionAngle(dataX, dataY);
         } else {
           const firstSelectedIndex = dataset.pointBackgroundColor.indexOf('#FF5722');
           const secondSelectedIndex = dataset.pointBackgroundColor.lastIndexOf('#FF5722');
@@ -173,6 +176,8 @@ const conf = {
           }
 
           dataset.pointBackgroundColor[point] = '#FF5722';
+          removeSessionAngle(dataX, dataY, true);
+          addSessionAngle(dataX, dataY);
         }
       }
 
@@ -227,7 +232,67 @@ const conf = {
 let currentParticipant = 0;
 let currentIteration = 0;
 
-infoAnalysis.innerText = analysis;
+if (!(analysis === null)) {
+  infoAnalysis.innerText = analysis;
+}
+
+function removeSessionAngle(x, y, nearest = false) {
+  const sessionAngles = sessionStorage.getItem('selected-angles');
+  if (!(sessionAngles === null)) {
+    const angles = sessionAngles.split(';');
+    let nearestAngle = [];
+
+    for (const angle of angles) {
+      const points = angle.split(',');
+
+      if (!nearest) {
+        if (!points.includes(x) && !points.includes(y)) {
+          sessionStorage.setItem('selected-angles', points.join(','));
+        }
+      } else {
+        if (nearestAngle.length > 0) {
+          if (Math.abs(points[0] - x) > Math.abs(nearestAngle[0] - x)) {
+            nearestAngle = [];
+            nearestAngle.push(points[0], points[1]);
+          }
+        } else {
+          nearestAngle.push(points[0], points[1]);
+        }
+      }
+    }
+
+    if (nearest) {
+      sessionStorage.setItem('selected-angles', nearestAngle.join(','));
+    }
+  }
+
+  checkSelectedAngles();
+}
+
+function addSessionAngle(x, y) {
+  let sessionAngles = sessionStorage.getItem('selected-angles');
+  if (sessionAngles === null) {
+    sessionStorage.setItem('selected-angles', `${x},${y}`);
+  } else {
+    sessionAngles += `;${x},${y}`;
+    sessionStorage.setItem('selected-angles', sessionAngles);
+  }
+
+  checkSelectedAngles();
+}
+
+function checkSelectedAngles() {
+  const sessionAngles = sessionStorage.getItem('selected-angles');
+  if (!(sessionAngles === null)) {
+    if (sessionAngles.split(';').length === 2) {
+      submitBtn.removeAttribute('disabled');
+    } else {
+      submitBtn.setAttribute('disabled', '');
+    }
+  } else {
+    submitBtn.setAttribute('disabled', '');
+  }
+}
 
 function updateInfos() {
   infoParticipant.innerText = participants[currentParticipant];
@@ -248,6 +313,7 @@ function updateInfos() {
 }
 
 updateInfos();
+checkSelectedAngles();
 
 // eslint-disable-next-line no-undef
 const plot = new Chart(chartCtx, conf);
@@ -262,11 +328,15 @@ submitBtn.addEventListener('click', () => {
   if (submitBtn.classList.contains('completed')) {
     LoaderOverlay.toggle();
     sessionStorage.setItem('results-available', true);
+    sessionStorage.removeItem('selected-angles');
 
     setTimeout(() => {
       Router.switchPage('participants-selection.html');
     }, 2000);
   } else {
+    sessionStorage.removeItem('selected-angles');
+    checkSelectedAngles();
+
     plot.data.datasets[0].pointBackgroundColor = plot.data.datasets[0].data.map(() => {
       return '#16A085';
     });
