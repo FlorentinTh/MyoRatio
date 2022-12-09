@@ -1,3 +1,5 @@
+@import url("./main.css");
+
 .wrapper.wrapper-large {
   max-width: 1024px !important;
 }
@@ -119,10 +121,4 @@ input[type="checkbox"].auto-switch:checked::after {
   line-height: 1.99em;
   padding: 0 24px;
   height: 2em;
-}
-
-@media only screen and (max-width: 980px) {
-  .participant-card-container {
-    grid-template-columns: auto;
-  }
 }

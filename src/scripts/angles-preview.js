@@ -1,10 +1,18 @@
-import Menu from './components/menu.js';
-import Router from './utils/router.js';
+import '../styles/angles-preview.css';
 
-Router.disableBackButton();
+import Chart from 'chart.js/auto';
+
+import { Menu } from './components/menu.js';
+import { Router } from './utils/router.js';
+import { LoaderOverlay } from './components/loader-overlay.js';
 
 const menu = new Menu();
 menu.init();
+
+const router = new Router();
+router.disableBackButton();
+
+const loaderOverlay = new LoaderOverlay();
 
 const conf = {
   type: 'scatter',
@@ -94,7 +102,7 @@ const submitBtn = document.querySelector('button[type="submit"]');
 const resetBtn = document.querySelector('button[type="reset"]');
 
 resetBtn.addEventListener('click', () => {
-  Router.switchPage('participants-selection.html');
+  router.switchPage('participants-selection.html');
 });
 
 const allComplexitiesSelected = [];
@@ -192,6 +200,10 @@ checkAllComplexitiesSelected();
 
 submitBtn.addEventListener('click', () => {
   if (!submitBtn.disabled) {
-    Router.switchPage('participants-selection.html');
+    loaderOverlay.toggle('Saving data...');
+
+    setTimeout(() => {
+      router.switchPage('participants-selection.html');
+    }, 1000);
   }
 });
