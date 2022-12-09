@@ -4,39 +4,12 @@
 <head>
   <title>EMG Trigno</title>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-  <link rel="stylesheet" href="../styles/reset.css">
-  <link rel="stylesheet" href="../styles/components/loader.css">
-  <link rel="stylesheet" href="../styles/components/menu.css">
-  <link rel="stylesheet" href="../styles/main.css">
 </head>
 
 <body>
-  <div id="loader-overlay" class="not-visible">
-    <div class="loader-wrapper">
-      <div class="loader graph-animate"></div>
-      <svg class="spinner" height="155" width="155">
-        <circle class="loader-rotate" cx="76" cy="77" r="75" stroke="transparent" stroke-width="2" fill="transparent" />
-      </svg>
-    </div>
-    <div class="loading-msg">
-      <p>Discovering data...</p>
-    </div>
-  </div>
+  <div id="loader-overlay" class="not-visible"></div>
   <div class="app">
-    <nav class="menu">
-      <ul>
-        <li><a class="active" id="home" href="data-discovering.html">Data Processing</a></li>
-        <li><a id="hpf-converter" href="#">HPF Converter</a></li>
-        <li><a id="file-organizer" class="disabled" href="#">File Organizer</a></li>
-        <li><a id="settings" href="settings.html">Settings</a></li>
-      </ul>
-    </nav>
-
-    <div class="toggle-nav-btn">
-      <div class="icon"></div>
-    </div>
+    <div class="menu-container"></div>
 
     <main class="content">
       <section class="wrapper">
@@ -88,7 +61,6 @@
       </section>
     </main>
   </div>
-  <script type="module" src="../app/data-discovering.js" defer></script>
 </body>
 
 </html>

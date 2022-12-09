@@ -1,14 +1,19 @@
-import LoaderOverlay from './components/loader-overlay.js';
-import Menu from './components/menu.js';
-import Router from './utils/router.js';
+import '../styles/data-discovering.css';
 
-Router.disableBackButton();
+import { Menu } from './components/menu.js';
+import { Router } from './utils/router.js';
+import { LoaderOverlay } from './components/loader-overlay.js';
 
 // eslint-disable-next-line no-undef
 const os = nw.require('os');
 
 const menu = new Menu();
 menu.init();
+
+const router = new Router();
+router.disableBackButton();
+
+const loaderOverlay = new LoaderOverlay();
 
 const folderInput = document.querySelector('.folder-input');
 const dropArea = document.querySelector('.folder-drop-area');
@@ -94,18 +99,11 @@ windowSizeInput.addEventListener('input', event => {
   }
 });
 
-const dataFolderPathSession = sessionStorage.getItem('data-path');
-
-if (!(dataFolderPathSession === null)) {
-  toggleFolderPath(dataFolderPathSession);
-  if (submitBtn.disabled) {
-    submitBtn.removeAttribute('disabled');
-  }
-}
-
 folderInput.addEventListener('change', event => {
   if (event && event.target.files.length > 0) {
     const folder = event.target.files[0];
+
+    console.log(folderInput.files);
 
     toggleFolderPath(folder.path);
     sessionStorage.setItem('data-path', folder.path);
@@ -132,10 +130,10 @@ folderInput.addEventListener('change', event => {
 
 submitBtn.addEventListener('click', () => {
   if (!submitBtn.disabled) {
-    LoaderOverlay.toggle();
+    loaderOverlay.toggle('Discovering data...');
 
     setTimeout(() => {
-      Router.switchPage('participants-selection.html');
+      router.switchPage('participants-selection.html');
     }, 2000);
   }
 });
