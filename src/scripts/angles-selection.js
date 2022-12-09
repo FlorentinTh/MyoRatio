@@ -1,32 +1,41 @@
-import LoaderOverlay from './components/loader-overlay.js';
-import Menu from './components/menu.js';
-import Router from './utils/router.js';
+import '../styles/angles-selection.css';
 
-Router.disableBackButton();
+import Chart from 'chart.js/auto';
+import { CrosshairPlugin } from 'chartjs-plugin-crosshair';
+
+import { Menu } from './components/menu.js';
+import { Router } from './utils/router.js';
+import { LoaderOverlay } from './components/loader-overlay.js';
+
+const menu = new Menu();
+menu.init();
+
+const router = new Router();
+router.disableBackButton();
+
+const loaderOverlay = new LoaderOverlay();
+
+Chart.register(CrosshairPlugin);
 
 const resetBtn = document.querySelector('button[type="reset"]');
 
 resetBtn.addEventListener('click', () => {
   sessionStorage.removeItem('selected-angles');
+
   sessionStorage.removeItem('participants');
-  Router.switchPage('participants-selection.html');
+
+  router.switchPage('participants-selection.html');
 });
 
 const menuBtns = [];
 menuBtns.push(document.querySelector('.auto-angles-btn'));
 
-const menu = new Menu();
-menu.init(menuBtns);
-
 const participants = sessionStorage.getItem('participants').split(',');
 const analysis = sessionStorage.getItem('analysis');
-
 const infoParticipant = document.getElementById('participant');
 const infoAnalysis = document.getElementById('analysis');
 const infoIter = document.getElementById('iteration');
-
 const chartCtx = document.getElementById('chart').getContext('2d');
-
 const dots = document.querySelector('.pager').children;
 const submitBtn = document.querySelector('button[type="submit"]');
 
@@ -165,7 +174,9 @@ const conf = {
           removeSessionAngle(dataX, dataY);
         } else {
           const firstSelectedIndex = dataset.pointBackgroundColor.indexOf('#FF5722');
+
           const secondSelectedIndex = dataset.pointBackgroundColor.lastIndexOf('#FF5722');
+
           const distToFirst = Math.abs(firstSelectedIndex - point);
           const distToSecond = Math.abs(secondSelectedIndex - point);
 
@@ -184,6 +195,7 @@ const conf = {
       plot.update();
     }
   },
+
   data: {
     datasets: [
       {
@@ -238,6 +250,7 @@ if (!(analysis === null)) {
 
 function removeSessionAngle(x, y, nearest = false) {
   const sessionAngles = sessionStorage.getItem('selected-angles');
+
   if (!(sessionAngles === null)) {
     const angles = sessionAngles.split(';');
     let nearestAngle = [];
@@ -271,6 +284,7 @@ function removeSessionAngle(x, y, nearest = false) {
 
 function addSessionAngle(x, y) {
   let sessionAngles = sessionStorage.getItem('selected-angles');
+
   if (sessionAngles === null) {
     sessionStorage.setItem('selected-angles', `${x},${y}`);
   } else {
@@ -283,6 +297,7 @@ function addSessionAngle(x, y) {
 
 function checkSelectedAngles() {
   const sessionAngles = sessionStorage.getItem('selected-angles');
+
   if (!(sessionAngles === null)) {
     if (sessionAngles.split(';').length === 2) {
       submitBtn.removeAttribute('disabled');
@@ -313,9 +328,9 @@ function updateInfos() {
 }
 
 updateInfos();
+
 checkSelectedAngles();
 
-// eslint-disable-next-line no-undef
 const plot = new Chart(chartCtx, conf);
 
 plot.data.datasets[0].pointBackgroundColor = plot.data.datasets[0].data.map(() => {
@@ -326,12 +341,12 @@ let allData = plot.data.datasets[0].data;
 
 submitBtn.addEventListener('click', () => {
   if (submitBtn.classList.contains('completed')) {
-    LoaderOverlay.toggle();
+    loaderOverlay.toggle('Saving data...');
     sessionStorage.setItem('results-available', true);
     sessionStorage.removeItem('selected-angles');
 
     setTimeout(() => {
-      Router.switchPage('participants-selection.html');
+      router.switchPage('participants-selection.html');
     }, 2000);
   } else {
     sessionStorage.removeItem('selected-angles');

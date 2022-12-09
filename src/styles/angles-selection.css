@@ -1,3 +1,6 @@
+@import url("@fortawesome/fontawesome-free/css/all.css");
+@import url("./main.css");
+
 .auto-angles-btn {
   transition-duration: .5s;
   transition-timing-function: swing;
@@ -21,7 +24,7 @@
   transform: translateX(250px);
 }
 
-.auto-angles-btn i{
+.auto-angles-btn i {
   position: absolute;
   top: 14px;
   left: 34px;
