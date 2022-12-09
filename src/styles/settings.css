@@ -1,3 +1,5 @@
+@import url("./main.css");
+
 .group:nth-last-of-type(2) {
   margin-bottom: 35px;
 }
