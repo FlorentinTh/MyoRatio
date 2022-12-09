@@ -5,16 +5,18 @@ export class LoaderOverlay {
   #loaderElement;
 
   constructor() {
+    document.querySelector('body').innerHTML += loaderTemplate();
     this.#loaderElement = document.getElementById('loader-overlay');
-    this.#loaderElement.innerHTML = loaderTemplate();
   }
 
-  toggle(message = '') {
+  toggle(opts = { message: null }) {
     document.querySelector('body').classList.toggle('hide-overflow');
 
-    if (!(message === '')) {
-      document.querySelector('.loading-msg p').innerText = message;
+    if (opts.message === '' || opts.message === null) {
+      opts.message = `Loading...`;
     }
+
+    document.querySelector('.loading-msg p').innerText = opts.message;
 
     this.#loaderElement.classList.toggle('not-visible');
     this.#loaderElement.classList.toggle('overlay-animate');

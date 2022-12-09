@@ -130,7 +130,7 @@ folderInput.addEventListener('change', event => {
 
 submitBtn.addEventListener('click', () => {
   if (!submitBtn.disabled) {
-    loaderOverlay.toggle('Discovering data...');
+    loaderOverlay.toggle({ message: 'Discovering data...' });
 
     setTimeout(() => {
       router.switchPage('participants-selection.html');

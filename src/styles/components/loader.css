@@ -1,7 +1,3 @@
-body.hide-overflow {
-  overflow: hidden;
-}
-
 div#loader-overlay {
   background: #232323;
   width: 100%;

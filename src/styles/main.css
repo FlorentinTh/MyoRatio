@@ -1,6 +1,10 @@
 @import url("./utils/reset.css");
 @import url("./utils/media-queries.css");
 
+body.hide-overflow {
+  overflow: hidden;
+}
+
 main.content {
   transition: ease-in-out .5s;
   background-color: #EDEDED;

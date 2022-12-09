@@ -16,7 +16,7 @@ const submitBtn = document.querySelector('button[type="submit"]');
 
 submitBtn.addEventListener('click', () => {
   if (!submitBtn.disabled) {
-    loaderOverlay.toggle('Saving data...');
+    loaderOverlay.toggle({ message: 'Saving data...' });
 
     setTimeout(() => {
       router.switchPage('data-discovering.html');

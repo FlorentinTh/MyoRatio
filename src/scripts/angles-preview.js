@@ -200,7 +200,7 @@ checkAllComplexitiesSelected();
 
 submitBtn.addEventListener('click', () => {
   if (!submitBtn.disabled) {
-    loaderOverlay.toggle('Saving data...');
+    loaderOverlay.toggle({ message: 'Saving data...' });
 
     setTimeout(() => {
       router.switchPage('participants-selection.html');

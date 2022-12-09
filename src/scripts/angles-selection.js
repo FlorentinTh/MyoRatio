@@ -341,7 +341,7 @@ let allData = plot.data.datasets[0].data;
 
 submitBtn.addEventListener('click', () => {
   if (submitBtn.classList.contains('completed')) {
-    loaderOverlay.toggle('Saving data...');
+    loaderOverlay.toggle({ message: 'Saving data...' });
     sessionStorage.setItem('results-available', true);
     sessionStorage.removeItem('selected-angles');
 

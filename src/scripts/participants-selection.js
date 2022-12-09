@@ -153,7 +153,7 @@ for (const participantItem of participantList) {
   });
 
   participantItem.querySelector('.actions > button').addEventListener('click', () => {
-    loaderOverlay.toggle('Preparing results...');
+    loaderOverlay.toggle({ message: 'Preparing results...' });
 
     sessionStorage.setItem('participant-result', participantName);
 
@@ -165,7 +165,7 @@ for (const participantItem of participantList) {
 
 previewBtn.addEventListener('click', () => {
   if (!previewBtn.disabled) {
-    loaderOverlay.toggle('Preparing data...');
+    loaderOverlay.toggle({ message: 'Preparing data...' });
 
     setTimeout(() => {
       router.switchPage('angles-preview.html');
@@ -242,7 +242,7 @@ selectBtnNotCompleted.addEventListener('click', () => {
 
 submitBtn.addEventListener('click', () => {
   if (!submitBtn.disabled) {
-    loaderOverlay.toggle('Preparing data...');
+    loaderOverlay.toggle({ message: 'Preparing data...' });
 
     setTimeout(() => {
       router.switchPage('angles-selection.html');

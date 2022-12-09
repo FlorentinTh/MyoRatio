@@ -4,7 +4,7 @@ import { LoaderOverlay } from './components/loader-overlay.js';
 import { Router } from './utils/router.js';
 
 const loaderOverlay = new LoaderOverlay();
-loaderOverlay.toggle('Loading Application Components...');
+loaderOverlay.toggle({ message: 'Loading Application Components...' });
 
 const router = new Router();
 router.disableBackButton();
