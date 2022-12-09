@@ -1,3 +1,6 @@
+@import url("@fortawesome/fontawesome-free/css/all.css");
+@import url("./main.css");
+
 .export-pdf-btn {
   top: 110px;
 }
@@ -56,6 +59,7 @@
 .matrix-container {
   display: flex;
   margin-bottom: 25px;
+  margin-top: 10px;
 }
 
 .tooltip-col,
@@ -97,8 +101,8 @@
   transform: rotate(45deg);
 }
 
-.tooltip-col[data-popper-placement^="top"] > .arrow,
-.tooltip-row[data-popper-placement^="top"] > .arrow {
+.tooltip-col[data-popper-placement^="top"]  >  .arrow,
+.tooltip-row[data-popper-placement^="top"]  >  .arrow {
   bottom: -4px;
 }
 
@@ -201,7 +205,7 @@ table thead th[scope="col"] {
 }
 
 #matrix:not(:target) tbody td:hover:not(:empty),
-#matrix:not(:target) tbody td:hover:not(:empty) ~ th span {
+#matrix:not(:target) tbody td:hover:not(:empty)~th span {
   background-color: #16A085;
   font-weight: bold;
 }

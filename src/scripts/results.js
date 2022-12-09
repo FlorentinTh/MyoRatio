@@ -1,17 +1,19 @@
-import Menu from './components/menu.js';
-import Router from './utils/router.js';
+import '../styles/results.css';
 
-Router.disableBackButton();
+import { createPopper } from '@popperjs/core';
 
-// eslint-disable-next-line no-undef
-const Popper = nw.require('@popperjs/core');
+import { Menu } from './components/menu.js';
+import { Router } from './utils/router.js';
+
+const menu = new Menu();
+menu.init();
+
+const router = new Router();
+router.disableBackButton();
 
 const menuBtns = [];
 menuBtns.push(document.querySelector('.export-pdf-btn'));
 menuBtns.push(document.querySelector('.export-xls-btn'));
-
-const menu = new Menu();
-menu.init(menuBtns);
 
 const title = document.querySelector('.title span');
 
@@ -38,7 +40,7 @@ const finishBtn = document.querySelector('button[type="submit"]');
 
 function initTooltips(identifiers, tooltips, placement) {
   for (let i = 0; i < identifiers.length; i++) {
-    const popperInstance = Popper.createPopper(identifiers[i], tooltips[i], {
+    const popperInstance = createPopper(identifiers[i], tooltips[i], {
       placement
     });
 
@@ -88,5 +90,5 @@ table.addEventListener('mouseout', () => {
 });
 
 finishBtn.addEventListener('click', () => {
-  Router.switchPage('participants-selection.html');
+  router.switchPage('participants-selection.html');
 });
