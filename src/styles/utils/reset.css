@@ -1,0 +1,29 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  font-family: "Avenir Next", Avenir, sans-serif;
+  color: #232323;
+  line-height: 1.5em;
+  position: relative;
+  overflow-x: hidden;
+}
+
+select,
+select:focus,
+textarea,
+textarea:focus,
+input,
+input:focus {
+  outline: none;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  appearance: none;
+  margin: 0;
+}

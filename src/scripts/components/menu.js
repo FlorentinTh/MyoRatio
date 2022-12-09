@@ -1,13 +1,19 @@
+import '../../styles/components/menu.css';
+import menuTemplate from '../../views/partials/components/menu.hbs';
+
 // eslint-disable-next-line no-undef
 const path = nw.require('path');
 // eslint-disable-next-line no-undef
 const exec = nw.require('child_process').execFile;
 
-class Menu {
+export class Menu {
   #toggleNavBtn;
   #additionalBtns;
 
   constructor() {
+    const menuContainer = document.querySelector('.menu-container');
+    menuContainer.innerHTML = menuTemplate();
+
     this.#toggleNavBtn = document.querySelector('.toggle-nav-btn');
     this.#additionalBtns = null;
   }
@@ -18,7 +24,6 @@ class Menu {
     });
 
     this.#additionalBtns = buttons;
-
     this.#setHPFConverterItem();
   }
 
@@ -37,7 +42,7 @@ class Menu {
   }
 
   #setHPFConverterItem() {
-    const basePath = process.cwd();
+    const basePath = process.env.INIT_CWD ?? process.cwd();
     const delsysExecutablePath = path.join(basePath, 'bin', 'DelsysFileUtil.exe');
 
     document.getElementById('hpf-converter').addEventListener('click', () => {
@@ -55,5 +60,3 @@ class Menu {
     });
   }
 }
-
-export default Menu;

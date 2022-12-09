@@ -1,0 +1,13 @@
+{
+    "name": "EMGTrigno-Dev",
+    "main": "http://localhost:4000",
+    "node-remote": "http://localhost/*",
+    "window": {
+      "title": "EMG Trigno Dev",
+      "icon": "./assets/icons/app.png",
+      "height": 720,
+      "width": 1280,
+      "resizable": true,
+      "position": "center"
+    }
+  }

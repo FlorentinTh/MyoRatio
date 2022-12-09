@@ -1,4 +1,4 @@
-class Router {
+export class Router {
   #url;
 
   constructor() {
@@ -19,5 +19,3 @@ class Router {
     };
   }
 }
-
-export default new Router();

@@ -1,8 +1,12 @@
-class LoaderOverlay {
+import '../../styles/components/loader.css';
+import loaderTemplate from '../../views/partials/components/loader.hbs';
+
+export class LoaderOverlay {
   #loaderElement;
 
   constructor() {
     this.#loaderElement = document.getElementById('loader-overlay');
+    this.#loaderElement.innerHTML = loaderTemplate();
   }
 
   toggle(message = '') {
@@ -16,5 +20,3 @@ class LoaderOverlay {
     this.#loaderElement.classList.toggle('overlay-animate');
   }
 }
-
-export default new LoaderOverlay();
