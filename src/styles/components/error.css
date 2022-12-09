@@ -1,0 +1,56 @@
+@import url("@fortawesome/fontawesome-free/css/all.css");
+
+div#error-overlay {
+  background: #232323;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  top: 0;
+  left: 0;
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+div#error-overlay.not-visible {
+  display: none;
+}
+
+.error-wrapper {
+  display: inline-block;
+  position: relative;
+}
+
+.error-wrapper i {
+  color: #FF8A65;
+  font-size: 6em;
+  transition: transform 0.2s ease-in-out;
+}
+
+.error-wrapper i:hover {
+  color: #FF8A65;
+  font-size: 6em;
+  transform: scale(1.1);
+}
+
+.error-msg {
+  margin-top: 25px;
+}
+
+.error-msg p {
+  color: #FF8A65;
+  text-align: center;
+  letter-spacing: 0.04em;
+}
+
+.error-msg p.message {
+  font-size: 1.4em;
+  margin-bottom: 10px;
+}
+
+.error-msg p.details {
+  font-size: 1em;
+  font-style: italic;
+}
