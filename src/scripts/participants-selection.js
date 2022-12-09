@@ -1,15 +1,26 @@
-import LoaderOverlay from './components/loader-overlay.js';
-import Menu from './components/menu.js';
-import Router from './utils/router.js';
+import '../styles/participants-selection.css';
 
-Router.disableBackButton();
+import { Menu } from './components/menu.js';
+import { Router } from './utils/router.js';
+import { LoaderOverlay } from './components/loader-overlay.js';
 
 const menu = new Menu();
 menu.init();
 
+const router = new Router();
+router.disableBackButton();
+
+const loaderOverlay = new LoaderOverlay();
+
 const changeBtn = document.getElementById('change-btn');
 changeBtn.addEventListener('click', () => {
-  Router.switchPage('data-discovering.html');
+  const dataFolderPathSession = sessionStorage.getItem('data-path');
+
+  if (!(dataFolderPathSession === null)) {
+    sessionStorage.removeItem('data-path');
+  }
+
+  router.switchPage('data-discovering.html');
 });
 
 let participants = sessionStorage.getItem('participants')?.split(',') || [];
@@ -55,7 +66,7 @@ const participantList = document.querySelector('ul.list').children;
 let isAllSelected = false;
 let isAllNotCompletedSelected = false;
 
-dataPath.innerHTML += ` ${sessionStorage.getItem('data-path') || 'ERROR'}`;
+dataPath.innerText += ` ${sessionStorage.getItem('data-path') || 'ERROR'}`;
 toggleSubmitBtn();
 
 if (!(sessionStorage.getItem('results-available') === null)) {
@@ -142,22 +153,22 @@ for (const participantItem of participantList) {
   });
 
   participantItem.querySelector('.actions > button').addEventListener('click', () => {
-    LoaderOverlay.toggle('Preparing results...');
+    loaderOverlay.toggle('Preparing results...');
 
     sessionStorage.setItem('participant-result', participantName);
 
     setTimeout(() => {
-      Router.switchPage('results.html');
+      router.switchPage('results.html');
     }, 1000);
   });
 }
 
 previewBtn.addEventListener('click', () => {
   if (!previewBtn.disabled) {
-    LoaderOverlay.toggle();
+    loaderOverlay.toggle('Preparing data...');
 
     setTimeout(() => {
-      Router.switchPage('angles-preview.html');
+      router.switchPage('angles-preview.html');
     }, 2000);
   }
 });
@@ -181,7 +192,7 @@ selectBtnAll.addEventListener('click', () => {
       participants.pop();
     }
 
-    selectBtnAll.innerHTML = 'Select All';
+    selectBtnAll.innerHTML = 'All';
     isAllSelected = false;
     selectBtnNotCompleted.removeAttribute('disabled');
   }
@@ -220,7 +231,7 @@ selectBtnNotCompleted.addEventListener('click', () => {
       }
     }
 
-    selectBtnNotCompleted.innerHTML = 'Select Not Completed';
+    selectBtnNotCompleted.innerHTML = 'Not Completed';
     isAllNotCompletedSelected = false;
     selectBtnAll.removeAttribute('disabled');
   }
@@ -231,10 +242,10 @@ selectBtnNotCompleted.addEventListener('click', () => {
 
 submitBtn.addEventListener('click', () => {
   if (!submitBtn.disabled) {
-    LoaderOverlay.toggle();
+    loaderOverlay.toggle('Preparing data...');
 
     setTimeout(() => {
-      Router.switchPage('angle-selection.html');
+      router.switchPage('angles-selection.html');
     }, 2000);
   }
 });
