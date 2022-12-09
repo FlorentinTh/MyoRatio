@@ -3,7 +3,7 @@ import '../styles/angles-preview.css';
 import Chart from 'chart.js/auto';
 
 import { Menu } from './components/menu.js';
-import { Router } from './utils/router.js';
+import { Router } from './routes/router.js';
 import { LoaderOverlay } from './components/loader-overlay.js';
 
 const menu = new Menu();

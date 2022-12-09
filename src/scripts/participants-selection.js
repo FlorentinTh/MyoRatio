@@ -1,7 +1,7 @@
 import '../styles/participants-selection.css';
 
 import { Menu } from './components/menu.js';
-import { Router } from './utils/router.js';
+import { Router } from './routes/router.js';
 import { LoaderOverlay } from './components/loader-overlay.js';
 
 const menu = new Menu();

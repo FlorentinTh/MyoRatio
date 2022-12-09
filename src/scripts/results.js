@@ -3,7 +3,7 @@ import '../styles/results.css';
 import { createPopper } from '@popperjs/core';
 
 import { Menu } from './components/menu.js';
-import { Router } from './utils/router.js';
+import { Router } from './routes/router.js';
 
 const menu = new Menu();
 menu.init();

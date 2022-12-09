@@ -4,7 +4,7 @@ import Chart from 'chart.js/auto';
 import { CrosshairPlugin } from 'chartjs-plugin-crosshair';
 
 import { Menu } from './components/menu.js';
-import { Router } from './utils/router.js';
+import { Router } from './routes/router.js';
 import { LoaderOverlay } from './components/loader-overlay.js';
 
 const menu = new Menu();
