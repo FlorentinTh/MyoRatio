@@ -20,7 +20,7 @@ changeBtn.addEventListener('click', () => {
     sessionStorage.removeItem('data-path');
   }
 
-  router.switchPage('data-discovering.html');
+  router.switchPage('data-discovering');
 });
 
 let participants = sessionStorage.getItem('participants')?.split(',') || [];
@@ -158,7 +158,7 @@ for (const participantItem of participantList) {
     sessionStorage.setItem('participant-result', participantName);
 
     setTimeout(() => {
-      router.switchPage('results.html');
+      router.switchPage('results');
     }, 1000);
   });
 }
@@ -168,7 +168,7 @@ previewBtn.addEventListener('click', () => {
     loaderOverlay.toggle({ message: 'Preparing data...' });
 
     setTimeout(() => {
-      router.switchPage('angles-preview.html');
+      router.switchPage('angles-preview');
     }, 2000);
   }
 });
@@ -245,7 +245,7 @@ submitBtn.addEventListener('click', () => {
     loaderOverlay.toggle({ message: 'Preparing data...' });
 
     setTimeout(() => {
-      router.switchPage('angles-selection.html');
+      router.switchPage('angles-selection');
     }, 2000);
   }
 });

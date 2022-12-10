@@ -10,5 +10,5 @@ const router = new Router();
 router.disableBackButton();
 
 setTimeout(() => {
-  router.switchPage('data-discovering.html');
+  router.switchPage('data-discovering');
 }, 2000);

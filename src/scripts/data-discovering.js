@@ -133,7 +133,7 @@ submitBtn.addEventListener('click', () => {
     loaderOverlay.toggle({ message: 'Discovering data...' });
 
     setTimeout(() => {
-      router.switchPage('participants-selection.html');
+      router.switchPage('participants-selection');
     }, 2000);
   }
 });

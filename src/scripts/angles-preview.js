@@ -102,7 +102,7 @@ const submitBtn = document.querySelector('button[type="submit"]');
 const resetBtn = document.querySelector('button[type="reset"]');
 
 resetBtn.addEventListener('click', () => {
-  router.switchPage('participants-selection.html');
+  router.switchPage('participants-selection');
 });
 
 const allComplexitiesSelected = [];
@@ -203,7 +203,7 @@ submitBtn.addEventListener('click', () => {
     loaderOverlay.toggle({ message: 'Saving data...' });
 
     setTimeout(() => {
-      router.switchPage('participants-selection.html');
+      router.switchPage('participants-selection');
     }, 1000);
   }
 });

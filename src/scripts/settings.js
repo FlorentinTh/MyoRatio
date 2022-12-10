@@ -19,7 +19,7 @@ submitBtn.addEventListener('click', () => {
     loaderOverlay.toggle({ message: 'Saving data...' });
 
     setTimeout(() => {
-      router.switchPage('data-discovering.html');
+      router.switchPage('data-discovering');
     }, 1000);
   }
 });

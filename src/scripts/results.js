@@ -90,5 +90,5 @@ table.addEventListener('mouseout', () => {
 });
 
 finishBtn.addEventListener('click', () => {
-  router.switchPage('participants-selection.html');
+  router.switchPage('participants-selection');
 });

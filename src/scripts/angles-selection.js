@@ -24,7 +24,7 @@ resetBtn.addEventListener('click', () => {
 
   sessionStorage.removeItem('participants');
 
-  router.switchPage('participants-selection.html');
+  router.switchPage('participants-selection');
 });
 
 const menuBtns = [];
@@ -346,7 +346,7 @@ submitBtn.addEventListener('click', () => {
     sessionStorage.removeItem('selected-angles');
 
     setTimeout(() => {
-      router.switchPage('participants-selection.html');
+      router.switchPage('participants-selection');
     }, 2000);
   } else {
     sessionStorage.removeItem('selected-angles');
