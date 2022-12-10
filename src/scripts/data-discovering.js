@@ -7,13 +7,13 @@ import { LoaderOverlay } from './components/loader-overlay.js';
 // eslint-disable-next-line no-undef
 const os = nw.require('os');
 
-const menu = new Menu();
-menu.init();
-
 const router = new Router();
 router.disableBackButton();
 
 const loaderOverlay = new LoaderOverlay();
+
+const menu = new Menu();
+menu.init();
 
 const folderInput = document.querySelector('.folder-input');
 const dropArea = document.querySelector('.folder-drop-area');
@@ -102,8 +102,6 @@ windowSizeInput.addEventListener('input', event => {
 folderInput.addEventListener('change', event => {
   if (event && event.target.files.length > 0) {
     const folder = event.target.files[0];
-
-    console.log(folderInput.files);
 
     toggleFolderPath(folder.path);
     sessionStorage.setItem('data-path', folder.path);

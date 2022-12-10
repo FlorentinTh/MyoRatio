@@ -6,7 +6,7 @@ import { Menu } from './components/menu.js';
 import { Router } from './routes/router.js';
 
 const menu = new Menu();
-menu.init();
+menu.init(['.export-pdf-btn', '.export-xls-btn']);
 
 const router = new Router();
 router.disableBackButton();

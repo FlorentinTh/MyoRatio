@@ -6,13 +6,13 @@ import { Menu } from './components/menu.js';
 import { Router } from './routes/router.js';
 import { LoaderOverlay } from './components/loader-overlay.js';
 
-const menu = new Menu();
-menu.init();
-
 const router = new Router();
 router.disableBackButton();
 
 const loaderOverlay = new LoaderOverlay();
+
+const menu = new Menu();
+menu.init();
 
 const conf = {
   type: 'scatter',
