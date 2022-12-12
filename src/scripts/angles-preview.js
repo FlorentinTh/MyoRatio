@@ -5,6 +5,7 @@ import Chart from 'chart.js/auto';
 import { Menu } from './components/menu.js';
 import { Router } from './routes/router.js';
 import { LoaderOverlay } from './components/loader-overlay.js';
+import { DataHelper } from './helpers/data-helper.js';
 
 const router = new Router();
 router.disableBackButton();
@@ -14,11 +15,18 @@ const loaderOverlay = new LoaderOverlay();
 const menu = new Menu();
 menu.init();
 
-const conf = {
+const chartSetup = {
   type: 'scatter',
   responsive: true,
   maintainAspectRatio: false,
   options: {
+    animation: false,
+    parsing: false,
+    interaction: {
+      mode: 'nearest',
+      axis: 'x',
+      intersect: false
+    },
     plugins: {
       legend: {
         display: false
@@ -48,7 +56,10 @@ const conf = {
           }
         },
         ticks: {
-          color: '#232323'
+          color: '#232323',
+          source: 'auto',
+          maxRotation: 0,
+          autoSkip: true
         }
       },
       y: {
@@ -67,7 +78,10 @@ const conf = {
           }
         },
         ticks: {
-          color: '#232323'
+          color: '#232323',
+          source: 'auto',
+          maxRotation: 0,
+          autoSkip: true
         }
       }
     },
@@ -97,109 +111,78 @@ const conf = {
 };
 
 const gridContainer = document.querySelector('.participant-card-container');
-const submitBtn = document.querySelector('button[type="submit"]');
+const submitButton = document.querySelector('button[type="submit"]');
+const resetButton = document.querySelector('button[type="reset"]');
 
-const resetBtn = document.querySelector('button[type="reset"]');
-
-resetBtn.addEventListener('click', () => {
+resetButton.addEventListener('click', () => {
   router.switchPage('participants-selection');
 });
 
 const allComplexitiesSelected = [];
 
-function checkAllComplexitiesSelected() {
-  if (allComplexitiesSelected.length < gridContainer.children.length) {
-    if (!submitBtn.disabled) {
-      submitBtn.setAttribute('disabled', '');
+const initComplexityRadio = (complexityRadio, card) => {
+  if (complexityRadio.checked) {
+    if (complexityRadio.value.toLowerCase() === 'low') {
+      if (!card.querySelector('.auto-switch').checked) {
+        card.querySelector('.auto-switch').checked = true;
+      }
+    } else {
+      if (card.querySelector('.auto-switch').checked) {
+        card.querySelector('.auto-switch').checked = false;
+      }
     }
-  } else {
-    if (submitBtn.disabled) {
-      submitBtn.removeAttribute('disabled');
+
+    if (!allComplexitiesSelected.includes(complexityRadio.name)) {
+      allComplexitiesSelected.push(complexityRadio.name);
     }
   }
-}
+};
+
+const checkAllComplexitiesSelected = () => {
+  if (allComplexitiesSelected.length < gridContainer.children.length) {
+    if (!submitButton.disabled) {
+      submitButton.setAttribute('disabled', '');
+    }
+  } else {
+    if (submitButton.disabled) {
+      submitButton.removeAttribute('disabled');
+    }
+  }
+};
 
 for (let i = 0; i < gridContainer.children.length; i++) {
   const card = gridContainer.children[i];
-  const ctx = card.querySelector('canvas').getContext('2d');
-  const gradient = ctx.createLinearGradient(0, 25, 0, 220);
+  const chartContext = card.querySelector('canvas').getContext('2d');
+
+  const gradient = chartContext.createLinearGradient(0, 25, 0, 220);
   gradient.addColorStop(0, 'rgba(22, 160, 133, 0.3)');
   gradient.addColorStop(0.5, 'rgba(22, 160, 133, 0.15)');
   gradient.addColorStop(1, 'rgba(22, 160, 133, 0)');
 
-  // eslint-disable-next-line no-undef, no-new
-  const plot = new Chart(ctx, conf);
-  plot.data.datasets[0].backgroundColor = gradient;
-  plot.data.datasets[0].data = [
-    { x: 0, y: Math.floor(Math.random() * (100 - 90 + 1) + 90) },
-    { x: 0.5, y: Math.floor(Math.random() * (100 - 90 + 1) + 90) },
-    { x: 1, y: Math.floor(Math.random() * (100 - 90 + 1) + 90) },
-    { x: 1.5, y: Math.floor(Math.random() * (100 - 90 + 1) + 90) },
-    { x: 2, y: Math.floor(Math.random() * (100 - 90 + 1) + 90) },
-    { x: 2.5, y: Math.floor(Math.random() * (100 - 90 + 1) + 90) },
-    { x: 3, y: Math.floor(Math.random() * (45 - 30 + 1) + 30) },
-    { x: 3.5, y: Math.floor(Math.random() * (45 - 30 + 1) + 30) },
-    { x: 4, y: Math.floor(Math.random() * (45 - 30 + 1) + 30) },
-    { x: 4.5, y: Math.floor(Math.random() * (45 - 30 + 1) + 30) },
-    { x: 5, y: Math.floor(Math.random() * (45 - 30 + 1) + 30) },
-    { x: 5.5, y: Math.floor(Math.random() * (45 - 30 + 1) + 30) },
-    { x: 6, y: Math.floor(Math.random() * (45 - 30 + 1) + 30) },
-    { x: 6.5, y: Math.floor(Math.random() * (45 - 30 + 1) + 30) },
-    { x: 7, y: Math.floor(Math.random() * (45 - 30 + 1) + 30) },
-    { x: 7.5, y: Math.floor(Math.random() * (45 - 30 + 1) + 30) },
-    { x: 8, y: Math.floor(Math.random() * (100 - 90 + 1) + 90) },
-    { x: 8.5, y: Math.floor(Math.random() * (100 - 90 + 1) + 90) },
-    { x: 9, y: Math.floor(Math.random() * (100 - 90 + 1) + 90) },
-    { x: 9.5, y: Math.floor(Math.random() * (100 - 90 + 1) + 90) },
-    { x: 10, y: Math.floor(Math.random() * (100 - 90 + 1) + 90) }
-  ];
-  plot.update();
+  const chart = new Chart(chartContext, chartSetup);
+  chart.data.datasets[0].backgroundColor = gradient;
 
-  let radios = [...card.querySelector('.switch').children];
-  radios = radios.filter(item => item.nodeName === 'INPUT');
+  chart.data.datasets[0].data = DataHelper.generateSyntheticData();
 
-  for (const radio of radios) {
-    if (radio.checked) {
-      if (radio.value.toLowerCase() === 'low') {
-        if (!card.querySelector('.auto-switch').checked) {
-          card.querySelector('.auto-switch').checked = true;
-        }
-      } else {
-        if (card.querySelector('.auto-switch').checked) {
-          card.querySelector('.auto-switch').checked = false;
-        }
-      }
+  chart.update();
 
-      if (!allComplexitiesSelected.includes(radio.name)) {
-        allComplexitiesSelected.push(radio.name);
-      }
-    }
+  let complexityRadios = [...card.querySelector('.switch').children];
+  complexityRadios = complexityRadios.filter(item => item.nodeName === 'INPUT');
 
-    radio.addEventListener('change', event => {
-      if (radio.checked) {
-        if (radio.value.toLowerCase() === 'low') {
-          if (!card.querySelector('.auto-switch').checked) {
-            card.querySelector('.auto-switch').checked = true;
-          }
-        } else {
-          if (card.querySelector('.auto-switch').checked) {
-            card.querySelector('.auto-switch').checked = false;
-          }
-        }
+  for (const complexityRadio of complexityRadios) {
+    initComplexityRadio(complexityRadio, card);
 
-        if (!allComplexitiesSelected.includes(radio.name)) {
-          allComplexitiesSelected.push(radio.name);
-        }
-        checkAllComplexitiesSelected();
-      }
+    complexityRadio.addEventListener('change', event => {
+      initComplexityRadio(complexityRadio, card);
+      checkAllComplexitiesSelected();
     });
   }
 }
 
 checkAllComplexitiesSelected();
 
-submitBtn.addEventListener('click', () => {
-  if (!submitBtn.disabled) {
+submitButton.addEventListener('click', () => {
+  if (!submitButton.disabled) {
     loaderOverlay.toggle({ message: 'Saving data...' });
 
     setTimeout(() => {

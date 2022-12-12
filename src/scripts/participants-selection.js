@@ -12,8 +12,9 @@ const loaderOverlay = new LoaderOverlay();
 const menu = new Menu();
 menu.init();
 
-const changeBtn = document.getElementById('change-btn');
-changeBtn.addEventListener('click', () => {
+const changeButton = document.getElementById('change-btn');
+
+changeButton.addEventListener('click', () => {
   const dataFolderPathSession = sessionStorage.getItem('data-path');
 
   if (!(dataFolderPathSession === null)) {
@@ -27,47 +28,59 @@ let participants = sessionStorage.getItem('participants')?.split(',') || [];
 const completedParticipants =
   sessionStorage.getItem('completed-participants')?.split(',') || [];
 
-function toggleSubmitBtn() {
-  if (participants.length > 0) {
-    if (submitBtn.disabled) {
-      submitBtn.removeAttribute('disabled');
-    }
-  } else {
-    if (!submitBtn.disabled) {
-      submitBtn.setAttribute('disabled', '');
-    }
-  }
-}
-
-function toggleParticipantStorage() {
-  if (participants.length > 0) {
-    sessionStorage.setItem('participants', participants.join(','));
-  } else {
-    sessionStorage.removeItem('participants');
-  }
-}
-
-function toggleCompletedParticipantStorage() {
-  if (completedParticipants.length > 0) {
-    sessionStorage.setItem('completed-participants', completedParticipants.join(','));
-  } else {
-    sessionStorage.removeItem('completed-participants');
-  }
-}
-
-const previewBtn = document.getElementById('btn-preview');
-const selectBtnAll = document.getElementById('btn-all');
-const selectBtnNotCompleted = document.getElementById('btn-not-completed');
-const submitBtn = document.querySelector('button[type="submit"]');
+const previewButton = document.getElementById('btn-preview');
+const selectButtonAll = document.getElementById('btn-all');
+const selectButtonNotCompleted = document.getElementById('btn-not-completed');
+const submitButton = document.querySelector('button[type="submit"]');
 const dataPath = document.getElementById('data-path');
-
 const participantList = document.querySelector('ul.list').children;
 
 let isAllSelected = false;
 let isAllNotCompletedSelected = false;
 
 dataPath.innerText += ` ${sessionStorage.getItem('data-path') || 'ERROR'}`;
-toggleSubmitBtn();
+
+const toggleSubmitButton = () => {
+  if (participants.length > 0) {
+    if (submitButton.disabled) {
+      submitButton.removeAttribute('disabled');
+    }
+  } else {
+    if (!submitButton.disabled) {
+      submitButton.setAttribute('disabled', '');
+    }
+  }
+};
+
+toggleSubmitButton();
+
+const toggleParticipantStorage = () => {
+  if (participants.length > 0) {
+    sessionStorage.setItem('participants', participants.join(','));
+  } else {
+    sessionStorage.removeItem('participants');
+  }
+};
+
+const toggleCompletedParticipantStorage = () => {
+  if (completedParticipants.length > 0) {
+    sessionStorage.setItem('completed-participants', completedParticipants.join(','));
+  } else {
+    sessionStorage.removeItem('completed-participants');
+  }
+};
+
+const setParticipantItemCompleted = participantItem => {
+  participantItem.classList.remove('not-completed');
+  participantItem.classList.add('completed');
+
+  const participantIcon = participantItem.querySelector('.content i');
+  participantIcon.classList.remove('fa-user-times');
+  participantIcon.classList.add('fa-user-check');
+
+  participantItem.querySelector('.line-2').innerText = 'completed';
+  participantItem.querySelector('.actions button').removeAttribute('disabled');
+};
 
 if (!(sessionStorage.getItem('results-available') === null)) {
   for (const participantItem of participantList) {
@@ -75,15 +88,7 @@ if (!(sessionStorage.getItem('results-available') === null)) {
 
     if (participants.length > 0 && participants.includes(participantName)) {
       if (participantItem.classList.contains('not-completed')) {
-        participantItem.classList.remove('not-completed');
-        participantItem.classList.add('completed');
-
-        const participantIcon = participantItem.querySelector('.content i');
-        participantIcon.classList.remove('fa-user-times');
-        participantIcon.classList.add('fa-user-check');
-
-        participantItem.querySelector('.line-2').innerText = 'completed';
-        participantItem.querySelector('.actions button').removeAttribute('disabled');
+        setParticipantItemCompleted(participantItem);
       }
 
       if (!completedParticipants.includes(participantName)) {
@@ -96,10 +101,10 @@ if (!(sessionStorage.getItem('results-available') === null)) {
 
   toggleParticipantStorage();
   toggleCompletedParticipantStorage();
-  toggleSubmitBtn();
+  toggleSubmitButton();
 } else {
   if (participants.length > 0 && participantList.length === participants.length) {
-    selectBtnAll.innerHTML = 'Unselect All';
+    selectButtonAll.innerHTML = 'Unselect All';
     isAllSelected = true;
   }
 }
@@ -113,15 +118,7 @@ if (!(sessionStorage.getItem('completed-participants') === null)) {
       completedParticipants.includes(participantName) &&
       participantItem.classList.contains('not-completed')
     ) {
-      participantItem.classList.remove('not-completed');
-      participantItem.classList.add('completed');
-
-      const participantIcon = participantItem.querySelector('.content i');
-      participantIcon.classList.remove('fa-user-times');
-      participantIcon.classList.add('fa-user-check');
-
-      participantItem.querySelector('.line-2').innerText = 'completed';
-      participantItem.querySelector('.actions button').removeAttribute('disabled');
+      setParticipantItemCompleted(participantItem);
     }
   }
 }
@@ -136,7 +133,7 @@ for (const participantItem of participantList) {
       participants.includes(participantName)
     ) {
       participantItem.classList.toggle('selected');
-      toggleSubmitBtn();
+      toggleSubmitButton();
     }
   }
 
@@ -148,7 +145,7 @@ for (const participantItem of participantList) {
     }
 
     participantItem.classList.toggle('selected');
-    toggleSubmitBtn();
+    toggleSubmitButton();
     toggleParticipantStorage();
   });
 
@@ -163,8 +160,8 @@ for (const participantItem of participantList) {
   });
 }
 
-previewBtn.addEventListener('click', () => {
-  if (!previewBtn.disabled) {
+previewButton.addEventListener('click', () => {
+  if (!previewButton.disabled) {
     loaderOverlay.toggle({ message: 'Preparing data...' });
 
     setTimeout(() => {
@@ -173,35 +170,61 @@ previewBtn.addEventListener('click', () => {
   }
 });
 
-selectBtnAll.addEventListener('click', () => {
+const selectParticipant = participantItem => {
+  const participantName = participantItem.querySelector('.line-1').innerHTML;
+  participants.push(participantName);
+  participantItem.classList.toggle('selected');
+};
+
+const toggleSelectButtons = (selected, all = true) => {
+  if (all) {
+    const baseText = 'All';
+    selectButtonAll.innerText = selected ? `Unselect ${baseText}` : baseText;
+    isAllSelected = selected;
+  } else {
+    const baseText = 'Not Completed';
+    selectButtonNotCompleted.innerText = selected ? `Unselect ${baseText}` : baseText;
+    isAllNotCompletedSelected = selected;
+  }
+
+  if (selected) {
+    if (all) {
+      selectButtonNotCompleted.setAttribute('disabled', '');
+    } else {
+      selectButtonAll.setAttribute('disabled', '');
+    }
+  } else {
+    if (all) {
+      selectButtonNotCompleted.removeAttribute('disabled');
+    } else {
+      selectButtonAll.removeAttribute('disabled');
+    }
+  }
+};
+
+selectButtonAll.addEventListener('click', () => {
   if (!isAllSelected) {
     for (const participantItem of participantList) {
       if (!participantItem.classList.contains('selected')) {
-        const participantName = participantItem.querySelector('.line-1').innerHTML;
-        participants.push(participantName);
-        participantItem.classList.toggle('selected');
+        selectParticipant(participantItem);
       }
     }
 
-    selectBtnAll.innerHTML = 'Unselect All';
-    isAllSelected = true;
-    selectBtnNotCompleted.setAttribute('disabled', '');
+    toggleSelectButtons(true);
   } else {
     for (const participantItem of participantList) {
       participantItem.classList.toggle('selected');
       participants.pop();
     }
 
-    selectBtnAll.innerHTML = 'All';
-    isAllSelected = false;
-    selectBtnNotCompleted.removeAttribute('disabled');
+    toggleSelectButtons(false);
   }
 
-  toggleSubmitBtn();
+  toggleSubmitButton();
   toggleParticipantStorage();
 });
 
-selectBtnNotCompleted.addEventListener('click', () => {
+selectButtonNotCompleted.addEventListener('click', () => {
   if (!isAllNotCompletedSelected) {
     for (const participantItem of participantList) {
       const participantItemClasses = participantItem.classList;
@@ -209,15 +232,11 @@ selectBtnNotCompleted.addEventListener('click', () => {
         participantItemClasses.contains('not-completed') &&
         !participantItemClasses.contains('selected')
       ) {
-        const participantName = participantItem.querySelector('.line-1').innerHTML;
-        participants.push(participantName);
-        participantItem.classList.toggle('selected');
+        selectParticipant(participantItem);
       }
     }
 
-    selectBtnNotCompleted.innerHTML = 'Unselect Not Completed';
-    isAllNotCompletedSelected = true;
-    selectBtnAll.setAttribute('disabled', '');
+    toggleSelectButtons(true, false);
   } else {
     for (const participantItem of participantList) {
       const participantItemClasses = participantItem.classList;
@@ -231,17 +250,15 @@ selectBtnNotCompleted.addEventListener('click', () => {
       }
     }
 
-    selectBtnNotCompleted.innerHTML = 'Not Completed';
-    isAllNotCompletedSelected = false;
-    selectBtnAll.removeAttribute('disabled');
+    toggleSelectButtons(false, false);
   }
 
-  toggleSubmitBtn();
+  toggleSubmitButton();
   toggleParticipantStorage();
 });
 
-submitBtn.addEventListener('click', () => {
-  if (!submitBtn.disabled) {
+submitButton.addEventListener('click', () => {
+  if (!submitButton.disabled) {
     loaderOverlay.toggle({ message: 'Preparing data...' });
 
     setTimeout(() => {

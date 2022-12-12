@@ -17,37 +17,37 @@ menu.init();
 
 const folderInput = document.querySelector('.folder-input');
 const dropArea = document.querySelector('.folder-drop-area');
-const chooseBtn = document.querySelector('.choose-btn');
-const folderMsg = document.querySelector('.folder-msg');
+const chooseButton = document.querySelector('.choose-btn');
+const folderMessage = document.querySelector('.folder-msg');
 
 folderInput.setAttribute('nwworkingdir', os.homedir());
 
 const storedAnalysis = sessionStorage.getItem('analysis');
-let radios = [...document.querySelector('.switch').children];
-radios = radios.filter(item => item.nodeName === 'INPUT');
+let analysisTypeRadios = [...document.querySelector('.switch').children];
+analysisTypeRadios = analysisTypeRadios.filter(item => item.nodeName === 'INPUT');
 
 if (storedAnalysis === null) {
-  sessionStorage.setItem('analysis', radios[0].value);
-  radios[0].checked = true;
+  sessionStorage.setItem('analysis', analysisTypeRadios[0].value);
+  analysisTypeRadios[0].checked = true;
 } else {
-  for (const radio of radios) {
-    if (radio.value === storedAnalysis) {
-      radio.checked = true;
+  for (const analysisTypeRadio of analysisTypeRadios) {
+    if (analysisTypeRadio.value === storedAnalysis) {
+      analysisTypeRadio.checked = true;
     }
   }
 }
 
-for (const radio of radios) {
-  radio.addEventListener('change', event => {
-    sessionStorage.setItem('analysis', radio.value);
+for (const analysisTypeRadio of analysisTypeRadios) {
+  analysisTypeRadio.addEventListener('change', event => {
+    sessionStorage.setItem('analysis', analysisTypeRadio.value);
   });
 }
 
-function toggleDropAreaActive() {
+const toggleDropAreaActive = () => {
   dropArea.classList.toggle('is-active');
-  chooseBtn.classList.toggle('is-active');
-  folderMsg.classList.toggle('is-active');
-}
+  chooseButton.classList.toggle('is-active');
+  folderMessage.classList.toggle('is-active');
+};
 
 folderInput.addEventListener('dragenter', () => {
   toggleDropAreaActive();
@@ -61,40 +61,41 @@ folderInput.addEventListener('drop', () => {
   toggleDropAreaActive();
 });
 
-const submitBtn = document.querySelector('button[type="submit"]');
 const windowSizeInput = document.getElementById('window-size');
 
-function toggleFolderPath(path = null) {
-  if (!(folderMsg.querySelector('.folder-path') === null)) {
-    folderMsg.querySelector('.folder-path').remove();
+const toggleFolderPath = (path = null) => {
+  if (!(folderMessage.querySelector('.folder-path') === null)) {
+    folderMessage.querySelector('.folder-path').remove();
   }
 
   if (path === null) {
-    chooseBtn.innerText = 'choose a folder';
-    folderMsg.querySelector('#text').innerHTML = `or drag and drop the folder here`;
+    chooseButton.innerText = 'choose a folder';
+    folderMessage.querySelector('#text').innerHTML = `or drag and drop the folder here`;
     folderInput.setAttribute('nwworkingdir', os.homedir());
   } else {
-    chooseBtn.innerText = 'change folder';
-    folderMsg.querySelector('#text').innerHTML = `selected folder path is`;
+    chooseButton.innerText = 'change folder';
+    folderMessage.querySelector('#text').innerHTML = `selected folder path is`;
     folderInput.setAttribute('nwworkingdir', path);
 
     const folderPathDiv = document.createElement('div');
     folderPathDiv.classList.add('folder-path');
     folderPathDiv.appendChild(document.createTextNode(path));
-    folderMsg.appendChild(folderPathDiv);
+    folderMessage.appendChild(folderPathDiv);
   }
-}
+};
+
+const submitButton = document.querySelector('button[type="submit"]');
 
 windowSizeInput.addEventListener('input', event => {
   const value = event.target.value;
 
   if (!(value === '') && value > 0) {
-    if (submitBtn.disabled && folderInput.files.length > 0) {
-      submitBtn.removeAttribute('disabled');
+    if (submitButton.disabled && folderInput.files.length > 0) {
+      submitButton.removeAttribute('disabled');
     }
   } else {
-    if (!submitBtn.disabled) {
-      submitBtn.setAttribute('disabled', '');
+    if (!submitButton.disabled) {
+      submitButton.setAttribute('disabled', '');
     }
   }
 });
@@ -107,11 +108,11 @@ folderInput.addEventListener('change', event => {
     sessionStorage.setItem('data-path', folder.path);
 
     if (
-      submitBtn.disabled &&
+      submitButton.disabled &&
       !(windowSizeInput.value === '') &&
       windowSizeInput.value > 0
     ) {
-      submitBtn.removeAttribute('disabled');
+      submitButton.removeAttribute('disabled');
     }
   } else {
     toggleFolderPath();
@@ -120,14 +121,14 @@ folderInput.addEventListener('change', event => {
       sessionStorage.removeItem('data-path');
     }
 
-    if (!submitBtn.disabled) {
-      submitBtn.setAttribute('disabled', '');
+    if (!submitButton.disabled) {
+      submitButton.setAttribute('disabled', '');
     }
   }
 });
 
-submitBtn.addEventListener('click', () => {
-  if (!submitBtn.disabled) {
+submitButton.addEventListener('click', () => {
+  if (!submitButton.disabled) {
     loaderOverlay.toggle({ message: 'Discovering data...' });
 
     setTimeout(() => {

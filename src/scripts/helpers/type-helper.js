@@ -15,6 +15,14 @@ export class TypeHelper {
     return val === null || val === undefined;
   }
 
+  static isChildOfHTMLElement(elem) {
+    return Object.prototype.isPrototypeOf.call(HTMLElement.prototype, elem);
+  }
+
+  static isNodeList(nodeList) {
+    return Object.prototype.toString.call(nodeList) === '[object NodeList]';
+  }
+
   static getType(data) {
     return Object.prototype.toString.call(data);
   }

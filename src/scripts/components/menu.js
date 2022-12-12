@@ -20,20 +20,22 @@ export class Menu {
     this.#additionalButtons = null;
   }
 
-  init(selectorButtons = []) {
-    if (!TypeHelper.isArray(selectorButtons)) {
-      throw new Error(
-        `selectorButtons parameter must be of type Array. Receive: ${TypeHelper.getType(
-          selectorButtons
-        )}`
-      );
+  init(buttons) {
+    if (!TypeHelper.isUndefinedOrNull(buttons) && !TypeHelper.isNodeList(buttons)) {
+      if (!TypeHelper.isChildOfHTMLElement(buttons)) {
+        throw new Error(
+          `selectorButtons parameter must be of type NodeList or a child of HTMLElement. Receive: ${TypeHelper.getType(
+            buttons
+          )}`
+        );
+      }
     }
 
     this.#toggleNavButton.addEventListener('click', () => {
       this.#toggle();
     });
 
-    this.#additionalButtons = selectorButtons;
+    this.#additionalButtons = buttons;
     this.#setHPFConverterItem();
   }
 
@@ -42,11 +44,14 @@ export class Menu {
     document.querySelector('nav').classList.toggle('open');
     document.querySelector('.content').classList.toggle('open');
 
-    if (this.#additionalButtons.length > 0) {
-      for (const buttonSelector of this.#additionalButtons) {
-        const button = document.querySelector(buttonSelector);
-        button.classList.toggle('open');
+    if (!TypeHelper.isChildOfHTMLElement(this.#additionalButtons)) {
+      if (this.#additionalButtons?.length > 0) {
+        for (const button of this.#additionalButtons) {
+          button.classList.toggle('open');
+        }
       }
+    } else {
+      this.#additionalButtons.classList.toggle('open');
     }
 
     this.#toggleNavButton.classList.toggle('open');

@@ -12,10 +12,10 @@ const loaderOverlay = new LoaderOverlay();
 const menu = new Menu();
 menu.init();
 
-const submitBtn = document.querySelector('button[type="submit"]');
+const submitButton = document.querySelector('button[type="submit"]');
 
-submitBtn.addEventListener('click', () => {
-  if (!submitBtn.disabled) {
+submitButton.addEventListener('click', () => {
+  if (!submitButton.disabled) {
     loaderOverlay.toggle({ message: 'Saving data...' });
 
     setTimeout(() => {
