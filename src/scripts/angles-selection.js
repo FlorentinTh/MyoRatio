@@ -6,6 +6,8 @@ import { CrosshairPlugin } from 'chartjs-plugin-crosshair';
 import { Menu } from './components/menu.js';
 import { Router } from './routes/router.js';
 import { LoaderOverlay } from './components/loader-overlay.js';
+import { ChartSetup } from './utils/chart-setup';
+import { ChartHelper } from './helpers/chart-helper.js';
 import { DataHelper } from './helpers/data-helper.js';
 
 const router = new Router();
@@ -36,13 +38,9 @@ const chartContext = document.getElementById('chart').getContext('2d');
 const pagerDots = document.querySelector('.pager').children;
 const submitButton = document.querySelector('button[type="submit"]');
 
+let allData = null;
 let nbSelectedPoints = 0;
 let firstElementZoom = null;
-
-const gradient = chartContext.createLinearGradient(0, 25, 0, 300);
-gradient.addColorStop(0, 'rgba(22, 160, 133, 0.25)');
-gradient.addColorStop(0.35, 'rgba(22, 160, 133, 0.15)');
-gradient.addColorStop(1, 'rgba(22, 160, 133, 0)');
 
 const checkSelectedAngles = () => {
   const sessionAngles = sessionStorage.getItem('selected-angles');
@@ -179,131 +177,25 @@ const chartPointOnClickHandler = (event, element, plot) => {
   plot.update();
 };
 
-const chartSetup = {
-  type: 'scatter',
-  responsive: true,
-  maintainAspectRatio: false,
-  options: {
-    animation: false,
-    parsing: false,
-    interaction: {
-      mode: 'nearest',
-      axis: 'x',
-      intersect: false
+ChartSetup.options.onClick = (event, element, plot) => {
+  chartPointOnClickHandler(event, element, plot);
+};
+
+ChartSetup.options.plugins.crosshair = {
+  ...ChartSetup.options.plugins.crosshair,
+  callbacks: {
+    beforeZoom: () => (start, end) => {
+      chartBeforeZoomHandler(start, end);
     },
-    plugins: {
-      legend: {
-        display: false
-      },
-      tooltip: {
-        displayColors: false,
-        padding: 12,
-        caretPadding: 16,
-        bodyFont: {
-          size: 14
-        }
-      },
-      crosshair: {
-        sync: {
-          enabled: false
-        },
-        line: {
-          color: '#232323dd',
-          width: 1,
-          dashPattern: [4, 5],
-          greyOutBehind: true
-        },
-        zoom: {
-          enabled: false, // if true: issue with point selection onClick
-          zoomButtonText: 'Reset',
-          zoomButtonClass: 'reset-zoom'
-        },
-        callbacks: {
-          beforeZoom: () => (start, end) => {
-            chartBeforeZoomHandler(start, end);
-          },
-          afterZoom: () => (start, end) => {
-            chartAfterZoomHandler(start, end);
-          }
-        }
-      }
-    },
-    scales: {
-      x: {
-        display: true,
-        title: {
-          display: true,
-          text: 'Seconds',
-          padding: {
-            top: 20
-          },
-          color: '#16A085',
-          font: {
-            weight: 'bold',
-            size: 14
-          }
-        },
-        ticks: {
-          color: '#232323',
-          source: 'auto',
-          maxRotation: 0,
-          autoSkip: true
-          // sampleSize: 1
-        }
-      },
-      y: {
-        display: true,
-        beginAtZero: true,
-        title: {
-          display: true,
-          text: 'Degrees',
-          padding: {
-            bottom: 20
-          },
-          color: '#16A085',
-          font: {
-            weight: 'bold',
-            size: 14
-          }
-        },
-        ticks: {
-          color: '#232323',
-          source: 'auto',
-          maxRotation: 0,
-          autoSkip: true
-          // sampleSize: 1
-        }
-      }
-    },
-    onHover: (event, chart) => {
-      event.native.target.style.cursor = chart[0] ? 'pointer' : 'default';
-    },
-    onClick: (event, element, plot) => {
-      chartPointOnClickHandler(event, element, plot);
+    afterZoom: () => (start, end) => {
+      chartAfterZoomHandler(start, end);
     }
-  },
-  data: {
-    datasets: [
-      {
-        pointBorderWidth: 1,
-        pointHoverRadius: 10,
-        pointBackgroundColor: '#16A085',
-        pointHoverBorderColor: '#232323dd',
-        pointHoverBorderWidth: 2,
-        pointRadius: 6,
-        borderWidth: 5,
-        pointStyle: 'circle',
-        backgroundColor: gradient,
-        borderColor: '#16A085',
-        showLine: true,
-        fill: true,
-        interpolate: true,
-        lineTension: 0,
-        data: DataHelper.generateSyntheticData()
-      }
-    ]
   }
 };
+
+ChartSetup.data.datasets[0].backgroundColor =
+  ChartHelper.generateChartGradient(chartContext);
+ChartSetup.data.datasets[0].data = DataHelper.generateSyntheticData();
 
 let currentParticipant = 0;
 let currentIteration = 0;
@@ -333,13 +225,13 @@ const updateInfos = () => {
 updateInfos();
 checkSelectedAngles();
 
-const plot = new Chart(chartContext, chartSetup);
+const plot = new Chart(chartContext, ChartSetup);
 
 plot.data.datasets[0].pointBackgroundColor = plot.data.datasets[0].data.map(() => {
   return '#16A085';
 });
 
-let allData = plot.data.datasets[0].data;
+allData = plot.data.datasets[0].data;
 
 const loadNextChart = data => {
   sessionStorage.removeItem('selected-angles');
@@ -351,7 +243,6 @@ const loadNextChart = data => {
 
   nbSelectedPoints = 0;
   firstElementZoom = null;
-
   allData = data;
 
   plot.data.datasets[0].data = allData;
