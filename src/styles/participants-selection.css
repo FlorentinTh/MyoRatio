@@ -1,7 +1,7 @@
 @import url("@fortawesome/fontawesome-free/css/all.css");
 @import url("./main.css");
 
-.export-user-list {
+.export-pdf-btn {
   top: 110px;
   left: 42px;
   transition-duration: .5s;
@@ -15,19 +15,19 @@
   box-shadow: 6px 6px 15px -3px rgb(0 0 0 / 60%);
 }
 
-.export-user-list:hover {
+.export-pdf-btn:hover {
   cursor: pointer;
   background-color: #232323dd;
 }
 
-.export-user-list.open {
+.export-pdf-btn.open {
   transform: translateX(250px);
 }
 
-.export-user-list i {
+.export-pdf-btn i {
   position: absolute;
-  top: 11px;
-  left: 32px;
+  top: 12px;
+  left: 35px;
   font-size: 1.65em;
   color: #EDEDED;
 }
