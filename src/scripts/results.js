@@ -9,8 +9,7 @@ const router = new Router();
 router.disableBackButton();
 
 const menu = new Menu();
-const additionalMenuButtons = document.querySelectorAll('[class^="export-"]');
-menu.init(additionalMenuButtons);
+menu.init();
 
 const title = document.querySelector('.title span');
 
