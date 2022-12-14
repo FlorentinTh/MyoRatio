@@ -40,7 +40,9 @@ const participantList = document.querySelector('ul.list').children;
 let isAllSelected = false;
 let isAllNotCompletedSelected = false;
 
-dataPath.innerText += ` ${sessionStorage.getItem('data-path') || 'ERROR'}`;
+dataPath.querySelector('p').innerText = ` ${
+  sessionStorage.getItem('data-path') || 'ERROR'
+}`;
 
 const toggleSubmitButton = () => {
   if (participants.length > 0) {

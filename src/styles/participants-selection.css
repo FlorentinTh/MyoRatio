@@ -76,20 +76,6 @@
   display: block;
 }
 
-.data-location span#data-path {
-  font-size: .9em;
-  letter-spacing: .02em;
-  padding: 15px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.data-location span#data-path strong {
-  text-transform: uppercase;
-  letter-spacing: -.02em;
-}
-
 .selection {
   display: flex;
   justify-content: space-between;
@@ -393,4 +379,22 @@ ul.list > li.item.selected > .actions button:hover {
   background-color: #606060;
   border-color: #606060;
   background-image: linear-gradient(to left, #606060, #606060);
+}
+
+.data-location span#data-path {
+  padding: 15px;
+  display: flex;
+}
+
+.data-location span#data-path i {
+  font-size: 1.2em;
+  padding-right: 15px;
+  padding-top: 3px;
+}
+
+.data-location span#data-path p {
+  font-size: .9em;
+  letter-spacing: .02em;
+  padding-top: 2px;
+  font-weight: bold;
 }
