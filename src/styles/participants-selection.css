@@ -1,6 +1,37 @@
 @import url("@fortawesome/fontawesome-free/css/all.css");
 @import url("./main.css");
 
+.export-user-list {
+  top: 110px;
+  left: 42px;
+  transition-duration: .5s;
+  transition-timing-function: swing;
+  width: 90px;
+  height: 50px;
+  background-color: #16A085;
+  position: fixed;
+  z-index: 9;
+  border-radius: 60px;
+  box-shadow: 6px 6px 15px -3px rgb(0 0 0 / 60%);
+}
+
+.export-user-list:hover {
+  cursor: pointer;
+  background-color: #232323dd;
+}
+
+.export-user-list.open {
+  transform: translateX(250px);
+}
+
+.export-user-list i {
+  position: absolute;
+  top: 11px;
+  left: 32px;
+  font-size: 1.65em;
+  color: #EDEDED;
+}
+
 .data-location-wrapper {
   display: flex;
   width: 100%;

@@ -10,7 +10,9 @@ router.disableBackButton();
 const loaderOverlay = new LoaderOverlay();
 
 const menu = new Menu();
-menu.init();
+
+const additionalMenuButtons = document.querySelectorAll('[class^="export-"]');
+menu.init(additionalMenuButtons);
 
 const changeButton = document.getElementById('change-btn');
 
@@ -84,7 +86,7 @@ const setParticipantItemCompleted = participantItem => {
 
 if (!(sessionStorage.getItem('results-available') === null)) {
   for (const participantItem of participantList) {
-    const participantName = participantItem.querySelector('.line-1').innerHTML;
+    const participantName = participantItem.querySelector('.line-1').innerText;
 
     if (participants.length > 0 && participants.includes(participantName)) {
       if (participantItem.classList.contains('not-completed')) {
@@ -104,14 +106,14 @@ if (!(sessionStorage.getItem('results-available') === null)) {
   toggleSubmitButton();
 } else {
   if (participants.length > 0 && participantList.length === participants.length) {
-    selectButtonAll.innerHTML = 'Unselect All';
+    selectButtonAll.innerText = 'Unselect All';
     isAllSelected = true;
   }
 }
 
 if (!(sessionStorage.getItem('completed-participants') === null)) {
   for (const participantItem of participantList) {
-    const participantName = participantItem.querySelector('.line-1').innerHTML;
+    const participantName = participantItem.querySelector('.line-1').innerText;
 
     if (
       completedParticipants.length > 0 &&
@@ -124,7 +126,7 @@ if (!(sessionStorage.getItem('completed-participants') === null)) {
 }
 
 for (const participantItem of participantList) {
-  const participantName = participantItem.querySelector('.line-1').innerHTML;
+  const participantName = participantItem.querySelector('.line-1').innerText;
 
   if (sessionStorage.getItem('results-available') === null) {
     if (
@@ -171,7 +173,7 @@ previewButton.addEventListener('click', () => {
 });
 
 const selectParticipant = participantItem => {
-  const participantName = participantItem.querySelector('.line-1').innerHTML;
+  const participantName = participantItem.querySelector('.line-1').innerText;
   participants.push(participantName);
   participantItem.classList.toggle('selected');
 };
