@@ -3,6 +3,10 @@ export class TypeHelper {
     return Object.prototype.toString.call(str) === '[object String]';
   }
 
+  static isBoolean(bool) {
+    return Object.prototype.toString.call(bool) === '[object Boolean]';
+  }
+
   static isArray(arr) {
     return Object.prototype.toString.call(arr) === '[object Array]';
   }

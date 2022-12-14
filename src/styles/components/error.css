@@ -30,8 +30,6 @@ div#error-overlay.not-visible {
 }
 
 .error-wrapper i:hover {
-  color: #FF8A65;
-  font-size: 6em;
   transform: scale(1.1);
 }
 
@@ -53,4 +51,29 @@ div#error-overlay.not-visible {
 .error-msg p.details {
   font-size: 1em;
   font-style: italic;
+}
+
+#interact-btn {
+  width: 25%;
+  margin-top: 35px;
+  padding: 12px 30px;
+  font-size: 1.2em;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  border-radius: 30px;
+  background-size: 0 100%;
+  background-repeat: no-repeat;
+  transition: ease-out .4s;
+  color: #FF7043;
+  border: 2px solid #FF7043;
+  background-color: #232323;
+  background-image: linear-gradient(to left, #232323, #232323);
+}
+
+#interact-btn:hover {
+  color: #232323;
+  font-weight: bolder;
+  background-color: #FF7043;
+  background-image: linear-gradient(to right, #FF7043, #FF7043);
+  cursor: pointer;
 }
