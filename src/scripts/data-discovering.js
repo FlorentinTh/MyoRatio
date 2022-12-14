@@ -2,6 +2,7 @@ import '../styles/data-discovering.css';
 
 import { Menu } from './components/menu.js';
 import { Router } from './routes/router.js';
+import { ErrorOverlay } from './components/error-overlay.js';
 import { LoaderOverlay } from './components/loader-overlay.js';
 
 // eslint-disable-next-line no-undef
@@ -9,6 +10,17 @@ const os = nw.require('os');
 
 const router = new Router();
 router.disableBackButton();
+
+if ('app-error' in sessionStorage) {
+  const { message, details } = JSON.parse(sessionStorage.getItem('app-error'));
+
+  const errorOverlay = new ErrorOverlay({
+    message,
+    details
+  });
+
+  errorOverlay.show();
+}
 
 const loaderOverlay = new LoaderOverlay();
 
@@ -70,11 +82,11 @@ const toggleFolderPath = (path = null) => {
 
   if (path === null) {
     chooseButton.innerText = 'choose a folder';
-    folderMessage.querySelector('#text').innerHTML = `or drag and drop the folder here`;
+    folderMessage.querySelector('#text').innerText = `or drag and drop the folder here`;
     folderInput.setAttribute('nwworkingdir', os.homedir());
   } else {
     chooseButton.innerText = 'change folder';
-    folderMessage.querySelector('#text').innerHTML = `selected folder path is`;
+    folderMessage.querySelector('#text').innerText = `selected folder path is`;
     folderInput.setAttribute('nwworkingdir', path);
 
     const folderPathDiv = document.createElement('div');
