@@ -6,17 +6,20 @@ export class LoaderOverlay {
   #loaderElement;
 
   constructor() {
-    document.querySelector('body').innerHTML += loaderTemplate();
+    document.querySelector('body').insertAdjacentHTML('afterbegin', loaderTemplate());
     this.#loaderElement = document.getElementById('loader-overlay');
   }
 
   toggle(opts = { message: null }) {
+    const defaultOpts = { message: null };
+    opts = { ...defaultOpts, ...opts };
+
     document.querySelector('body').classList.toggle('hide-overflow');
 
     if (TypeHelper.isUndefinedOrNull(opts.message) || opts.message === '') {
       opts.message = `Loading...`;
     } else if (!TypeHelper.isString(opts.message)) {
-      throw new Error(
+      console.error(
         `message parameter must be of type String. Received: ${TypeHelper.getType(
           opts.message
         )}`
