@@ -2,11 +2,13 @@ import '../../styles/components/menu.css';
 import menuTemplate from '../../views/partials/components/menu.hbs';
 
 import { TypeHelper } from '../helpers/type-helper.js';
+import { PlatformHelper } from '../helpers/platform-helper.js';
+import { ErrorOverlay } from '../components/error-overlay.js';
 
 // eslint-disable-next-line no-undef
 const path = nw.require('path');
 // eslint-disable-next-line no-undef
-const exec = nw.require('child_process').execFile;
+const { execFile } = nw.require('child_process');
 
 export class Menu {
   #toggleNavButton;
@@ -14,7 +16,7 @@ export class Menu {
 
   constructor() {
     const menuContainer = document.querySelector('.menu-container');
-    menuContainer.innerHTML = menuTemplate();
+    menuContainer.insertAdjacentHTML('afterbegin', menuTemplate());
 
     this.#toggleNavButton = document.querySelector('.toggle-nav-btn');
     this.#additionalButtons = null;
@@ -23,7 +25,7 @@ export class Menu {
   init(buttons) {
     if (!TypeHelper.isUndefinedOrNull(buttons) && !TypeHelper.isNodeList(buttons)) {
       if (!TypeHelper.isChildOfHTMLElement(buttons)) {
-        throw new Error(
+        console.error(
           `selectorButtons parameter must be of type NodeList or a child of HTMLElement. Receive: ${TypeHelper.getType(
             buttons
           )}`
@@ -58,17 +60,29 @@ export class Menu {
   }
 
   #setHPFConverterItem() {
-    const basePath = process.env.INIT_CWD ?? process.cwd();
-    const delsysExecutablePath = path.join(basePath, 'bin', 'DelsysFileUtil.exe');
+    const HPFConverterLink = document.getElementById('hpf-converter');
 
-    document.getElementById('hpf-converter').addEventListener('click', () => {
-      this.#toggle();
+    if (PlatformHelper.isWindowsPlatform()) {
+      const basePath = process.env.INIT_CWD ?? process.cwd();
+      const delsysExecutablePath = path.join(basePath, 'bin', 'DelsysFileUtil.exe');
 
-      exec(delsysExecutablePath, err => {
-        if (err) {
-          throw new Error(err);
-        }
+      HPFConverterLink.addEventListener('click', () => {
+        this.#toggle();
+
+        execFile(delsysExecutablePath, err => {
+          if (err) {
+            const errorOverlay = new ErrorOverlay({
+              message: 'Cannot launch converter',
+              details: err.message,
+              interact: true
+            });
+
+            errorOverlay.show();
+          }
+        });
       });
-    });
+    } else {
+      HPFConverterLink.setAttribute('disabled', '');
+    }
   }
 }
