@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-undef
 const os = nw.require('os');
 
 export class PlatformHelper {

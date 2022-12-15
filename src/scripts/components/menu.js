@@ -5,9 +5,7 @@ import { TypeHelper } from '../helpers/type-helper.js';
 import { PlatformHelper } from '../helpers/platform-helper.js';
 import { ErrorOverlay } from '../components/error-overlay.js';
 
-// eslint-disable-next-line no-undef
 const path = nw.require('path');
-// eslint-disable-next-line no-undef
 const { execFile } = nw.require('child_process');
 
 export class Menu {

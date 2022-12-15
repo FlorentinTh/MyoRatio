@@ -3,9 +3,7 @@ import '../styles/main.css';
 import { LoaderOverlay } from './components/loader-overlay.js';
 import { Router } from './routes/router.js';
 
-// eslint-disable-next-line no-undef
 const path = nw.require('path');
-// eslint-disable-next-line no-undef
 const { execFile } = nw.require('child_process');
 
 const loaderOverlay = new LoaderOverlay();
