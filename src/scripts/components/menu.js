@@ -25,7 +25,7 @@ export class Menu {
   init(buttons) {
     if (!TypeHelper.isUndefinedOrNull(buttons) && !TypeHelper.isNodeList(buttons)) {
       if (!TypeHelper.isChildOfHTMLElement(buttons)) {
-        console.error(
+        throw new Error(
           `selectorButtons parameter must be of type NodeList or a child of HTMLElement. Receive: ${TypeHelper.getType(
             buttons
           )}`

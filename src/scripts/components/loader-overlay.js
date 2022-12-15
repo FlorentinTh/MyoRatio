@@ -19,7 +19,7 @@ export class LoaderOverlay {
     if (TypeHelper.isUndefinedOrNull(opts.message) || opts.message === '') {
       opts.message = `Loading...`;
     } else if (!TypeHelper.isString(opts.message)) {
-      console.error(
+      throw new Error(
         `message parameter must be of type String. Received: ${TypeHelper.getType(
           opts.message
         )}`

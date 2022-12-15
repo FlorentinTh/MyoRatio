@@ -14,7 +14,7 @@ export class ErrorOverlay {
     if (TypeHelper.isUndefinedOrNull(opts.message) || opts.message === '') {
       this.#message = `Sorry, an error occurred`;
     } else if (!TypeHelper.isString(opts.message)) {
-      console.error(
+      throw new Error(
         `message parameter must be of type String. Receive: ${TypeHelper.getType(
           opts.message
         )}`
@@ -24,7 +24,7 @@ export class ErrorOverlay {
     if (TypeHelper.isUndefinedOrNull(opts.details) || opts.details === '') {
       this.#details = `unknown`;
     } else if (!TypeHelper.isString(opts.details)) {
-      console.error(
+      throw new Error(
         `details parameter must be of type String. Receive: ${TypeHelper.getType(
           opts.details
         )}`
@@ -32,7 +32,7 @@ export class ErrorOverlay {
     }
 
     if (!TypeHelper.isBoolean(opts.interact)) {
-      console.error(
+      throw new Error(
         `interact parameter must be of type Boolean. Receive: ${TypeHelper.getType(
           opts.interact
         )}`

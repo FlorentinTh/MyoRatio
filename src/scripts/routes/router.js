@@ -9,9 +9,9 @@ export class Router {
 
   switchPage(page) {
     if (TypeHelper.isUndefinedOrNull(page) || page === '') {
-      console.error(`page parameter cannot be empty`);
+      throw new Error(`page parameter cannot be empty`);
     } else if (!TypeHelper.isString(page)) {
-      console.error(
+      throw new Error(
         `page parameter must be of type String. Received: ${TypeHelper.getType(page)}`
       );
     }
