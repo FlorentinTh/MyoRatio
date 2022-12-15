@@ -86,6 +86,9 @@
   },
   "devDependencies": {
     "@florentinth/nwjs-builder-phoenix": "^1.15.2",
+    "@types/chrome": "^0.0.204",
+    "@types/node": "^18.11.15",
+    "@types/nw.js": "^0.13.16",
     "clean-webpack-plugin": "^4.0.0",
     "css-loader": "^6.7.2",
     "css-minimizer-webpack-plugin": "^4.2.2",
