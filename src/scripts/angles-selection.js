@@ -121,7 +121,7 @@ const getActivePoint = (event, dataset) => {
 };
 
 const chartBeforeZoomHandler = (start, end) => {
-  firstElementZoom = allData.findIndex(value => {
+  firstElementZoom = allData?.findIndex(value => {
     if (value.x >= start) {
       return true;
     }
