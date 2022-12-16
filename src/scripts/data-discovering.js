@@ -4,8 +4,9 @@ import { Menu } from './components/menu.js';
 import { Router } from './routes/router.js';
 import { ErrorOverlay } from './components/error-overlay.js';
 import { LoaderOverlay } from './components/loader-overlay.js';
+import { Metadata } from './components/metadata.js';
+import { PathHelper } from './helpers/path-helper.js';
 
-// eslint-disable-next-line no-undef
 const os = nw.require('os');
 
 const router = new Router();
@@ -139,12 +140,49 @@ folderInput.addEventListener('change', event => {
   }
 });
 
-submitButton.addEventListener('click', () => {
+submitButton.addEventListener('click', async () => {
   if (!submitButton.disabled) {
     loaderOverlay.toggle({ message: 'Discovering data...' });
 
-    setTimeout(() => {
-      router.switchPage('participants-selection');
-    }, 2000);
+    if ('data-path' in sessionStorage) {
+      const dataPath = sessionStorage.getItem('data-path');
+
+      const sanitizedPath = PathHelper.sanitizePath(dataPath);
+      const metadata = new Metadata(sanitizedPath);
+
+      try {
+        await metadata.checkBaseFolderContent();
+
+        try {
+          await metadata.createMetadataFolderTree();
+
+          setTimeout(() => {
+            router.switchPage('participants-selection');
+          }, 1000);
+        } catch (error) {
+          loaderOverlay.toggle();
+
+          const errorOverlay = new ErrorOverlay({
+            message: `Application cannot initialize metadata folder tree`,
+            details: error.message,
+            interact: true
+          });
+
+          errorOverlay.show();
+        }
+      } catch (error) {
+        loaderOverlay.toggle();
+
+        const errorOverlay = new ErrorOverlay({
+          message: error.message,
+          details: `please ensure you have the three following folders with your data inside: ${metadata.getBaseContent.join(
+            ', '
+          )}`,
+          interact: true
+        });
+
+        errorOverlay.show();
+      }
+    }
   }
 });
