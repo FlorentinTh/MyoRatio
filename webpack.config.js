@@ -6,7 +6,6 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 const getViews = directory => {
   const viewFilesLocation = fs.readdirSync(path.resolve(__dirname, directory));
@@ -56,7 +55,8 @@ module.exports = (env, argv) => {
           ? 'scripts/[name].bundle.[contenthash:8].js'
           : '[name].bundle.[contenthash:8].js',
 
-      path: path.resolve(__dirname, outputFolder)
+      path: path.resolve(__dirname, outputFolder),
+      clean: true
     },
     resolve: {
       extensions: ['.js']
@@ -103,9 +103,6 @@ module.exports = (env, argv) => {
       new MiniCssExtractPlugin({
         filename: 'styles/[name].[contenthash:8].css',
         chunkFilename: '[id].css'
-      }),
-      new CleanWebpackPlugin({
-        protectWebpackAssets: false
       })
     ].concat(
       views.map(
@@ -168,6 +165,9 @@ module.exports = (env, argv) => {
       }
     },
     stats,
+    experiments: {
+      topLevelAwait: true
+    },
     devServer: {
       port: 4000,
       hot: true,
