@@ -10,21 +10,13 @@ export class LoaderOverlay {
     this.#loaderElement = document.getElementById('loader-overlay');
   }
 
-  toggle(opts = { message: null }) {
-    const defaultOpts = { message: null };
+  toggle(opts = { message: '' }) {
+    const defaultOpts = { message: '' };
     opts = { ...defaultOpts, ...opts };
 
     document.querySelector('body').classList.toggle('hide-overflow');
 
-    if (TypeHelper.isUndefinedOrNull(opts.message) || opts.message === '') {
-      opts.message = `Loading...`;
-    } else if (!TypeHelper.isString(opts.message)) {
-      throw new Error(
-        `message parameter must be of type String. Received: ${TypeHelper.getType(
-          opts.message
-        )}`
-      );
-    }
+    TypeHelper.checkString(opts.message, { label: 'message' });
 
     document.querySelector('.loading-msg p').innerText = opts.message;
 

@@ -8,13 +8,7 @@ export class Router {
   }
 
   switchPage(page) {
-    if (TypeHelper.isUndefinedOrNull(page) || page === '') {
-      throw new Error(`page parameter cannot be empty`);
-    } else if (!TypeHelper.isString(page)) {
-      throw new Error(
-        `page parameter must be of type String. Received: ${TypeHelper.getType(page)}`
-      );
-    }
+    TypeHelper.checkStringNotNull(page, { label: 'page' });
 
     window.history.pushState('', '', this.#url);
     window.location.replace(decodeURI(`${page}.html`));
