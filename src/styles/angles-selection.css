@@ -15,6 +15,13 @@
   box-shadow: 6px 6px 15px -3px rgb(0 0 0 / 60%);
 }
 
+.top-btn-disabled {
+  background-color: #BDBDBD;
+  cursor: default;
+  pointer-events: none;
+  box-shadow: 6px 6px 15px -3px rgb(0 0 0 / 30%);
+}
+
 .auto-angles-btn:hover {
   cursor: pointer;
   background-color: #232323dd;
