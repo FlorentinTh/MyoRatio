@@ -1,8 +1,17 @@
 import '../styles/participants-selection.css';
+import participantCard from '../views/partials/participants-list/participant-card.hbs';
+import emptyCard from '../views/partials/participants-list/empty-card.hbs';
 
 import { Menu } from './components/menu.js';
 import { Router } from './routes/router.js';
 import { LoaderOverlay } from './components/loader-overlay.js';
+import { ErrorOverlay } from './components/error-overlay';
+import { Metadata } from './components/metadata.js';
+import { PathHelper } from './helpers/path-helper.js';
+import { StringHelper } from './helpers/string-helper';
+
+const path = nw.require('path');
+const fs = nw.require('fs');
 
 const router = new Router();
 router.disableBackButton();
@@ -14,11 +23,11 @@ const menu = new Menu();
 const additionalMenuButtons = document.querySelectorAll('[class^="export-"]');
 menu.init(additionalMenuButtons);
 
+const dataFolderPathSession = sessionStorage.getItem('data-path');
+const analysisType = sessionStorage.getItem('analysis');
+
 const changeButton = document.getElementById('change-btn');
-
 changeButton.addEventListener('click', () => {
-  const dataFolderPathSession = sessionStorage.getItem('data-path');
-
   if (!(dataFolderPathSession === null)) {
     sessionStorage.removeItem('data-path');
   }
@@ -26,247 +35,273 @@ changeButton.addEventListener('click', () => {
   router.switchPage('data-discovering');
 });
 
-let participants = sessionStorage.getItem('participants')?.split(',') || [];
-const completedParticipants =
-  sessionStorage.getItem('completed-participants')?.split(',') || [];
-
+const dataPath = document.getElementById('data-path');
+const analysisTitle = document.querySelector('.analysis h3');
 const previewButton = document.getElementById('btn-preview');
 const selectButtonAll = document.getElementById('btn-all');
 const selectButtonNotCompleted = document.getElementById('btn-not-completed');
 const submitButton = document.querySelector('button[type="submit"]');
-const dataPath = document.getElementById('data-path');
-const participantList = document.querySelector('ul.list').children;
-
-let isAllSelected = false;
-let isAllNotCompletedSelected = false;
+const participantList = document.querySelector('ul.list');
 
 dataPath.querySelector('p').innerText = ` ${
   sessionStorage.getItem('data-path') || 'ERROR'
 }`;
 
-const toggleSubmitButton = () => {
-  if (participants.length > 0) {
-    if (submitButton.disabled) {
-      submitButton.removeAttribute('disabled');
+analysisTitle.innerText += ` ${analysisType}`;
+
+const getAllParticipants = async () => {
+  let participantsFolder;
+  try {
+    const participantsFolderPath = path.join(dataFolderPathSession, analysisType);
+    const sanitizedParticipantsFolderPath =
+      PathHelper.sanitizePath(participantsFolderPath);
+
+    let filteredParticipants;
+
+    try {
+      participantsFolder = await fs.promises.readdir(sanitizedParticipantsFolderPath);
+
+      filteredParticipants = participantsFolder = participantsFolder.filter(
+        async file => {
+          const stat = await fs.promises.stat(path.join(participantsFolderPath, file));
+          return stat.isDirectory();
+        }
+      );
+    } catch (error) {
+      const errorOverlay = new ErrorOverlay({
+        message: `Error occurs while trying to retrieve participants`,
+        details: error.message,
+        interact: true
+      });
+
+      errorOverlay.show();
     }
-  } else {
-    if (!submitButton.disabled) {
-      submitButton.setAttribute('disabled', '');
-    }
+
+    return filteredParticipants;
+  } catch (error) {
+    throw new Error(error);
   }
 };
 
-toggleSubmitButton();
-
-const toggleParticipantStorage = () => {
-  if (participants.length > 0) {
-    sessionStorage.setItem('participants', participants.join(','));
-  } else {
-    sessionStorage.removeItem('participants');
-  }
+const displayEmptyCard = () => {
+  previewButton.setAttribute('disabled', '');
+  selectButtonAll.setAttribute('disabled', '');
+  selectButtonNotCompleted.setAttribute('disabled', '');
+  participantList.insertAdjacentHTML('afterbegin', emptyCard());
 };
 
-const toggleCompletedParticipantStorage = () => {
-  if (completedParticipants.length > 0) {
-    sessionStorage.setItem('completed-participants', completedParticipants.join(','));
-  } else {
-    sessionStorage.removeItem('completed-participants');
-  }
+const displayParticipantCard = (participant, infos) => {
+  participantList.insertAdjacentHTML(
+    'afterbegin',
+    participantCard({ participant, infos })
+  );
 };
 
-const setParticipantItemCompleted = participantItem => {
-  participantItem.classList.remove('not-completed');
-  participantItem.classList.add('completed');
+const participants = await getAllParticipants();
+const metadata = new Metadata(dataFolderPathSession);
 
-  const participantIcon = participantItem.querySelector('.content i');
-  participantIcon.classList.remove('fa-user-times');
-  participantIcon.classList.add('fa-user-check');
-
-  participantItem.querySelector('.line-2').innerText = 'completed';
-  participantItem.querySelector('.actions button').removeAttribute('disabled');
-};
-
-if (!(sessionStorage.getItem('results-available') === null)) {
-  for (const participantItem of participantList) {
-    const participantName = participantItem.querySelector('.line-1').innerText;
-
-    if (participants.length > 0 && participants.includes(participantName)) {
-      if (participantItem.classList.contains('not-completed')) {
-        setParticipantItemCompleted(participantItem);
-      }
-
-      if (!completedParticipants.includes(participantName)) {
-        completedParticipants.push(participantName);
-      }
-
-      participants.pop();
-    }
-  }
-
-  toggleParticipantStorage();
-  toggleCompletedParticipantStorage();
-  toggleSubmitButton();
+if (!(participants?.length > 0)) {
+  displayEmptyCard();
 } else {
-  if (participants.length > 0 && participantList.length === participants.length) {
-    selectButtonAll.innerText = 'Unselect All';
-    isAllSelected = true;
+  for (const participant of participants) {
+    const participantName = StringHelper.formatParticipantName(participant);
+    const infos = await metadata.getParticipantInfo(
+      PathHelper.sanitizePath(analysisType),
+      participantName
+    );
+
+    displayParticipantCard(participantName, infos);
   }
-}
 
-if (!(sessionStorage.getItem('completed-participants') === null)) {
-  for (const participantItem of participantList) {
-    const participantName = participantItem.querySelector('.line-1').innerText;
+  let selectedParticipants =
+    sessionStorage.getItem('selected-participants')?.split(',') || [];
 
-    if (
-      completedParticipants.length > 0 &&
-      completedParticipants.includes(participantName) &&
-      participantItem.classList.contains('not-completed')
-    ) {
-      setParticipantItemCompleted(participantItem);
+  const toggleSubmitButton = () => {
+    if (selectedParticipants.length > 0) {
+      if (submitButton.disabled) {
+        submitButton.removeAttribute('disabled');
+      }
+    } else {
+      if (!submitButton.disabled) {
+        submitButton.setAttribute('disabled', '');
+      }
     }
-  }
-}
+  };
 
-for (const participantItem of participantList) {
-  const participantName = participantItem.querySelector('.line-1').innerText;
+  toggleSubmitButton();
 
-  if (sessionStorage.getItem('results-available') === null) {
-    if (
-      participants.length > 0 &&
-      !participantItem.classList.contains('selected') &&
-      participants.includes(participantName)
-    ) {
+  const toggleSelectedParticipantStorage = () => {
+    if (selectedParticipants.length > 0) {
+      sessionStorage.setItem('selected-participants', selectedParticipants.join(','));
+    } else {
+      sessionStorage.removeItem('selected-participants');
+    }
+  };
+
+  const participantItems = document.querySelector('ul.list').children;
+
+  let totalCompleted = 0;
+
+  for (const participantItem of participantItems) {
+    if (participantItem.classList.contains('completed')) {
+      totalCompleted++;
+    }
+
+    const participantName = participantItem
+      .querySelector('.line-1')
+      .innerText.toLowerCase();
+
+    participantItem.querySelector('.content').addEventListener('click', () => {
+      if (participantItem.classList.contains('selected')) {
+        selectedParticipants = selectedParticipants.filter(
+          participant => participant !== participantName
+        );
+      } else {
+        selectedParticipants.push(participantName);
+      }
+
       participantItem.classList.toggle('selected');
       toggleSubmitButton();
+      toggleSelectedParticipantStorage();
+    });
+
+    const resultsButton = participantItem.querySelector('.actions > button');
+
+    if (!(resultsButton === null)) {
+      resultsButton.addEventListener('click', () => {
+        loaderOverlay.toggle({ message: 'Preparing results...' });
+
+        sessionStorage.setItem('participant-result', participantName);
+
+        setTimeout(() => {
+          router.switchPage('results');
+        }, 1000);
+      });
     }
   }
 
-  participantItem.querySelector('.content').addEventListener('click', () => {
-    if (participantItem.classList.contains('selected')) {
-      participants = participants.filter(participant => participant !== participantName);
-    } else {
-      participants.push(participantName);
-    }
-
-    participantItem.classList.toggle('selected');
-    toggleSubmitButton();
-    toggleParticipantStorage();
-  });
-
-  participantItem.querySelector('.actions > button').addEventListener('click', () => {
-    loaderOverlay.toggle({ message: 'Preparing results...' });
-
-    sessionStorage.setItem('participant-result', participantName);
-
-    setTimeout(() => {
-      router.switchPage('results');
-    }, 1000);
-  });
-}
-
-previewButton.addEventListener('click', () => {
-  if (!previewButton.disabled) {
-    loaderOverlay.toggle({ message: 'Preparing data...' });
-
-    setTimeout(() => {
-      router.switchPage('angles-preview');
-    }, 2000);
-  }
-});
-
-const selectParticipant = participantItem => {
-  const participantName = participantItem.querySelector('.line-1').innerText;
-  participants.push(participantName);
-  participantItem.classList.toggle('selected');
-};
-
-const toggleSelectButtons = (selected, all = true) => {
-  if (all) {
-    const baseText = 'All';
-    selectButtonAll.innerText = selected ? `Unselect ${baseText}` : baseText;
-    isAllSelected = selected;
-  } else {
-    const baseText = 'Not Completed';
-    selectButtonNotCompleted.innerText = selected ? `Unselect ${baseText}` : baseText;
-    isAllNotCompletedSelected = selected;
-  }
-
-  if (selected) {
-    if (all) {
+  const disableNotRequiredButton = () => {
+    if (totalCompleted === participants.length) {
       selectButtonNotCompleted.setAttribute('disabled', '');
-    } else {
+    } else if (!(totalCompleted > 0)) {
       selectButtonAll.setAttribute('disabled', '');
     }
-  } else {
+  };
+
+  disableNotRequiredButton();
+
+  previewButton.addEventListener('click', () => {
+    if (!previewButton.disabled) {
+      loaderOverlay.toggle({ message: 'Preparing data...' });
+
+      setTimeout(() => {
+        router.switchPage('angles-preview');
+      }, 2000);
+    }
+  });
+
+  const selectParticipant = participantItem => {
+    const participantName = participantItem
+      .querySelector('.line-1')
+      .innerText.toLowerCase();
+    selectedParticipants.push(participantName);
+    participantItem.classList.toggle('selected');
+  };
+
+  let isAllSelected = false;
+  let isAllNotCompletedSelected = false;
+
+  const toggleSelectButtons = (selected, all = true) => {
     if (all) {
-      selectButtonNotCompleted.removeAttribute('disabled');
+      const baseText = 'All';
+      selectButtonAll.innerText = selected ? `Unselect ${baseText}` : baseText;
+      isAllSelected = selected;
     } else {
-      selectButtonAll.removeAttribute('disabled');
+      const baseText = 'Not Completed';
+      selectButtonNotCompleted.innerText = selected ? `Unselect ${baseText}` : baseText;
+      isAllNotCompletedSelected = selected;
     }
-  }
-};
 
-selectButtonAll.addEventListener('click', () => {
-  if (!isAllSelected) {
-    for (const participantItem of participantList) {
-      if (!participantItem.classList.contains('selected')) {
-        selectParticipant(participantItem);
+    if (selected) {
+      if (all) {
+        selectButtonNotCompleted.setAttribute('disabled', '');
+      } else {
+        selectButtonAll.setAttribute('disabled', '');
+      }
+    } else {
+      if (all) {
+        selectButtonNotCompleted.removeAttribute('disabled');
+      } else {
+        selectButtonAll.removeAttribute('disabled');
       }
     }
 
-    toggleSelectButtons(true);
-  } else {
-    for (const participantItem of participantList) {
-      participantItem.classList.toggle('selected');
-      participants.pop();
-    }
+    disableNotRequiredButton();
+  };
 
-    toggleSelectButtons(false);
-  }
-
-  toggleSubmitButton();
-  toggleParticipantStorage();
-});
-
-selectButtonNotCompleted.addEventListener('click', () => {
-  if (!isAllNotCompletedSelected) {
-    for (const participantItem of participantList) {
-      const participantItemClasses = participantItem.classList;
-      if (
-        participantItemClasses.contains('not-completed') &&
-        !participantItemClasses.contains('selected')
-      ) {
-        selectParticipant(participantItem);
+  selectButtonAll.addEventListener('click', () => {
+    if (!isAllSelected) {
+      for (const participantItem of participantItems) {
+        if (!participantItem.classList.contains('selected')) {
+          selectParticipant(participantItem);
+        }
       }
-    }
 
-    toggleSelectButtons(true, false);
-  } else {
-    for (const participantItem of participantList) {
-      const participantItemClasses = participantItem.classList;
-
-      if (
-        participantItemClasses.contains('not-completed') &&
-        participantItemClasses.contains('selected')
-      ) {
+      toggleSelectButtons(true);
+    } else {
+      for (const participantItem of participantItems) {
         participantItem.classList.toggle('selected');
-        participants.pop();
+        selectedParticipants.pop();
       }
+
+      toggleSelectButtons(false);
     }
 
-    toggleSelectButtons(false, false);
-  }
+    toggleSubmitButton();
+    toggleSelectedParticipantStorage();
+  });
 
-  toggleSubmitButton();
-  toggleParticipantStorage();
-});
+  selectButtonNotCompleted.addEventListener('click', () => {
+    if (!isAllNotCompletedSelected) {
+      for (const participantItem of participantItems) {
+        const participantItemClasses = participantItem.classList;
 
-submitButton.addEventListener('click', () => {
-  if (!submitButton.disabled) {
-    loaderOverlay.toggle({ message: 'Preparing data...' });
+        if (
+          participantItemClasses.contains('not-completed') &&
+          !participantItemClasses.contains('selected')
+        ) {
+          selectParticipant(participantItem);
+        }
+      }
 
-    setTimeout(() => {
-      router.switchPage('angles-selection');
-    }, 2000);
-  }
-});
+      toggleSelectButtons(true, false);
+    } else {
+      for (const participantItem of participantItems) {
+        const participantItemClasses = participantItem.classList;
+
+        if (
+          participantItemClasses.contains('not-completed') &&
+          participantItemClasses.contains('selected')
+        ) {
+          participantItem.classList.toggle('selected');
+          selectedParticipants.pop();
+        }
+      }
+
+      toggleSelectButtons(false, false);
+    }
+
+    toggleSubmitButton();
+    toggleSelectedParticipantStorage();
+  });
+
+  submitButton.addEventListener('click', () => {
+    if (!submitButton.disabled) {
+      loaderOverlay.toggle({ message: 'Preparing data...' });
+
+      setTimeout(() => {
+        router.switchPage('angles-selection');
+      }, 1000);
+    }
+  });
+}

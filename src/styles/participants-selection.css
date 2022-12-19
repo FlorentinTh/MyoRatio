@@ -32,7 +32,7 @@
   color: #EDEDED;
 }
 
-.data-location-wrapper {
+.data-wrapper {
   display: flex;
   width: 100%;
   padding-right: 15px;
@@ -76,10 +76,29 @@
   display: block;
 }
 
+.analysis {
+  display: flex;
+  width: 100%;
+  text-align: center;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.analysis h3 {
+  width: 100%;
+  margin-right: 15px;
+  padding-bottom: 10px;
+  border-bottom: 2px dotted #16A085;
+  color: #16A085;
+  font-size: 1em;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
 .selection {
   display: flex;
   justify-content: space-between;
-  margin: 0 15px 15px;
+  margin: 15px;
   width: 100%;
   padding-right: 15px;
 }
@@ -130,7 +149,7 @@
 }
 
 .list-container.empty-list {
-  padding-right: 32px;
+  padding-right: 15px;
 }
 
 .empty-content {
@@ -194,7 +213,7 @@ ul.list > li.item > .content .icon {
   margin-left: 25px;
 }
 
-ul.list > li.item > .content i {
+ul.list > li.item > .content .icon i {
   font-size: 1.5em;
   line-height: 56px;
   padding: 7px 20px;
@@ -202,7 +221,7 @@ ul.list > li.item > .content i {
   border-radius: 60px;
 }
 
-ul.list > li.item.selected > .content i {
+ul.list > li.item.selected > .content .icon i {
   border-color: #EDEDED;
 }
 
@@ -213,8 +232,16 @@ ul.list > li.item > .content .infos {
 }
 
 ul.list > li.item > .content div.line-1 {
-  font-size: 1.2em;
-  text-transform: capitalize;
+  font-size: 1em;
+  text-transform: uppercase;
+}
+
+ul.list > li.item > .content div.line-1 .auto-angles {
+  padding-left: 10px;
+}
+
+ul.list > li.item > .content div.line-1 .auto-angles i {
+  font-size: .8em;
 }
 
 ul.list > li.item > .content div.line-2 {

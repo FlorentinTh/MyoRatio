@@ -4,45 +4,18 @@ import { TypeHelper } from '../helpers/type-helper.js';
 const fs = nw.require('fs');
 const { execSync } = nw.require('child_process');
 
-const checkInputPath = inputPath => {
-  if (TypeHelper.isUndefinedOrNull(inputPath)) {
-    throw new Error(`inputPath parameter cannot be ${inputPath}`);
-  } else if (inputPath === '') {
-    throw new Error(`inputPath parameter cannot be an empty String`);
-  } else if (!TypeHelper.isString(inputPath)) {
-    throw new Error(
-      `inputPath parameter must be of type String. Received: ${TypeHelper.getType(
-        inputPath
-      )}`
-    );
-  }
-};
-
 export class FileHelper {
   static async createFileOrDirectoryIfNotExists(
     inputPath,
     opts = { isDirectory: true, hidden: false }
   ) {
-    checkInputPath(inputPath);
+    TypeHelper.checkStringNotNull(inputPath, { label: 'inputPath' });
 
     const defaultOpts = { isDirectory: true, hidden: false };
     opts = { ...defaultOpts, ...opts };
 
-    if (!TypeHelper.isBoolean(opts.isDirectory)) {
-      throw new Error(
-        `isDirectory parameter must be of type Boolean. Receive: ${TypeHelper.getType(
-          opts.isDirectory
-        )}`
-      );
-    }
-
-    if (!TypeHelper.isBoolean(opts.hidden)) {
-      throw new Error(
-        `hidden parameter must be of type Boolean. Receive: ${TypeHelper.getType(
-          opts.hidden
-        )}`
-      );
-    }
+    TypeHelper.checkBoolean(opts.isDirectory, { label: 'isDirectory' });
+    TypeHelper.checkBoolean(opts.hidden, { label: 'hidden' });
 
     try {
       await fs.promises.access(inputPath, fs.constants.F_OK);
@@ -72,7 +45,7 @@ export class FileHelper {
   }
 
   static async initEmptyJSONFile(inputPath) {
-    checkInputPath(inputPath);
+    TypeHelper.checkStringNotNull(inputPath, { label: 'inputPath' });
     try {
       const file = await fs.promises.readFile(inputPath);
 
@@ -84,8 +57,31 @@ export class FileHelper {
     }
   }
 
+  static async writeJSONFile(inputPath, content) {
+    TypeHelper.checkStringNotNull(inputPath, { label: 'inputPath' });
+    TypeHelper.checkObject(content, { label: 'content' });
+
+    try {
+      await fs.promises.writeFile(inputPath, JSON.stringify(content));
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  static async parseJSONFile(inputPath) {
+    TypeHelper.checkStringNotNull(inputPath, { label: 'inputPath' });
+
+    let metadataFile;
+    try {
+      metadataFile = await fs.promises.readFile(inputPath, 'utf8');
+    } catch (error) {
+      throw new Error(error);
+    }
+    return JSON.parse(metadataFile);
+  }
+
   static setHiddenFileOrFolder(inputPath) {
-    checkInputPath(inputPath);
+    TypeHelper.checkStringNotNull(inputPath, { label: 'inputPath' });
 
     if (PlatformHelper.isWindowsPlatform()) {
       const exec = execSync(`attrib +h ${inputPath}`);

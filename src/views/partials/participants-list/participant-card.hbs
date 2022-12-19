@@ -1,0 +1,44 @@
+{{#if infos.completed}}
+  <li class="item completed">
+{{else}}
+  <li class="item not-completed">
+{{/if}}
+  <div class="content">
+    <div class="icon">
+      {{#if infos.completed}}
+        <i class="fas fa-user-check"></i>
+      {{else}}
+        <i class="fas fa-user-times"></i>
+      {{/if}}
+    </div>
+    <div class="infos">
+      <div class="line-1">
+        {{~participant~}}
+        {{#if infos.auto_angles}}
+          <span class="auto-angles">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+          </span>
+        {{/if}}
+      </div>
+      <div class="line-2">
+        <span class="state"></span>
+        <span class="text">
+          {{~#if infos.completed~}}
+            completed
+          {{~else~}}
+            not completed
+          {{~/if~}}
+        </span>
+      </div>
+      <div class="line-3 {{ infos.complexity~}}">
+        <span class="state"></span>
+        <span class="text">{{~infos.complexity~}}</span>
+      </div>
+    </div>
+  </div>
+  {{#if infos.completed}}
+    <div class="actions">
+      <button type="button">See Results</button>
+    </div>
+  {{/if}}
+</li>
