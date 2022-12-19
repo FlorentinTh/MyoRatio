@@ -83,5 +83,9 @@ table.addEventListener('mouseout', () => {
 });
 
 finishButton.addEventListener('click', () => {
+  if ('participant-result' in sessionStorage) {
+    sessionStorage.removeItem('participant-result');
+  }
+
   router.switchPage('participants-selection');
 });
