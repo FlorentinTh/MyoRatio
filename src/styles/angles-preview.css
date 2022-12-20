@@ -4,12 +4,16 @@
   max-width: 1024px !important;
 }
 
+.analysis h3 {
+  margin: 0 6px;
+}
+
 .participant-card-container {
   display: grid;
   grid-template-columns: auto auto;
   row-gap: 35px;
   column-gap: 35px;
-  margin-bottom: 35px;
+  margin: 35px 0;
 }
 
 .participant-card {
@@ -26,6 +30,9 @@
 
 .participant-card h3 {
   color: #232323dd;
+  text-transform: uppercase;
+  font-size: 1em;
+  letter-spacing: 0.02em;
 }
 
 .angle-auto-select {

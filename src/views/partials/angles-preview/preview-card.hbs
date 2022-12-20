@@ -1,0 +1,37 @@
+<div class="participant-card">
+  <h3>{{~participant~}}</h3>
+  <div class="angle-auto-select">
+    <span>Auto-select angles</span>
+    {{#if infos.auto_angles}}
+      <input type="checkbox" class="auto-switch" checked>
+    {{else}}
+      <input type="checkbox" class="auto-switch">
+    {{/if}}
+  </div>
+  <canvas id="chart-{{~participant~}}" height="180px"></canvas>
+  <div class="complexity-container">
+    <span>Select a complexity:</span>
+    <div class="switch">
+      {{#if (eq infos.complexity "low")}}
+        <input type="radio" id="radio-opt1-{{~participant~}}" name="switch-complexity-{{~participant~}}" value="low" checked>
+      {{else}}
+         <input type="radio" id="radio-opt1-{{~participant~}}" name="switch-complexity-{{~participant~}}" value="low">
+      {{/if}}
+      <label for="radio-opt1-{{~participant~}}">Low</label>
+      {{#if (eq infos.complexity "medium")}}
+        <input type="radio" id="radio-opt2-{{~participant~}}" name="switch-complexity-{{~participant~}}" value="medium" checked>
+      {{else}}
+        <input type="radio" id="radio-opt2-{{~participant~}}" name="switch-complexity-{{~participant~}}" value="medium">
+      {{/if}}
+      <label for="radio-opt2-{{~participant~}}">Medium</label>
+      {{#if (eq infos.complexity "high")}}
+        <input type="radio" id="radio-opt3-{{~participant~}}" name="switch-complexity-{{~participant~}}" value="high" checked>
+      {{else}}
+        <input type="radio" id="radio-opt3-{{~participant~}}" name="switch-complexity-{{~participant~}}" value="high">
+      {{/if}}
+      <label for="radio-opt3-{{~participant~}}">High</label>
+    </div>
+
+
+  </div>
+</div>

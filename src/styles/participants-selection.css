@@ -76,23 +76,8 @@
   display: block;
 }
 
-.analysis {
-  display: flex;
-  width: 100%;
-  text-align: center;
-  justify-content: center;
-  margin-bottom: 30px;
-}
-
 .analysis h3 {
-  width: 100%;
   margin-right: 15px;
-  padding-bottom: 10px;
-  border-bottom: 2px dotted #16A085;
-  color: #16A085;
-  font-size: 1em;
-  text-transform: uppercase;
-  letter-spacing: 0.02em;
 }
 
 .selection {
