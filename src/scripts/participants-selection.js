@@ -5,8 +5,10 @@ import emptyCard from '../views/partials/participants-list/empty-card.hbs';
 import { Menu } from './components/menu.js';
 import { Router } from './routes/router.js';
 import { LoaderOverlay } from './components/loader-overlay.js';
+import { ErrorOverlay } from './components/error-overlay';
 import { getAllParticipants } from './components/participants';
 import { Metadata } from './components/metadata.js';
+import { PDFReport } from './components/PDFReport';
 import { PathHelper } from './helpers/path-helper.js';
 import { StringHelper } from './helpers/string-helper';
 
@@ -34,6 +36,7 @@ changeButton.addEventListener('click', () => {
   router.switchPage('data-discovering');
 });
 
+const exportPDFButton = document.querySelector('.export-pdf-btn');
 const dataPath = document.getElementById('data-path');
 const analysisTitle = document.querySelector('.analysis h3');
 const previewButton = document.getElementById('btn-preview');
@@ -62,9 +65,9 @@ const displayParticipantCard = (participant, infos) => {
   );
 };
 
-const participantsFolderPath = path.join(dataFolderPathSession, analysisType);
-const sanitizedParticipantsFolderPath = PathHelper.sanitizePath(participantsFolderPath);
-const participants = await getAllParticipants(sanitizedParticipantsFolderPath);
+const analysisFolderPath = path.join(dataFolderPathSession, analysisType);
+const sanitizedAnalysisFolderPath = PathHelper.sanitizePath(analysisFolderPath);
+const participants = await getAllParticipants(sanitizedAnalysisFolderPath);
 const metadata = new Metadata(dataFolderPathSession);
 
 if (!(participants?.length > 0)) {
@@ -270,5 +273,29 @@ if (!(participants?.length > 0)) {
         router.switchPage('angles-selection');
       }, 1000);
     }
+  });
+
+  exportPDFButton.addEventListener('click', async () => {
+    loaderOverlay.toggle({ message: 'Creating PDF report...' });
+
+    const sanitizedPDFPath = PathHelper.sanitizePath(
+      path.join(analysisFolderPath, `${analysisType}_report.pdf`)
+    );
+
+    const pdfReport = new PDFReport(sanitizedPDFPath);
+
+    try {
+      await pdfReport.create();
+    } catch (error) {
+      const errorOverlay = new ErrorOverlay({
+        message: `Error occurs while trying create PDF report`,
+        details: error.message,
+        interact: true
+      });
+
+      errorOverlay.show();
+    }
+
+    loaderOverlay.toggle();
   });
 }
