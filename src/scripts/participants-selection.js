@@ -124,7 +124,7 @@ if (!(participants?.length > 0)) {
           participant => participant !== participantName
         );
       } else {
-        selectedParticipants.push(participantName);
+        selectedParticipants.push(participantName.trim());
       }
 
       participantItem.classList.toggle('selected');
@@ -138,7 +138,7 @@ if (!(participants?.length > 0)) {
       resultsButton.addEventListener('click', () => {
         loaderOverlay.toggle({ message: 'Preparing results...' });
 
-        sessionStorage.setItem('participant-result', participantName);
+        sessionStorage.setItem('participant-result', participantName.trim());
 
         setTimeout(() => {
           router.switchPage('results');
@@ -171,7 +171,7 @@ if (!(participants?.length > 0)) {
     const participantName = participantItem
       .querySelector('.line-1')
       .innerText.toLowerCase();
-    selectedParticipants.push(participantName);
+    selectedParticipants.push(participantName.trim());
     participantItem.classList.toggle('selected');
   };
 
