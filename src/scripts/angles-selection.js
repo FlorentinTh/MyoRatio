@@ -24,7 +24,7 @@ menu.init(additionalButton);
 Chart.register(CrosshairPlugin);
 
 const selectedParticipants = sessionStorage.getItem('selected-participants').split(',');
-const analysis = sessionStorage.getItem('analysis');
+const analysisType = sessionStorage.getItem('analysis');
 const dataPath = sessionStorage.getItem('data-path');
 
 const autoAnglesButton = document.querySelector('div.auto-angles-btn');
@@ -34,6 +34,7 @@ const infoIteration = document.getElementById('iteration');
 const chartContext = document.getElementById('chart').getContext('2d');
 const pagerDots = document.querySelector('.pager').children;
 const submitButton = document.querySelector('button[type="submit"]');
+const resetButton = document.querySelector('button[type="reset"]');
 
 let allData = null;
 let nbSelectedPoints = 0;
@@ -88,7 +89,6 @@ const removeSessionPoint = (x, y, nearest = false) => {
           sessionStorage.setItem('selected-points', pointArray.join(','));
         }
       } else {
-        console.log('HERE');
         if (nearestPoint.length > 0) {
           if (Math.abs(pointArray[0] - x) > Math.abs(nearestPoint[0] - x)) {
             nearestPoint = [];
@@ -205,8 +205,8 @@ ChartSetup.data.datasets[0].data = DataHelper.generateSyntheticData();
 let currentParticipant = 0;
 let currentIteration = 0;
 
-if (!(analysis === null)) {
-  infoAnalysis.innerText = analysis;
+if (!(analysisType === null)) {
+  infoAnalysis.innerText = analysisType;
 }
 
 const updateInfos = () => {
@@ -231,7 +231,7 @@ const autoAngleButtonClickHandler = event => {};
 
 const displayAutoAnglesButton = async () => {
   const participant = selectedParticipants[currentParticipant];
-  const participantsInfos = await metadata.getParticipantInfo(analysis, participant);
+  const participantsInfos = await metadata.getParticipantInfo(analysisType, participant);
   const isHidden = autoAnglesButton.classList.contains('top-btn-disabled');
 
   if (participantsInfos.auto_angles) {
@@ -258,7 +258,53 @@ plot.data.datasets[0].pointBackgroundColor = plot.data.datasets[0].data.map(() =
   return '#16A085';
 });
 
-const getHandPointsObject = () => {
+const checkForMetadataExistingPoints = async () => {
+  const infos = await metadata.getParticipantInfo(
+    PathHelper.sanitizePath(analysisType),
+    selectedParticipants[currentParticipant]
+  );
+
+  const iterations = infos.iterations;
+
+  if (iterations) {
+    if (iterations[currentIteration + 1]) {
+      const points = iterations[currentIteration + 1].points;
+      const pointAx = points.hand[0].x;
+      const pointBx = points.hand[1].x;
+      const pointAy = points.hand[0].y;
+      const pointBy = points.hand[1].y;
+
+      if (pointAx && pointAy && pointBx && pointBy) {
+        const plottedPoints = plot.data.datasets[0].data;
+
+        for (let i = 0; i < plottedPoints.length; i++) {
+          const plottedPoint = plottedPoints[i];
+
+          if (plottedPoint.x === Number(pointAx) || plottedPoint.x === Number(pointBx)) {
+            if ('selected-points' in sessionStorage) {
+              sessionStorage.removeItem('selected-points');
+            }
+
+            sessionStorage.setItem(
+              'selected-points',
+              `${pointAx},${pointAy};${pointBx},${pointBy}`
+            );
+
+            nbSelectedPoints = 2;
+            plot.data.datasets[0].pointBackgroundColor[i] = '#FF5722';
+          }
+        }
+
+        plot.update();
+        checkSelectedPoints();
+      }
+    }
+  }
+};
+
+await checkForMetadataExistingPoints();
+
+const getPointsObject = (auto = false) => {
   const points = sessionStorage.getItem('selected-points');
   const pointsArray = points.split(';');
 
@@ -266,47 +312,57 @@ const getHandPointsObject = () => {
   const iterationObject = {
     iterations: {}
   };
-  const pointsObject = {
+  const pointsObjectAll = {
     points: {
       hand: {
-        0: { x: undefined, y: undefined },
-        1: { x: undefined, y: undefined }
+        0: { x: null, y: null },
+        1: { x: null, y: null }
+      },
+      auto: {
+        0: { x: null, y: null },
+        1: { x: null, y: null }
       }
     }
   };
 
   for (const point of pointsArray) {
     const pointArray = point.split(',');
-    const pointsObjectHand = pointsObject.points.hand;
+    let pointsObject;
 
-    if (pointsObjectHand[0].x === undefined && pointsObjectHand[0].y === undefined) {
-      pointsObjectHand[0].x = pointArray[0];
-      pointsObjectHand[0].y = pointArray[1];
+    if (auto) {
+      pointsObject = pointsObjectAll.points.auto;
     } else {
-      if (pointsObjectHand[0].x > pointArray[0]) {
-        pointsObjectHand[1].x = pointsObjectHand[0].x;
-        pointsObjectHand[1].y = pointsObjectHand[0].y;
-        pointsObjectHand[0].x = pointArray[0];
-        pointsObjectHand[0].y = pointArray[1];
+      pointsObject = pointsObjectAll.points.hand;
+    }
+
+    if (pointsObject[0].x === null && pointsObject[0].y === null) {
+      pointsObject[0].x = pointArray[0];
+      pointsObject[0].y = pointArray[1];
+    } else {
+      if (pointsObject[0].x > pointArray[0]) {
+        pointsObject[1].x = pointsObject[0].x;
+        pointsObject[1].y = pointsObject[0].y;
+        pointsObject[0].x = pointArray[0];
+        pointsObject[0].y = pointArray[1];
       } else {
-        pointsObjectHand[1].x = pointArray[0];
-        pointsObjectHand[1].y = pointArray[1];
+        pointsObject[1].x = pointArray[0];
+        pointsObject[1].y = pointArray[1];
       }
     }
   }
 
-  iterationObject.iterations[iteration] = pointsObject;
+  iterationObject.iterations[iteration] = pointsObjectAll;
 
   return iterationObject;
 };
 
 const writeMetadata = async data => {
   const participant = selectedParticipants[currentParticipant];
-  await metadata.writeContent(analysis, participant, data);
+  await metadata.writeContent(analysisType, participant, data);
 };
 
 allData = plot.data.datasets[0].data;
-const loadNextChart = data => {
+const loadNextChart = async data => {
   checkSelectedPoints();
 
   plot.data.datasets[0].pointBackgroundColor = plot.data.datasets[0].data.map(() => {
@@ -327,11 +383,12 @@ const loadNextChart = data => {
     currentParticipant++;
   }
 
+  await checkForMetadataExistingPoints();
   updateInfos();
 };
 
 submitButton.addEventListener('click', async () => {
-  const formattedAngles = getHandPointsObject();
+  const formattedAngles = getPointsObject();
   await writeMetadata(formattedAngles);
   sessionStorage.removeItem('selected-points');
 
@@ -345,11 +402,9 @@ submitButton.addEventListener('click', async () => {
     }, 1000);
   } else {
     await displayAutoAnglesButton();
-    loadNextChart(DataHelper.generateSyntheticData());
+    await loadNextChart(DataHelper.generateSyntheticData());
   }
 });
-
-const resetButton = document.querySelector('button[type="reset"]');
 
 resetButton.addEventListener('click', () => {
   sessionStorage.removeItem('selected-points');
