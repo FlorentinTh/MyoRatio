@@ -95,7 +95,10 @@ module.exports = (env, argv) => {
         },
         {
           test: /\.hbs$/,
-          loader: 'handlebars-loader'
+          loader: 'handlebars-loader',
+          options: {
+            helperDirs: path.join(__dirname, 'src', 'views', 'helpers')
+          }
         }
       ]
     },
