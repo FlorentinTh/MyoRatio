@@ -5,13 +5,12 @@ import emptyCard from '../views/partials/participants-list/empty-card.hbs';
 import { Menu } from './components/menu.js';
 import { Router } from './routes/router.js';
 import { LoaderOverlay } from './components/loader-overlay.js';
-import { ErrorOverlay } from './components/error-overlay';
+import { getAllParticipants } from './components/participants';
 import { Metadata } from './components/metadata.js';
 import { PathHelper } from './helpers/path-helper.js';
 import { StringHelper } from './helpers/string-helper';
 
 const path = nw.require('path');
-const fs = nw.require('fs');
 
 const router = new Router();
 router.disableBackButton();
@@ -49,40 +48,6 @@ dataPath.querySelector('p').innerText = ` ${
 
 analysisTitle.innerText += ` ${analysisType}`;
 
-const getAllParticipants = async () => {
-  let participantsFolder;
-  try {
-    const participantsFolderPath = path.join(dataFolderPathSession, analysisType);
-    const sanitizedParticipantsFolderPath =
-      PathHelper.sanitizePath(participantsFolderPath);
-
-    let filteredParticipants;
-
-    try {
-      participantsFolder = await fs.promises.readdir(sanitizedParticipantsFolderPath);
-
-      filteredParticipants = participantsFolder = participantsFolder.filter(
-        async file => {
-          const stat = await fs.promises.stat(path.join(participantsFolderPath, file));
-          return stat.isDirectory();
-        }
-      );
-    } catch (error) {
-      const errorOverlay = new ErrorOverlay({
-        message: `Error occurs while trying to retrieve participants`,
-        details: error.message,
-        interact: true
-      });
-
-      errorOverlay.show();
-    }
-
-    return filteredParticipants;
-  } catch (error) {
-    throw new Error(error);
-  }
-};
-
 const displayEmptyCard = () => {
   previewButton.setAttribute('disabled', '');
   selectButtonAll.setAttribute('disabled', '');
@@ -97,7 +62,9 @@ const displayParticipantCard = (participant, infos) => {
   );
 };
 
-const participants = await getAllParticipants();
+const participantsFolderPath = path.join(dataFolderPathSession, analysisType);
+const sanitizedParticipantsFolderPath = PathHelper.sanitizePath(participantsFolderPath);
+const participants = await getAllParticipants(sanitizedParticipantsFolderPath);
 const metadata = new Metadata(dataFolderPathSession);
 
 if (!(participants?.length > 0)) {
