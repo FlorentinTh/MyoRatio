@@ -14,12 +14,10 @@ export const getAllParticipants = async sanitizedPath => {
     try {
       participantsFolder = await fs.promises.readdir(sanitizedPath);
 
-      filteredParticipants = participantsFolder = participantsFolder.filter(
-        async file => {
-          const stat = await fs.promises.stat(path.join(sanitizedPath, file));
-          return stat.isDirectory();
-        }
-      );
+      filteredParticipants = participantsFolder.filter(file => {
+        const stat = fs.statSync(path.join(sanitizedPath, file));
+        return stat.isDirectory();
+      });
     } catch (error) {
       const errorOverlay = new ErrorOverlay({
         message: `Error occurs while trying to retrieve participants`,
