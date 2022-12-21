@@ -119,6 +119,7 @@
     "@popperjs/core": "^2.11.6",
     "chartjs": "^0.3.24",
     "chartjs-plugin-crosshair": "^1.2.0",
+    "dayjs": "^1.11.7",
     "html-pdf-node-generator": "^1.0.1"
   }
 }
