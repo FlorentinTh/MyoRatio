@@ -1,6 +1,7 @@
 import '../styles/participants-selection.css';
 import participantCard from '../views/partials/participants-list/participant-card.hbs';
 import emptyCard from '../views/partials/participants-list/empty-card.hbs';
+import report from '../views/partials/pdf-report/report.hbs';
 
 import { Menu } from './components/menu.js';
 import { Router } from './routes/router.js';
@@ -8,7 +9,7 @@ import { LoaderOverlay } from './components/loader-overlay.js';
 import { ErrorOverlay } from './components/error-overlay';
 import { getAllParticipants } from './components/participants';
 import { Metadata } from './components/metadata.js';
-import { PDFReport } from './components/PDFReport';
+import { PDFReport } from './components/pdf-report';
 import { PathHelper } from './helpers/path-helper.js';
 import { StringHelper } from './helpers/string-helper';
 
@@ -70,6 +71,8 @@ const sanitizedAnalysisFolderPath = PathHelper.sanitizePath(analysisFolderPath);
 const participants = await getAllParticipants(sanitizedAnalysisFolderPath);
 const metadata = new Metadata(dataFolderPathSession);
 
+const participantsObject = [];
+
 if (!(participants?.length > 0)) {
   displayEmptyCard();
 } else {
@@ -79,6 +82,11 @@ if (!(participants?.length > 0)) {
       PathHelper.sanitizePath(analysisType),
       participantName
     );
+
+    participantsObject.push({
+      name: participant,
+      infos
+    });
 
     displayParticipantCard(participantName, infos);
   }
@@ -285,7 +293,12 @@ if (!(participants?.length > 0)) {
     const pdfReport = new PDFReport(sanitizedPDFPath);
 
     try {
-      await pdfReport.create();
+      await pdfReport.create(
+        report({
+          analysis: analysisType,
+          participants: participantsObject
+        })
+      );
     } catch (error) {
       const errorOverlay = new ErrorOverlay({
         message: `Error occurs while trying create PDF report`,
