@@ -7,7 +7,6 @@ import timezone from 'dayjs/plugin/timezone';
 import { TypeHelper } from '../helpers/type-helper';
 
 const fs = nw.require('fs');
-const HTML2PDF = nw.require('html-pdf-node-generator');
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -40,6 +39,8 @@ export class PDFReport {
 
   async create(data) {
     TypeHelper.checkStringNotNull(data);
+
+    const HTML2PDF = await nw.require('html-pdf-node-generator');
 
     try {
       const PDFBuffer = await HTML2PDF.generatePdf(

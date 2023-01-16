@@ -9,7 +9,6 @@ import { LoaderOverlay } from './components/loader-overlay.js';
 import { ErrorOverlay } from './components/error-overlay';
 import { getAllParticipants } from './components/participants';
 import { Metadata } from './components/metadata.js';
-import { PDFReport } from './components/pdf-report';
 import { PathHelper } from './helpers/path-helper.js';
 import { StringHelper } from './helpers/string-helper';
 
@@ -290,6 +289,7 @@ if (!(participants?.length > 0)) {
       path.join(analysisFolderPath, `${analysisType}_report.pdf`)
     );
 
+    const { PDFReport } = await import('./components/pdf-report');
     const pdfReport = new PDFReport(sanitizedPDFPath);
 
     try {
