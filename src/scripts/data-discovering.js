@@ -35,26 +35,38 @@ const folderMessage = document.querySelector('.folder-msg');
 
 folderInput.setAttribute('nwworkingdir', os.homedir());
 
-const storedAnalysis = sessionStorage.getItem('analysis');
-let analysisTypeRadios = [...document.querySelector('.switch').children];
-analysisTypeRadios = analysisTypeRadios.filter(item => item.nodeName === 'INPUT');
+const initSwitch = (label, opts = { disabled: false }) => {
+  const defaultOpts = { disabled: false };
+  opts = { ...defaultOpts, ...opts };
 
-if (storedAnalysis === null) {
-  sessionStorage.setItem('analysis', analysisTypeRadios[0].value);
-  analysisTypeRadios[0].checked = true;
-} else {
-  for (const analysisTypeRadio of analysisTypeRadios) {
-    if (analysisTypeRadio.value === storedAnalysis) {
-      analysisTypeRadio.checked = true;
+  const storedSwitchValue = sessionStorage.getItem(label);
+  let switchRadios = [...document.getElementById(`switch-${label}`).children];
+  switchRadios = switchRadios.filter(item => item.nodeName === 'INPUT');
+
+  if (storedSwitchValue === null) {
+    sessionStorage.setItem(label, switchRadios[0].value);
+    switchRadios[0].checked = true;
+  } else {
+    for (const switchRadio of switchRadios) {
+      if (switchRadio.value === storedSwitchValue) {
+        switchRadio.checked = true;
+      }
     }
   }
-}
 
-for (const analysisTypeRadio of analysisTypeRadios) {
-  analysisTypeRadio.addEventListener('change', event => {
-    sessionStorage.setItem('analysis', analysisTypeRadio.value);
-  });
-}
+  for (const switchRadio of switchRadios) {
+    if (!opts.disabled) {
+      switchRadio.addEventListener('change', event => {
+        sessionStorage.setItem(label, switchRadio.value);
+      });
+    } else {
+      switchRadio.setAttribute('disabled', '');
+    }
+  }
+};
+
+initSwitch('analysis');
+initSwitch('stage');
 
 const toggleDropAreaActive = () => {
   dropArea.classList.toggle('is-active');
