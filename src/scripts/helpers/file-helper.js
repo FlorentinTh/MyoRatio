@@ -71,13 +71,13 @@ export class FileHelper {
   static async parseJSONFile(inputPath) {
     TypeHelper.checkStringNotNull(inputPath, { label: 'inputPath' });
 
-    let metadataFile;
+    let file;
     try {
-      metadataFile = await fs.promises.readFile(inputPath, 'utf8');
+      file = await fs.promises.readFile(inputPath, 'utf8');
     } catch (error) {
       throw new Error(error);
     }
-    return JSON.parse(metadataFile);
+    return JSON.parse(file);
   }
 
   static setHiddenFileOrFolder(inputPath) {
