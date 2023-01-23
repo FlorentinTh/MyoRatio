@@ -121,7 +121,7 @@ input[type="checkbox"].auto-switch:checked::after {
   display: flex;
   overflow: hidden;
   justify-content: center;
-  margin-top: 15px;
+  margin: 15px 0 0;
 }
 
 .complexity-container .switch label {
