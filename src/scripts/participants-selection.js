@@ -11,6 +11,7 @@ import { getAllParticipants } from './components/participants';
 import { Metadata } from './components/metadata.js';
 import { PathHelper } from './helpers/path-helper.js';
 import { StringHelper } from './helpers/string-helper';
+import { Switch } from './utils/switch';
 
 const path = nw.require('path');
 
@@ -48,6 +49,8 @@ const participantList = document.querySelector('ul.list');
 dataPath.querySelector('p').innerText = ` ${
   sessionStorage.getItem('data-path') || 'ERROR'
 }`;
+
+Switch.init('stage');
 
 analysisTitle.innerText += ` ${analysisType}`;
 

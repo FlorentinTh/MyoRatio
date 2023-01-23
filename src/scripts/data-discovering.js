@@ -6,6 +6,7 @@ import { ErrorOverlay } from './components/error-overlay.js';
 import { LoaderOverlay } from './components/loader-overlay.js';
 import { Metadata } from './components/metadata.js';
 import { PathHelper } from './helpers/path-helper.js';
+import { Switch } from './utils/switch';
 
 const os = nw.require('os');
 
@@ -35,38 +36,7 @@ const folderMessage = document.querySelector('.folder-msg');
 
 folderInput.setAttribute('nwworkingdir', os.homedir());
 
-const initSwitch = (label, opts = { disabled: false }) => {
-  const defaultOpts = { disabled: false };
-  opts = { ...defaultOpts, ...opts };
-
-  const storedSwitchValue = sessionStorage.getItem(label);
-  let switchRadios = [...document.getElementById(`switch-${label}`).children];
-  switchRadios = switchRadios.filter(item => item.nodeName === 'INPUT');
-
-  if (storedSwitchValue === null) {
-    sessionStorage.setItem(label, switchRadios[0].value);
-    switchRadios[0].checked = true;
-  } else {
-    for (const switchRadio of switchRadios) {
-      if (switchRadio.value === storedSwitchValue) {
-        switchRadio.checked = true;
-      }
-    }
-  }
-
-  for (const switchRadio of switchRadios) {
-    if (!opts.disabled) {
-      switchRadio.addEventListener('change', event => {
-        sessionStorage.setItem(label, switchRadio.value);
-      });
-    } else {
-      switchRadio.setAttribute('disabled', '');
-    }
-  }
-};
-
-initSwitch('analysis');
-initSwitch('stage');
+Switch.init('analysis');
 
 const toggleDropAreaActive = () => {
   dropArea.classList.toggle('is-active');
@@ -85,8 +55,6 @@ folderInput.addEventListener('dragleave', () => {
 folderInput.addEventListener('drop', () => {
   toggleDropAreaActive();
 });
-
-const windowSizeInput = document.getElementById('window-size');
 
 const toggleFolderPath = (path = null) => {
   if (!(folderMessage.querySelector('.folder-path') === null)) {
@@ -111,11 +79,18 @@ const toggleFolderPath = (path = null) => {
 
 const submitButton = document.querySelector('button[type="submit"]');
 
+const windowSizeInput = document.getElementById('window-size');
+
+if (!('window-size' in sessionStorage)) {
+  sessionStorage.setItem('window-size', windowSizeInput.value);
+}
+
 windowSizeInput.addEventListener('input', event => {
   const value = event.target.value;
 
   if (!(value === '') && value > 0) {
     if (submitButton.disabled && folderInput.files.length > 0) {
+      sessionStorage.setItem('window-size', value);
       submitButton.removeAttribute('disabled');
     }
   } else {
@@ -137,6 +112,10 @@ folderInput.addEventListener('change', event => {
       !(windowSizeInput.value === '') &&
       windowSizeInput.value > 0
     ) {
+      if (!('window-size' in sessionStorage)) {
+        sessionStorage.setItem('window-size', windowSizeInput.value);
+      }
+
       submitButton.removeAttribute('disabled');
     }
   } else {

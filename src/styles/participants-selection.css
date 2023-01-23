@@ -60,7 +60,7 @@
   align-items: center;
 }
 
-.change-btn-container  >  button {
+.change-btn-container > button {
   padding: 6px 10px;
   font-size: .9em;
   color: #EDEDED;
@@ -74,6 +74,11 @@
   background-repeat: no-repeat;
   transition: ease-out .2s;
   display: block;
+}
+
+#group-stage {
+  padding-right: 15px;
+  margin-bottom: 75px;
 }
 
 .analysis h3 {

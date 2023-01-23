@@ -140,16 +140,19 @@ main.content section.wrapper .label {
   font-weight: bold;
 }
 
-.switch input {
-  position: absolute !important;
-  clip: rect(0, 0, 0, 0);
-  height: 1px;
-  width: 1px;
-  border: 0;
+.switch {
+  margin: 0 50px;
+  width: 100%;
+  display: flex;
   overflow: hidden;
+  justify-content: center;
 }
 
 .switch label {
+  line-height: 2.49em;
+  padding: 0 7%;
+  height: 2.5em;
+  margin-right: -1px;
   text-transform: uppercase;
   background-color: #232323dd;
   color: #EDEDED;
@@ -157,6 +160,15 @@ main.content section.wrapper .label {
   text-align: center;
   border: 1px solid #232323;
   transition: all .25s ease-in-out;
+}
+
+.switch input {
+  position: absolute !important;
+  clip: rect(0, 0, 0, 0);
+  height: 1px;
+  width: 1px;
+  border: 0;
+  overflow: hidden;
 }
 
 .switch label:first-of-type {

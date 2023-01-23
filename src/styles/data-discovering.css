@@ -71,21 +71,6 @@
   opacity: 0;
 }
 
-.input-container .switch {
-  margin: 0 50px;
-  width: 100%;
-  display: flex;
-  overflow: hidden;
-  justify-content: center;
-}
-
-.input-container .switch label {
-  line-height: 2.49em;
-  padding: 0 7%;
-  height: 2.5em;
-  margin-right: -1px;
-}
-
 .input-container > .unit {
   background-color: #232323dd;
   color: #EDEDED;
