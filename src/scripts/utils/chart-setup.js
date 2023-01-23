@@ -94,19 +94,37 @@ export const ChartSetup = {
   data: {
     datasets: [
       {
+        drawActiveElementsOnTop: true,
         pointBorderWidth: 1,
         pointHoverRadius: 10,
         pointBackgroundColor: '#16A085',
         pointHoverBorderColor: '#232323dd',
         pointHoverBorderWidth: 2,
-        pointRadius: 6,
-        borderWidth: 5,
+        pointRadius: 3,
+        borderWidth: 2,
         pointStyle: 'circle',
         borderColor: '#16A085',
         showLine: true,
         fill: true,
         interpolate: true,
-        lineTension: 0
+        lineTension: 0,
+        order: 2
+      },
+      {
+        drawActiveElementsOnTop: true,
+        pointBorderWidth: 1,
+        pointHoverRadius: 10,
+        pointBackgroundColor: '#FF5722',
+        pointHoverBorderWidth: 2,
+        pointRadius: 6,
+        borderWidth: 5,
+        pointStyle: 'circle',
+        borderColor: '#232323dd',
+        showLine: false,
+        fill: true,
+        interpolate: true,
+        lineTension: 0,
+        order: 1
       }
     ]
   }

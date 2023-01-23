@@ -11,6 +11,9 @@ import { ChartSetup } from './utils/chart-setup';
 import { ChartHelper } from './helpers/chart-helper.js';
 import { DataHelper } from './helpers/data-helper.js';
 import { PathHelper } from './helpers/path-helper.js';
+// import { FileHelper } from './helpers/file-helper';
+
+// const path = nw.require('path');
 
 const router = new Router();
 router.disableBackButton();
@@ -142,40 +145,69 @@ const chartAfterZoomHandler = (start, end) => {
 };
 
 const chartPointOnClickHandler = (event, element, plot) => {
-  const dataset = plot.data.datasets[0];
-  const { index, x, y } = getActivePoint(event, dataset);
+  const datasetRaw = plot.data.datasets[0];
+  const datasetSelected = plot.data.datasets[1];
+
+  const rawActivePoint = getActivePoint(event, datasetRaw);
 
   if (nbSelectedPoints < 2) {
-    if (dataset.pointBackgroundColor[index] === '#16A085') {
-      dataset.pointBackgroundColor[index] = '#FF5722';
+    if (!(rawActivePoint.x === 0)) {
+      datasetSelected.data.push(datasetRaw.data[rawActivePoint.index]);
       nbSelectedPoints++;
-      addSessionPoint(x, y);
+      addSessionPoint(rawActivePoint.x, rawActivePoint.y);
     } else {
-      dataset.pointBackgroundColor[index] = '#16A085';
+      const activeSelectedPoint = getActivePoint(event, datasetSelected);
+
+      datasetSelected.data = datasetSelected.data.filter(point => {
+        return point.x !== activeSelectedPoint.x;
+      });
+
       nbSelectedPoints--;
       sessionStorage.removeItem('selected-points');
     }
   } else {
-    if (dataset.pointBackgroundColor[index] === '#FF5722') {
-      dataset.pointBackgroundColor[index] = '#16A085';
+    if (rawActivePoint.x === 0 || rawActivePoint.x === datasetRaw.data[1].x) {
+      const activeSelectedPoint = getActivePoint(event, datasetSelected);
+
+      datasetSelected.data = datasetSelected.data.filter(point => {
+        return point.x !== activeSelectedPoint.x;
+      });
+
       nbSelectedPoints--;
-      removeSessionPoint(x, y, true);
+      removeSessionPoint(activeSelectedPoint.x, activeSelectedPoint.y, true);
     } else {
-      const firstSelectedIndex = dataset.pointBackgroundColor.indexOf('#FF5722');
-      const secondSelectedIndex = dataset.pointBackgroundColor.lastIndexOf('#FF5722');
-      const distToFirst = Math.abs(firstSelectedIndex - index);
-      const distToSecond = Math.abs(secondSelectedIndex - index);
+      const sortedSelectedPoints = datasetSelected.data.sort((a, b) => {
+        if (a.x < b.x) {
+          return -1;
+        }
+
+        if (a.x > b.x) {
+          return 1;
+        }
+        return 0;
+      });
+
+      const firstSelectedIndex = datasetRaw.data.findIndex(
+        point => point.x === sortedSelectedPoints[0].x
+      );
+
+      const secondSelectedIndex = datasetRaw.data.findIndex(
+        point => point.x === sortedSelectedPoints[1].x
+      );
+
+      const distToFirst = Math.abs(firstSelectedIndex - rawActivePoint.index);
+      const distToSecond = Math.abs(secondSelectedIndex - rawActivePoint.index);
 
       if (distToFirst < distToSecond) {
-        dataset.pointBackgroundColor[firstSelectedIndex] = '#16A085';
+        datasetSelected.data = [sortedSelectedPoints[1]];
       } else {
-        dataset.pointBackgroundColor[secondSelectedIndex] = '#16A085';
+        datasetSelected.data = [sortedSelectedPoints[0]];
       }
 
-      dataset.pointBackgroundColor[index] = '#FF5722';
+      datasetSelected.data.push(datasetRaw.data[rawActivePoint.index]);
 
-      removeSessionPoint(x, y, true);
-      addSessionPoint(x, y);
+      removeSessionPoint(rawActivePoint.x, rawActivePoint.y, true);
+      addSessionPoint(rawActivePoint.x, rawActivePoint.y);
     }
   }
 
@@ -200,7 +232,14 @@ ChartSetup.options.plugins.crosshair = {
 
 ChartSetup.data.datasets[0].backgroundColor =
   ChartHelper.generateChartGradient(chartContext);
+
+// const file = await FileHelper.parseJSONFile(
+//   path.normalize('small_angles_5507_Ext_genou_Rep_1.3.json')
+// );
+
+// ChartSetup.data.datasets[0].data = file;
 ChartSetup.data.datasets[0].data = DataHelper.generateSyntheticData();
+ChartSetup.data.datasets[1].data = [];
 
 let currentParticipant = 0;
 let currentIteration = 0;
@@ -227,7 +266,11 @@ const updateInfos = () => {
   }
 };
 
-const autoAngleButtonClickHandler = event => {};
+const autoAngleButtonClickHandler = event => {
+  /**
+   * TODO
+   */
+};
 
 const displayAutoAnglesButton = async () => {
   const participant = selectedParticipants[currentParticipant];
@@ -269,10 +312,10 @@ const checkForMetadataExistingPoints = async () => {
   if (iterations) {
     if (iterations[currentIteration + 1]) {
       const points = iterations[currentIteration + 1].points;
-      const pointAx = points.hand[0].x;
-      const pointBx = points.hand[1].x;
-      const pointAy = points.hand[0].y;
-      const pointBy = points.hand[1].y;
+      const pointAx = points.manual[0].x;
+      const pointBx = points.manual[1].x;
+      const pointAy = points.manual[0].y;
+      const pointBy = points.manual[1].y;
 
       if (pointAx && pointAy && pointBx && pointBy) {
         const plottedPoints = plot.data.datasets[0].data;
@@ -314,7 +357,7 @@ const getPointsObject = (auto = false) => {
   };
   const pointsObjectAll = {
     points: {
-      hand: {
+      manual: {
         0: { x: null, y: null },
         1: { x: null, y: null }
       },
@@ -332,7 +375,7 @@ const getPointsObject = (auto = false) => {
     if (auto) {
       pointsObject = pointsObjectAll.points.auto;
     } else {
-      pointsObject = pointsObjectAll.points.hand;
+      pointsObject = pointsObjectAll.points.manual;
     }
 
     if (pointsObject[0].x === null && pointsObject[0].y === null) {
