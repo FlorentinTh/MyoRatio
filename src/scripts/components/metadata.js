@@ -6,6 +6,7 @@ const fs = nw.require('fs');
 
 export class Metadata {
   #baseContent = ['flexion', 'extension', 'sit-stand'];
+  #stages = ['concentric', 'eccentric'];
   #metadataRootFolder = '.metadata';
   #metadataFilename = '.data.json';
   #inputDataPath;
@@ -90,10 +91,23 @@ export class Metadata {
       const participantObject = {};
 
       const value = (participantObject[participant] = {
-        completed: false,
         complexity: 'unknown',
-        auto_angles: false
+        auto_angles: false,
+        stages: {}
       });
+
+      for (const stage of this.#stages) {
+        const stageObject = {};
+
+        stageObject[stage] = {
+          completed: false
+        };
+
+        value.stages = {
+          ...value.stages,
+          ...stageObject
+        };
+      }
 
       metadataFileJSON = { ...metadataFileJSON, ...participantObject };
       await FileHelper.writeJSONFile(metadataFilePath, metadataFileJSON);
@@ -102,10 +116,47 @@ export class Metadata {
     }
   }
 
-  async writeContent(analysisType, participant, content) {
+  async getParticipantFolderPath(
+    analysisType,
+    participant,
+    opts = { fromSession: false }
+  ) {
+    TypeHelper.checkStringNotNull(analysisType, { label: 'analysisType' });
+    TypeHelper.checkStringNotNull(participant, { label: 'participant' });
+
+    const defaultOpts = { fromSession: false };
+    opts = { ...defaultOpts, ...opts };
+
+    let participantFolderName;
+
+    const participantArray = participant.split('_');
+
+    if (opts.fromSession) {
+      const participantID = participantArray.slice(1, participantArray.length - 1);
+      const participantSex = participantArray[participantArray.length - 1];
+      participantFolderName = `${participantID} (${participantSex.toUpperCase()})`;
+    } else {
+      participantFolderName = participantArray[0];
+    }
+
+    return path.join(
+      this.#inputDataPath,
+      this.#metadataRootFolder,
+      `.${analysisType}`,
+      participantFolderName
+    );
+  }
+
+  async writeContent(analysisType, participant, content, stage) {
     TypeHelper.checkStringNotNull(analysisType, { label: 'analysisType' });
     TypeHelper.checkStringNotNull(participant, { label: 'participant' });
     TypeHelper.checkObject(content, { label: 'content' });
+
+    if (!TypeHelper.isUndefinedOrNull(stage)) {
+      if (!TypeHelper.isString(stage)) {
+        throw new Error(`stage parameter cannot be ${stage}`);
+      }
+    }
 
     const metadataFilePath = path.join(
       this.#inputDataPath,
@@ -120,28 +171,77 @@ export class Metadata {
     const JSONFileParticipantObject = metadataFileJSON[participant];
     const JSONFileParticipantObjectKeys = Object.keys(JSONFileParticipantObject);
 
+    let JSONFileStageObject;
+    let JSONFileStageObjectKeys;
+
+    if (!TypeHelper.isUndefinedOrNull(stage)) {
+      JSONFileStageObject = metadataFileJSON[participant].stages;
+      JSONFileStageObjectKeys = Object.keys(JSONFileStageObject[stage]);
+    }
+
     const output = {};
 
     for (const contentKey of contentKeys) {
       if (
         TypeHelper.isObject(content[contentKey]) &&
-        JSONFileParticipantObjectKeys.includes(contentKey)
+        (JSONFileParticipantObjectKeys.includes(contentKey) ||
+          JSONFileStageObjectKeys.includes(contentKey))
       ) {
         const keyContentObject = {};
+        let mainContent;
+
+        if (TypeHelper.isUndefinedOrNull(stage)) {
+          mainContent = JSONFileParticipantObject[contentKey];
+        } else {
+          mainContent = JSONFileStageObject[stage][contentKey];
+        }
+
         keyContentObject[contentKey] = {
-          ...JSONFileParticipantObject[contentKey],
+          ...mainContent,
           ...content[contentKey]
         };
 
-        output[participant] = {
-          ...JSONFileParticipantObject,
-          ...keyContentObject
-        };
+        if (TypeHelper.isUndefinedOrNull(stage)) {
+          output[participant] = {
+            ...JSONFileParticipantObject,
+            ...keyContentObject
+          };
+        } else {
+          output[participant] = {
+            ...JSONFileParticipantObject,
+            stages: {
+              ...JSONFileStageObject
+            }
+          };
+
+          output[participant].stages[stage] = {
+            ...JSONFileStageObject[stage],
+            ...keyContentObject
+          };
+        }
       } else {
-        output[participant] = {
-          ...JSONFileParticipantObject,
-          ...content
-        };
+        let mainContent;
+
+        if (TypeHelper.isUndefinedOrNull(stage)) {
+          mainContent = JSONFileParticipantObject;
+
+          output[participant] = {
+            ...mainContent,
+            ...content
+          };
+        } else {
+          output[participant] = {
+            ...JSONFileParticipantObject,
+            stages: {
+              ...JSONFileStageObject
+            }
+          };
+
+          output[participant].stages[stage] = {
+            ...JSONFileStageObject[stage],
+            ...content
+          };
+        }
       }
 
       metadataFileJSON = { ...metadataFileJSON, ...output };
