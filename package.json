@@ -85,7 +85,7 @@
   },
   "devDependencies": {
     "@florentinth/nwjs-builder-phoenix": "^1.15.2",
-    "@types/chrome": "^0.0.208",
+    "@types/chrome": "^0.0.210",
     "@types/node": "^18.11.18",
     "@types/nw.js": "^0.13.16",
     "css-loader": "^6.7.2",
