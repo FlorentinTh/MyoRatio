@@ -248,3 +248,39 @@ main.content section.wrapper .label {
   cursor: default;
   pointer-events: none;
 }
+
+.load {
+  animation-duration: 1s;
+  animation-fill-mode: forwards;
+  animation-iteration-count: infinite;
+  animation-name: load-effect;
+  animation-timing-function: linear;
+  background: #f6f7f8;
+  background: #eee;
+  background: linear-gradient(linear, left top, right top, color-stop(8%, #eee), color-stop(18%, #ddd), color-stop(33%, #eee));
+  background: linear-gradient(to left, #eee 8%, #ddd 18%, #eee 33%);
+  background: linear-gradient(to right, #eee 8%, #ddd 18%, #eee 33%);
+  background-size: 800px 104px;
+  background-size: 1200px 104px;
+  position: relative;
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes load-effect {
+  0% {
+    background-position: -468px 0;
+  }
+
+  100% {
+    background-position: 468px 0;
+  }
+}

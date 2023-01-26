@@ -1,19 +1,16 @@
 import '../styles/angles-preview.css';
 import previewCard from '../views/partials/angles-preview/preview-card.hbs';
 
-import Chart from 'chart.js/auto';
-
 import { Menu } from './components/menu.js';
 import { Router } from './routes/router.js';
 import { getAllParticipants } from './components/participants';
 import { Metadata } from './components/metadata';
 import { LoaderOverlay } from './components/loader-overlay.js';
 import { ErrorOverlay } from './components/error-overlay';
-import { ChartSetup } from './utils/chart-setup';
 import { PathHelper } from './helpers/path-helper';
 import { StringHelper } from './helpers/string-helper';
-import { ChartHelper } from './helpers/chart-helper.js';
-import { DataHelper } from './helpers/data-helper.js';
+import { DOMElement } from './utils/dom-element.js';
+import { FileHelper } from './helpers/file-helper';
 
 const path = nw.require('path');
 
@@ -33,50 +30,47 @@ const gridContainer = document.querySelector('.participant-card-container');
 const submitButton = document.querySelector('button[type="submit"]');
 const resetButton = document.querySelector('button[type="reset"]');
 
-const allComplexitiesSelected = [];
-
 analysisTitle.innerText += ` ${analysisType}`;
 
-const initChartOptions = () => {
-  delete ChartSetup.options.plugins.crosshair;
-
-  ChartSetup.options.scales.x.title.padding.top = 10;
-  ChartSetup.options.scales.y.title.padding.top = 10;
-  ChartSetup.data.datasets[0].pointHoverRadius = 5;
-  ChartSetup.data.datasets[0].pointRadius = 3;
-  ChartSetup.data.datasets[0].borderWidth = 2;
-};
-
-initChartOptions();
-
-const displayPreviewCard = (participant, infos) => {
-  gridContainer.insertAdjacentHTML('afterbegin', previewCard({ participant, infos }));
-};
+const allComplexitiesSelected = [];
 
 const participantsFolderPath = path.join(dataFolderPathSession, analysisType);
 const sanitizedParticipantsFolderPath = PathHelper.sanitizePath(participantsFolderPath);
 const participants = await getAllParticipants(sanitizedParticipantsFolderPath);
 const metadata = new Metadata(dataFolderPathSession);
 
-if (participants?.length > 0) {
-  for (const participant of participants) {
-    const participantName = StringHelper.formatParticipantName(participant);
-    const infos = await metadata.getParticipantInfo(
-      PathHelper.sanitizePath(analysisType),
-      participantName
-    );
+const displayPreviewCard = (participant, infos, chart) => {
+  gridContainer.insertAdjacentHTML(
+    'beforeend',
+    previewCard({ participant, infos, chart })
+  );
+};
 
-    displayPreviewCard(participantName, infos);
-  }
-} else {
-  const errorOverlay = new ErrorOverlay({
-    message: `Error occurs while trying to retrieve participants`,
-    details: `Received participants: ${participants}`,
-    interact: true
-  });
+const getChartFiles = async participant => {
+  let chartFiles = [];
+  const inputPath = await metadata.getParticipantFolderPath(analysisType, participant);
 
-  errorOverlay.show();
-}
+  const files = await FileHelper.listAllFiles(PathHelper.sanitizePath(inputPath));
+  chartFiles = chartFiles.concat(
+    files
+      .filter(file => {
+        const fileArray = file.split('.');
+
+        if (fileArray[fileArray.length - 1] === 'svg') {
+          const fileArray = file.split('_');
+
+          if (fileArray.includes('plot')) {
+            return true;
+          }
+        }
+
+        return false;
+      })
+      .map(file => path.join(inputPath, file))
+  );
+
+  return chartFiles;
+};
 
 const initComplexityRadio = (complexityRadio, card, onChange = false) => {
   if (complexityRadio.checked) {
@@ -115,30 +109,9 @@ const getComplexityRadios = card => {
   return complexityRadios.filter(item => item.nodeName === 'INPUT');
 };
 
-for (let i = 0; i < gridContainer.children.length; i++) {
-  const card = gridContainer.children[i];
-  const chartContext = card.querySelector('canvas').getContext('2d');
-  const chart = new Chart(chartContext, ChartSetup);
-
-  chart.data.datasets[0].backgroundColor =
-    ChartHelper.generateChartGradient(chartContext);
-
-  chart.data.datasets[0].data = DataHelper.generateSyntheticData();
-  chart.update();
-
-  const complexityRadios = getComplexityRadios(card);
-
-  for (const complexityRadio of complexityRadios) {
-    initComplexityRadio(complexityRadio, card);
-
-    complexityRadio.addEventListener('change', event => {
-      initComplexityRadio(complexityRadio, card, true);
-      checkAllComplexitiesSelected();
-    });
-  }
-}
-
-checkAllComplexitiesSelected();
+const getNavButtons = card => {
+  return [...card.querySelectorAll('.nav-btn-container .icon-container')];
+};
 
 const saveData = async () => {
   const cards = gridContainer.children;
@@ -161,6 +134,78 @@ const saveData = async () => {
     });
   }
 };
+
+if (participants?.length > 0) {
+  setTimeout(() => {
+    DOMElement.clear(gridContainer);
+  }, 500);
+
+  for (let i = 0; i < participants.length; i++) {
+    const participantName = StringHelper.formatParticipantName(participants[i]);
+    const infos = await metadata.getParticipantInfo(
+      PathHelper.sanitizePath(analysisType),
+      participantName
+    );
+
+    let currentChart = 0;
+
+    setTimeout(async () => {
+      const chartPath = await getChartFiles(participants[i]);
+      displayPreviewCard(participantName, infos, chartPath[currentChart]);
+
+      const card = gridContainer.children[i];
+      const complexityRadios = getComplexityRadios(card);
+
+      for (const complexityRadio of complexityRadios) {
+        initComplexityRadio(complexityRadio, card);
+
+        complexityRadio.addEventListener('change', event => {
+          initComplexityRadio(complexityRadio, card, true);
+          checkAllComplexitiesSelected();
+        });
+      }
+
+      const navButtons = getNavButtons(card);
+      for (const navButton of navButtons) {
+        navButton.addEventListener('click', event => {
+          if (navButton.parentElement.classList.contains('nav-next')) {
+            if (currentChart === 0) {
+              card.querySelector('.nav-prev').children[0].classList.remove('disabled');
+            }
+
+            currentChart++;
+
+            if (currentChart === chartPath.length - 1) {
+              navButton.classList.add('disabled');
+            }
+          } else {
+            if (currentChart === chartPath.length - 1) {
+              card.querySelector('.nav-next').children[0].classList.remove('disabled');
+            }
+
+            currentChart--;
+
+            if (currentChart === 0) {
+              navButton.classList.add('disabled');
+            }
+          }
+
+          card.querySelector('img').src = chartPath[currentChart];
+        });
+      }
+
+      checkAllComplexitiesSelected();
+    }, 500);
+  }
+} else {
+  const errorOverlay = new ErrorOverlay({
+    message: `Error occurs while trying to retrieve participants`,
+    details: `Received participants: ${participants}`,
+    interact: true
+  });
+
+  errorOverlay.show();
+}
 
 submitButton.addEventListener('click', async () => {
   if (!submitButton.disabled) {

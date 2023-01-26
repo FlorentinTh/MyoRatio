@@ -16,6 +16,7 @@
   margin: 35px 0;
 }
 
+.placeholder-container,
 .participant-card {
   padding: 10px;
   border: 1px solid #232323dd;
@@ -26,6 +27,32 @@
   align-items: center;
   height: 100%;
   width: 450px;
+  animation: fade-in .25s ease-in;
+}
+
+.placeholder-container > div {
+  border: 1px dashed #232323dd;
+  width: 100%;
+  border-radius: 6px;
+}
+
+.placeholder-container div.title {
+  height: 24px;
+}
+
+.placeholder-container div.header {
+  height: 54px;
+  margin: 25px 0 35px;
+}
+
+.placeholder-container div.content {
+  height: 210px;
+  margin-bottom: 35px;
+}
+
+.placeholder-container div.footer {
+  height: 101px;
+  margin-bottom: 25px;
 }
 
 .participant-card h3 {
@@ -96,10 +123,64 @@ input[type="checkbox"].auto-switch:checked::after {
   left: calc(100% - 1.5em);
 }
 
-.participant-card-container canvas {
+.participant-card-container img {
   border: 1px dashed #232323dd;
   border-radius: 6px;
-  padding: 15px;
+  padding: 0 0 15px 15px;
+  width: 100%;
+}
+
+.nav-btn-container {
+  width: 100%;
+  height: 100%;
+  border-radius: 6px;
+  margin-top: 15px;
+  display: flex;
+}
+
+.nav-btn-container > .nav-btn {
+  width: 100%;
+}
+
+.nav-btn-container > .nav-prev {
+  text-align: right;
+  margin-right: 10px;
+}
+
+.nav-btn-container > .nav-next {
+  text-align: left;
+  margin-left: 10px;
+}
+
+.nav-btn-container .icon-container {
+  display: inline-flex;
+  align-items: center;
+  height: 100%;
+  background-color: #16a084e4;
+  border: 2px solid #16A085;
+  background-size: 0 100%;
+  background-image: linear-gradient(to left, #16A085, #16A085);
+  border-radius: 30px;
+  padding: 2px 25px;
+  transition: ease-out .4s;
+}
+
+.nav-btn-container .icon-container.disabled {
+  background-color: #BDBDBD;
+  border-color: #BDBDBD;
+  cursor: default;
+  pointer-events: none;
+}
+
+.nav-btn-container .icon-container:hover {
+  cursor: pointer;
+  background-color: #16A085;
+  background-image: linear-gradient(to right, #16A085, #16A085);
+}
+
+.nav-btn-container > .nav-btn i {
+  font-size: 1.4em;
+  color: #EDEDED;
 }
 
 .complexity-container {
