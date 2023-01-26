@@ -9,11 +9,10 @@ import { LoaderOverlay } from './components/loader-overlay.js';
 import { Metadata } from './components/metadata';
 import { ChartSetup } from './utils/chart-setup';
 import { ChartHelper } from './helpers/chart-helper.js';
-import { DataHelper } from './helpers/data-helper.js';
 import { PathHelper } from './helpers/path-helper.js';
-// import { FileHelper } from './helpers/file-helper';
+import { FileHelper } from './helpers/file-helper';
 
-// const path = nw.require('path');
+const path = nw.require('path');
 
 const router = new Router();
 router.disableBackButton();
@@ -29,6 +28,7 @@ Chart.register(CrosshairPlugin);
 const selectedParticipants = sessionStorage.getItem('selected-participants').split(',');
 const analysisType = sessionStorage.getItem('analysis');
 const dataPath = sessionStorage.getItem('data-path');
+const stage = sessionStorage.getItem('stage');
 
 const autoAnglesButton = document.querySelector('div.auto-angles-btn');
 const infoParticipant = document.getElementById('participant');
@@ -42,9 +42,15 @@ const resetButton = document.querySelector('button[type="reset"]');
 let allData = null;
 let nbSelectedPoints = 0;
 let firstElementZoom = null;
+let currentParticipant = 0;
+let currentIteration = 0;
 
 const inputDataPath = PathHelper.sanitizePath(dataPath);
 const metadata = new Metadata(inputDataPath);
+
+if (!(analysisType === null)) {
+  infoAnalysis.innerText = analysisType;
+}
 
 if ('selected-points' in sessionStorage) {
   sessionStorage.removeItem('selected-points');
@@ -233,20 +239,48 @@ ChartSetup.options.plugins.crosshair = {
 ChartSetup.data.datasets[0].backgroundColor =
   ChartHelper.generateChartGradient(chartContext);
 
-// const file = await FileHelper.parseJSONFile(
-//   path.normalize('small_angles_5507_Ext_genou_Rep_1.3.json')
-// );
+const getAngleFiles = async () => {
+  const angleFiles = [];
 
-// ChartSetup.data.datasets[0].data = file;
-ChartSetup.data.datasets[0].data = DataHelper.generateSyntheticData();
+  for (const selectedParticipant of selectedParticipants) {
+    const inputPath = await metadata.getParticipantFolderPath(
+      analysisType,
+      selectedParticipant,
+      {
+        fromSession: true
+      }
+    );
+
+    const files = await FileHelper.listAllFiles(PathHelper.sanitizePath(inputPath));
+    angleFiles.push(
+      files
+        .filter(file => {
+          const fileArray = file.split('.');
+
+          if (fileArray[fileArray.length - 1] === 'json') {
+            const fileArray = file.split('_');
+
+            if (fileArray.includes('angles') && fileArray.includes('small')) {
+              return true;
+            }
+          }
+
+          return false;
+        })
+        .map(file => path.join(inputPath, file))
+    );
+  }
+
+  return angleFiles;
+};
+
+const angleFiles = await getAngleFiles();
+const angleFile = await FileHelper.parseJSONFile(
+  PathHelper.sanitizePath(angleFiles[currentParticipant][currentIteration])
+);
+
+ChartSetup.data.datasets[0].data = angleFile;
 ChartSetup.data.datasets[1].data = [];
-
-let currentParticipant = 0;
-let currentIteration = 0;
-
-if (!(analysisType === null)) {
-  infoAnalysis.innerText = analysisType;
-}
 
 const updateInfos = () => {
   infoParticipant.innerText = selectedParticipants[currentParticipant];
@@ -307,7 +341,7 @@ const checkForMetadataExistingPoints = async () => {
     selectedParticipants[currentParticipant]
   );
 
-  const iterations = infos.iterations;
+  const iterations = infos.stages[stage].iterations;
 
   if (iterations) {
     if (iterations[currentIteration + 1]) {
@@ -334,7 +368,8 @@ const checkForMetadataExistingPoints = async () => {
             );
 
             nbSelectedPoints = 2;
-            plot.data.datasets[0].pointBackgroundColor[i] = '#FF5722';
+            plot.data.datasets[1].data.push({ x: plottedPoint.x, y: plottedPoint.y });
+            // plot.data.datasets[0].pointBackgroundColor[i] = '#FF5722';
           }
         }
 
@@ -401,30 +436,35 @@ const getPointsObject = (auto = false) => {
 
 const writeMetadata = async data => {
   const participant = selectedParticipants[currentParticipant];
-  await metadata.writeContent(analysisType, participant, data);
+  await metadata.writeContent(analysisType, participant, data, stage);
 };
 
 allData = plot.data.datasets[0].data;
-const loadNextChart = async data => {
+const loadNextChart = async angleFiles => {
   checkSelectedPoints();
 
   plot.data.datasets[0].pointBackgroundColor = plot.data.datasets[0].data.map(() => {
     return '#16A085';
   });
 
+  plot.data.datasets[1].data = [];
+
   nbSelectedPoints = 0;
   firstElementZoom = null;
-  allData = data;
-
-  plot.data.datasets[0].data = allData;
-  plot.update();
 
   if (currentIteration < 2) {
     currentIteration++;
   } else {
+    await writeMetadata({ completed: true });
     currentIteration = 0;
     currentParticipant++;
   }
+
+  allData = await FileHelper.parseJSONFile(
+    PathHelper.sanitizePath(angleFiles[currentParticipant][currentIteration])
+  );
+  plot.data.datasets[0].data = allData;
+  plot.update();
 
   await checkForMetadataExistingPoints();
   updateInfos();
@@ -445,7 +485,7 @@ submitButton.addEventListener('click', async () => {
     }, 1000);
   } else {
     await displayAutoAnglesButton();
-    await loadNextChart(DataHelper.generateSyntheticData());
+    await loadNextChart(angleFiles);
   }
 });
 
