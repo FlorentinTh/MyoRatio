@@ -1,5 +1,9 @@
+import { TypeHelper } from '../helpers/type-helper';
+
 export class Switch {
   static init(label, opts = { disabled: false }) {
+    TypeHelper.checkStringNotNull(label, { label: 'label' });
+
     const defaultOpts = { disabled: false };
     opts = { ...defaultOpts, ...opts };
 
@@ -27,5 +31,7 @@ export class Switch {
         switchRadio.setAttribute('disabled', '');
       }
     }
+
+    return switchRadios;
   }
 }
