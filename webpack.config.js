@@ -6,6 +6,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 
 const getViews = directory => {
   const viewFilesLocation = fs.readdirSync(path.resolve(__dirname, directory));
@@ -112,6 +113,14 @@ module.exports = (env, argv) => {
             ? 'styles/[name].[contenthash:8].css'
             : 'styles/[name].css',
         chunkFilename: '[id].css'
+      }),
+      new CopyPlugin({
+        patterns: [
+          {
+            from: path.join(__dirname, 'src', 'assets', 'icons', 'app.png'),
+            to: path.join('public', 'assets')
+          }
+        ]
       })
     ].concat(
       views.map(
