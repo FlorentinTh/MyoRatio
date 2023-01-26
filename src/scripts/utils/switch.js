@@ -7,6 +7,8 @@ export class Switch {
     const defaultOpts = { disabled: false };
     opts = { ...defaultOpts, ...opts };
 
+    TypeHelper.checkBoolean(opts.disabled, { label: 'disabled' });
+
     const storedSwitchValue = sessionStorage.getItem(label);
     let switchRadios = [...document.getElementById(`switch-${label}`).children];
     switchRadios = switchRadios.filter(item => item.nodeName === 'INPUT');

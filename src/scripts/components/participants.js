@@ -5,7 +5,7 @@ const path = nw.require('path');
 const fs = nw.require('fs');
 
 export const getAllParticipants = async sanitizedPath => {
-  TypeHelper.checkStringNotNull(sanitizedPath);
+  TypeHelper.checkStringNotNull(sanitizedPath, { label: 'sanitizedPath' });
 
   let participantsFolder;
   try {

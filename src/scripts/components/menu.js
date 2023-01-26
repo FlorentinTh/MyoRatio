@@ -87,7 +87,7 @@ export class Menu {
   }
 
   setItemActive(itemID) {
-    TypeHelper.checkStringNotNull(itemID);
+    TypeHelper.checkStringNotNull(itemID, { label: 'itemID' });
 
     const items = document.querySelectorAll('nav.menu ul li a');
     for (const item of items) {
