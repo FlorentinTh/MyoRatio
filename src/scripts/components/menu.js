@@ -21,14 +21,16 @@ export class Menu {
   }
 
   init(buttons) {
-    if (!TypeHelper.isUndefinedOrNull(buttons) && !TypeHelper.isNodeList(buttons)) {
-      if (!TypeHelper.isChildOfHTMLElement(buttons)) {
-        throw new Error(
-          `selectorButtons parameter must be of type NodeList or a child of HTMLElement. Receive: ${TypeHelper.getType(
-            buttons
-          )}`
-        );
-      }
+    if (
+      !TypeHelper.isUndefinedOrNull(buttons) &&
+      !TypeHelper.isNodeList(buttons) &&
+      !TypeHelper.isChildOfHTMLElement(buttons)
+    ) {
+      throw new Error(
+        `selectorButtons parameter must be of type NodeList or a child of HTMLElement. Receive: ${TypeHelper.getType(
+          buttons
+        )}`
+      );
     }
 
     this.#toggleNavButton.addEventListener('click', () => {
@@ -81,6 +83,21 @@ export class Menu {
       });
     } else {
       HPFConverterLink.setAttribute('disabled', '');
+    }
+  }
+
+  setItemActive(itemID) {
+    TypeHelper.checkStringNotNull(itemID);
+
+    const items = document.querySelectorAll('nav.menu ul li a');
+    for (const item of items) {
+      if (!(item.id === itemID)) {
+        if (item.classList.contains('active')) {
+          item.classList.remove('active');
+        }
+      } else {
+        item.classList.add('active');
+      }
     }
   }
 }
