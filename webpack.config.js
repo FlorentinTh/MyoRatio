@@ -53,7 +53,7 @@ module.exports = (env, argv) => {
       filename:
         argv.mode === 'production'
           ? 'scripts/[name].bundle.[contenthash:8].js'
-          : '[name].bundle.[contenthash:8].js',
+          : '[name].bundle.js',
 
       path: path.resolve(__dirname, outputFolder),
       clean: true
@@ -90,7 +90,10 @@ module.exports = (env, argv) => {
             }
           },
           generator: {
-            filename: 'fonts/[name].[contenthash:8][ext]'
+            filename:
+              argv.mode === 'production'
+                ? 'fonts/[name].[contenthash:8].[ext]'
+                : 'fonts/[name].[ext]'
           }
         },
         {
@@ -104,7 +107,10 @@ module.exports = (env, argv) => {
     },
     plugins: [
       new MiniCssExtractPlugin({
-        filename: 'styles/[name].[contenthash:8].css',
+        filename:
+          argv.mode === 'production'
+            ? 'styles/[name].[contenthash:8].css'
+            : 'styles/[name].css',
         chunkFilename: '[id].css'
       })
     ].concat(
