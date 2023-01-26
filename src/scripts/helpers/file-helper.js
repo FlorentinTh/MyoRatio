@@ -2,6 +2,7 @@ import { PlatformHelper } from '../helpers/platform-helper.js';
 import { TypeHelper } from '../helpers/type-helper.js';
 
 const fs = nw.require('fs');
+const path = nw.require('path');
 const { execSync } = nw.require('child_process');
 
 export class FileHelper {
@@ -88,6 +89,20 @@ export class FileHelper {
       if (!(exec.toString() === '')) {
         throw new Error(`Cannot hide ${inputPath}`);
       }
+    }
+  }
+
+  static async listAllFiles(inputPath) {
+    let files;
+    try {
+      files = await fs.promises.readdir(inputPath);
+
+      return files.filter(async file => {
+        const stat = await fs.promises.stat(path.join(inputPath, file));
+        return stat.isFile();
+      });
+    } catch (error) {
+      throw new Error(error);
     }
   }
 }
