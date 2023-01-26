@@ -4,9 +4,15 @@
   margin-bottom: 35px;
 }
 
+.group .label p {
+  font-weight: bold;
+  color: #16A085;
+}
+
 .setting-container {
   display: flex;
   flex-wrap: wrap;
+  border: 1px solid #16A085;
 }
 
 .setting-line {
@@ -32,6 +38,28 @@
   color: #232323dd;
   text-transform: capitalize;
   font-size: 1.2em;
+}
+
+.setting-container .input-text {
+  margin: 0;
+}
+
+.setting-container .label p {
+  font-weight: normal;
+  color: #232323dd;
+}
+
+.setting-container .input-container > .unit {
+  background-color: #232323dd;
+  color: #EDEDED;
+  text-transform: uppercase;
+  font-size: .8em;
+  height: 39px;
+  padding: 0 15px;
+  line-height: 39px;
+  position: absolute;
+  border-top-left-radius: 30px;
+  border-bottom-left-radius: 30px;
 }
 
 .switch-box {

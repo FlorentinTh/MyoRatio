@@ -24,10 +24,13 @@ if ('app-error' in sessionStorage) {
   errorOverlay.show();
 }
 
+sessionStorage.clear();
+
 const loaderOverlay = new LoaderOverlay();
 
 const menu = new Menu();
 menu.init();
+menu.setItemActive('home');
 
 const folderInput = document.querySelector('.folder-input');
 const dropArea = document.querySelector('.folder-drop-area');
@@ -79,27 +82,6 @@ const toggleFolderPath = (path = null) => {
 
 const submitButton = document.querySelector('button[type="submit"]');
 
-const windowSizeInput = document.getElementById('window-size');
-
-if (!('window-size' in sessionStorage)) {
-  sessionStorage.setItem('window-size', windowSizeInput.value);
-}
-
-windowSizeInput.addEventListener('input', event => {
-  const value = event.target.value;
-
-  if (!(value === '') && value > 0) {
-    if (submitButton.disabled && folderInput.files.length > 0) {
-      sessionStorage.setItem('window-size', value);
-      submitButton.removeAttribute('disabled');
-    }
-  } else {
-    if (!submitButton.disabled) {
-      submitButton.setAttribute('disabled', '');
-    }
-  }
-});
-
 folderInput.addEventListener('change', event => {
   if (event && event.target.files.length > 0) {
     const folder = event.target.files[0];
@@ -107,15 +89,7 @@ folderInput.addEventListener('change', event => {
     toggleFolderPath(folder.path);
     sessionStorage.setItem('data-path', folder.path);
 
-    if (
-      submitButton.disabled &&
-      !(windowSizeInput.value === '') &&
-      windowSizeInput.value > 0
-    ) {
-      if (!('window-size' in sessionStorage)) {
-        sessionStorage.setItem('window-size', windowSizeInput.value);
-      }
-
+    if (submitButton.disabled) {
       submitButton.removeAttribute('disabled');
     }
   } else {

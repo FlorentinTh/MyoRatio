@@ -16,29 +16,22 @@
         <h2>Settings</h2>
         <div class="group">
           <div class="label">
-            <p>Section #1</p>
+            <p>EMG Processing</p>
           </div>
           <div class="setting-container">
-            <div class="setting-line">
-              <div class="setting-label">
-                <span>Example setting #1</span>
+            <div class="group">
+              <div class="label">
+                <p>Size of the window</p>
               </div>
-              <div class="switch-box">
-                <input type="checkbox" class="switch">
-              </div>
-            </div>
-            <div class="setting-line">
-              <div class="setting-label">
-                <span>Example setting #2</span>
-              </div>
-              <div class="switch-box">
-                <input type="checkbox" class="switch">
+              <div class="input-container">
+                <span class="unit">Sec.</span>
+                <input id="window-size" step="0.01" class="input-text" type="number" value="0.2">
               </div>
             </div>
           </div>
         </div>
-        <div class="group">
-          <div class="label">
+        <!-- <div class="group"> -->
+        <!-- <div class="label">
             <p>Section #2</p>
           </div>
           <div class="setting-container">
@@ -50,8 +43,8 @@
                 <input type="checkbox" class="switch">
               </div>
             </div>
-          </div>
-        </div>
+          </div> -->
+        <!-- </div> -->
         <div class="group">
           <div class="button-container">
             <button type="submit">Save</button>

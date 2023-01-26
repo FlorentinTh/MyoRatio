@@ -15,6 +15,8 @@ router.disableBackButton();
 const basePath = process.env.INIT_CWD ?? process.cwd();
 const APIExecutablePath = path.join(basePath, 'bin', 'EMGTrignoAPI', 'EMGTrignoAPI.exe');
 
+localStorage.setItem('window-size', 0.2);
+
 execFile(APIExecutablePath, error => {
   if (error) {
     sessionStorage.setItem(

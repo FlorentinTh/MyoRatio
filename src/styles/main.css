@@ -113,12 +113,12 @@ main.content section.wrapper .label {
   display: flex;
   align-items: center;
   padding: 50px;
-  border: 1px dashed #232323dd;
   border-radius: 6px;
 }
 
 .input-container {
   height: 100px;
+  border: 1px dashed #232323dd;
 }
 
 .input-text {
