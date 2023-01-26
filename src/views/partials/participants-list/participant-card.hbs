@@ -1,11 +1,11 @@
-{{#if infos.completed}}
+{{#if stage.completed}}
   <li class="item completed">
 {{else}}
   <li class="item not-completed">
 {{/if}}
   <div class="content">
     <div class="icon">
-      {{#if infos.completed}}
+      {{#if stage.completed}}
         <i class="fas fa-user-check"></i>
       {{else}}
         <i class="fas fa-user-times"></i>
@@ -23,7 +23,7 @@
       <div class="line-2">
         <span class="state"></span>
         <span class="text">
-          {{~#if infos.completed~}}
+          {{~#if stage.completed~}}
             completed
           {{~else~}}
             not completed
@@ -36,7 +36,7 @@
       </div>
     </div>
   </div>
-  {{#if infos.completed}}
+  {{#if stage.completed}}
     <div class="actions">
       <button type="button">See Results</button>
     </div>

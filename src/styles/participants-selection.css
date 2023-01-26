@@ -138,8 +138,13 @@
   border-radius: 6px;
 }
 
+.list-container.change {
+  height: 480px;
+}
+
 .list-container.empty-list {
   padding-right: 15px;
+  margin-bottom: 0;
 }
 
 .empty-content {
@@ -174,7 +179,8 @@ ul.list {
   list-style-type: none;
 }
 
-ul.list  >  li.item {
+ul.list > li.item {
+  animation: fade-in .25s ease-in;
   display: flex;
   margin: 15px 15px 15px 0;
   min-width: 300px;
