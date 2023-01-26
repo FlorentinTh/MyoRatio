@@ -127,6 +127,8 @@ export class Metadata {
     const defaultOpts = { fromSession: false };
     opts = { ...defaultOpts, ...opts };
 
+    TypeHelper.checkBoolean(opts.fromSession, { label: 'fromSession' });
+
     let participantFolderName;
 
     const participantArray = participant.split('_');
@@ -247,5 +249,19 @@ export class Metadata {
       metadataFileJSON = { ...metadataFileJSON, ...output };
       await FileHelper.writeJSONFile(metadataFilePath, metadataFileJSON);
     }
+  }
+
+  async writeHTMLReport(analysisType, content) {
+    TypeHelper.checkStringNotNull(analysisType, { label: 'analysisType' });
+    TypeHelper.checkStringNotNull(content, { label: 'content' });
+
+    const reportOutputPath = path.join(
+      this.#inputDataPath,
+      this.#metadataRootFolder,
+      `.${analysisType}`,
+      `${analysisType}_report.html`
+    );
+
+    await FileHelper.writeFile(reportOutputPath, content);
   }
 }

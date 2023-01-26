@@ -1,266 +1,381 @@
-<style>
-  * {
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
-    -webkit-font-smoothing: antialiased;
-  }
+<!DOCTYPE html>
+<head>
+  <style>
+    @page {
+        size: letter portrait;
+        @frame content_frame {
+            left: 50pt; width: 512pt; top: 90pt; height: 612pt;
+        }
+        @frame footer_frame {
+            -pdf-frame-content: footer;
+            left: 50pt; width: 512pt; top: 752pt; height: 20pt;
+        }
+    }
+    * {
+      padding: 0;
+      margin: 0;
+      box-sizing: border-box;
+    }
 
-  h1 {
-    text-align: center;
-    font-size: 1.4em;
-    text-transform: uppercase;
-    letter-spacing: 0.02em;
-    margin-bottom: 75px;
-  }
+    h1 {
+      text-align: center;
+      font-size: 1.4em;
+      text-transform: uppercase;
+      letter-spacing: 0.32px;
+      margin-bottom: 75px;
+    }
 
-  section:not(:last-of-type) {
-    margin-bottom: 50px;
-  }
+    section h2, h3, h4 {
+      text-transform: capitalize;
+      letter-spacing: 0.32px;
+      margin-top: 35px;
+      margin-bottom: 25px;
+    }
 
-  section h2, h3, h4 {
-    text-transform: uppercase;
-    letter-spacing: 0.02em;
-    margin-bottom: 35px;
-  }
+    section h2, h3 {
+      font-size: 1.2em;
+    }
 
-   section h2, h3 {
-    font-size: 1.2em;
-   }
+    section h3, h4 {
+      padding-left: 25px;
+    }
 
-  section h3, h4 {
-    padding-left: 25px;
-  }
+    section h4 {
+      padding-left: 25px;
+      font-weight: normal;
+      font-size: 1em;
+    }
 
-  section h4 {
-    padding-left: 25px;
-    font-weight: normal;
-    font-size: 1em;
-  }
+    section .content {
+      width: 100%;
+      display: flex;
+      padding: 0 35px;
+    }
 
-  section .content {
-    width: 100%;
-    display: flex;
-    padding: 0 35px;
-  }
+    section .content h4 {
+      width: 100%;
+      display: inline-flex;
+      padding-left: 0;
+      margin-bottom: 35px;
+    }
 
-  section .content h4 {
-    width: 100%;
-    display: inline-flex;
-    padding-left: 0;
-    margin-bottom: 35px;
-  }
+    section .content {
+      margin-bottom: 50px;
+    }
 
-  section .content:not(:last-of-type) {
-    margin-bottom: 50px;
-  }
+    section .content:last-of-type {
+      margin-bottom: 0;
+    }
 
-  .table-container {
-    width: 100%;
-    display: inline-flex;
-    justify-content: center;
-  }
+    .table-container {
+      width: 100%;
+      display: inline-flex;
+      justify-content: center;
+    }
 
-  table {
-    justify-self: center;
-    width: 80%;
-    border: 1px solid #b3adad;
-    border-collapse: collapse;
-    padding: 5px;
-  }
+    table {
+      justify-self: center;
+      width: 80%;
+      border: 1px solid #B3ADAD;
+      border-collapse: collapse;
+      padding: 5px;
+    }
 
-  table caption {
-    text-transform: uppercase;
-    font-size: 0.9em;
-    margin-bottom: 15px;
-  }
+    table caption {
+      text-transform: uppercase;
+      font-size: 0.9em;
+    }
 
 
-  table th {
-    border: 1px solid #b3adad;
-    padding: 6px;
-    background: #f0f0f0;
-    color: #313030;
-  }
+    table th {
+      border: 1px solid #B3ADAD;
+      padding: 6px;
+      background: #F0F0F0;
+      color: #313030;
+    }
 
-  table td {
-    border: 1px solid #b3adad;
-    text-align: center;
-    padding: 6px;
-    background: #ffffff;
-    color: #313030;
-    text-transform: uppercase;
-  }
+    table td {
+      border: 1px solid #B3ADAD;
+      text-align: center;
+      padding: 6px;
+      background: #FFFFFF;
+      color: #313030;
+      text-transform: uppercase;
+    }
 
-  #participants-table th:first-of-type {
-    width: 20%;
-  }
+    #participants-table th:first-of-type {
+      width: 20%;
+    }
 
-  #auto-selection-table th:first-of-type,
-  #angles-table th:first-of-type  {
-    width: 50%;
-  }
+    #auto-selection-table th:first-of-type,
+    #angles-table th:first-of-type  {
+      width: 50%;
+    }
 
-  #participants-table th:nth-of-type(2) {
-    width: 10%;
-  }
+    #participants-table th:nth-of-type(2) {
+      width: 10%;
+    }
 
-  #auto-selection-table th:nth-of-type(2),
-  #angles-table th:nth-of-type(2) {
-    width: 20%;
-  }
+    #auto-selection-table th:nth-of-type(2),
+    #angles-table th:nth-of-type(2) {
+      width: 20%;
+    }
 
-  #participants-table th:nth-of-type(3) {
-    width: 70%;
-  }
+    #participants-table th:nth-of-type(3) {
+      width: 70%;
+    }
 
-  #auto-selection-table th:nth-of-type(3),
-  #angles-table th:nth-of-type(3) {
-    width: 20%;
-  }
+    #auto-selection-table th:nth-of-type(3),
+    #angles-table th:nth-of-type(3) {
+      width: 20%;
+    }
 
-  #participants-table tr td:not(:last-of-type) {
-    background-color: #FFCCBC;
-  }
+    #participants-table tr td {
+      background-color: #FFCCBC;
+    }
 
-  #participants-table tr.completed td:not(:last-of-type) {
-    background-color: #DCEDC8;
-  }
-</style>
+    #participants-table tr td:last-of-type {
+      background-color: #FFFFFF;
+    }
 
-<body>
-  <h1>Report for {{analysis}} analysis of EMG data</h1>
+    #participants-table tr.completed td {
+      background-color: #DCEDC8;
+    }
 
-  <section>
-    <h2>1. List of Participants</h2>
-    <div class="content">
-      <div class="table-container">
-        <table id="participants-table">
-          <caption><strong>Table 1.1</strong>: list of participants for the {{analysis}} analysis</caption>
-          <thead>
-            <tr>
-              <th>Participant</th>
-              <th>Completed</th>
-              <th>Notes</th>
-            </tr>
-          </thead>
-          <tbody>
-            {{#each participants}}
-              {{#if this.infos.completed}}
-                <tr class="completed">
-              {{else}}
-                <tr>
-              {{/if}}
-                <td>{{~this.name~}}</td>
-                {{#if this.infos.completed}}
-                  <td>X</td>
-                {{else}}
-                  <td></td>
-                {{/if}}
-                <td></td>
-              </tr>
-            {{/each}}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </section>
+    #participants-table tr.completed td:last-of-type {
+      background-color: #FFFFFF;
+    }
 
-  <section>
-    <h2>2. Auto-Selection of Angles</h2>
-    <div class="content">
-      <div class="table-container">
-        <table id="auto-selection-table">
-          <caption><strong>Table 2.1</strong>: details of the auto-selection complexity of the angles for each participant in the analysis of the {{analysis~}}</caption>
-          <thead>
-            <tr>
-              <th>Participant</th>
-              <th>Complexity</th>
-              <th>Auto-Selection</th>
-            </tr>
-          </thead>
-          <tbody>
-            {{#each participants}}
-              <tr>
-                <td>{{~this.name~}}</td>
-                <td>{{~this.infos.complexity~}}</td>
-                {{#if this.infos.auto_angles}}
-                  <td>X</td>
-                {{else}}
-                  <td></td>
-                {{/if}}
-              </tr>
-            {{/each}}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </section>
+    #footer {
+      width: 100%;
+      font-size: 10px;
+      text-align: right;
+    }
+  </style>
+</head>
+  <body>
+    <h1>Report for {{analysis}} analysis of EMG data</h1>
 
-  <section>
-    <h2>3. {{analysis}} Analysis</h2>
-    {{#each participants as | participant |}}
-      <h3>3.{{~inc @index~}}. Participant {{participant.name~}}</h3>
-      {{#if participant.infos.completed}}
-      <h4>A. Angles Manually Selected</h4>
+    <section>
+      <h2>1. List of Participants</h2>
       <div class="content">
         <div class="table-container">
-          <table id="angles-table">
-            <caption><strong>Table 3.{{~inc @index~}}.1</strong>: list of manually selected angles for each iteration</caption>
+          <table id="participants-table">
+            <caption><strong>Table 1.1</strong>: list of participants for the {{analysis}} analysis</caption>
             <thead>
               <tr>
-                <th>Iteration</th>
-                <th>Point A</th>
-                <th>Point B</th>
+                <th>Participant</th>
+                <th>Stage Completed</th>
+                <th>Notes</th>
               </tr>
             </thead>
             <tbody>
-              {{#each participant.infos.iterations as | iteration |}}
-                <tr>
-                  <td>Iteration {{inc @index~}}</td>
-                  {{#each iteration.points.hand as | point |}}
-                    <td>[{{~point.x}}, {{point.y~}}]</td>
-                  {{/each}}
-                </tr>
-              {{/each}}
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <h4>B. Angles Automatically Selected</h4>
-      <div class="content">
-        <div class="table-container">
-          <table id="angles-table">
-            <caption><strong>Table 3.{{~inc @index~}}.1</strong>: list of automatically selected angles for each iteration</caption>
-            <thead>
-              <tr>
-                <th>Iteration</th>
-                <th>Point A</th>
-                <th>Point B</th>
-              </tr>
-            </thead>
-            <tbody>
-              {{#each participant.infos.iterations as | iteration |}}
-                <tr>
-                  <td>Iteration {{inc @index~}}</td>
-                  {{#each iteration.points.auto as | point |}}
-                    {{#if point.x}}
-                      <td>[{{~point.x}}, {{point.y~}}]</td>
+              {{#each participants}}
+                {{#if this.infos.stages.concentric.completed}}
+                  {{#if this.infos.stages.eccentric.completed}}
+                    <tr class="completed">
+                  {{else}}
+                    <tr>
+                  {{/if}}
+                {{else}}
+                    <tr>
+                {{/if}}
+                  <td>{{~this.name~}}</td>
+                  {{#if this.infos.stages.concentric.completed}}
+                    {{#if this.infos.stages.eccentric.completed}}
+                      <td>concentric, eccentric</td>
                     {{else}}
-                      <td>n/a</td>
+                      <td>concentric</td>
                     {{/if}}
-                  {{/each}}
+                  {{else}}
+                      {{#if this.infos.stages.eccentric.completed}}
+                        <td>eccentric</td>
+                      {{else}}
+                        <td>none</td>
+                      {{/if}}
+                  {{/if}}
+                  <td>&nbsp;&nbsp;&nbsp;</td>
                 </tr>
               {{/each}}
             </tbody>
           </table>
         </div>
       </div>
-      {{else}}
-        <div class="content">
-          <p><strong><em>Participant is not completed</em></strong></p>
+    </section>
+
+    <section>
+      <h2>2. Auto-Selection of Angles</h2>
+      <div class="content">
+        <div class="table-container">
+          <table id="auto-selection-table">
+            <caption><strong>Table 2.1</strong>: details of the auto-selection complexity of the angles for each participant in the analysis of the {{analysis~}}</caption>
+            <thead>
+              <tr>
+                <th>Participant</th>
+                <th>Complexity</th>
+                <th>Auto-Selection</th>
+              </tr>
+            </thead>
+            <tbody>
+              {{#each participants}}
+                <tr>
+                  <td>{{~this.name~}}</td>
+                  <td>{{~this.infos.complexity~}}</td>
+                  {{#if this.infos.auto_angles}}
+                    <td>&nbsp;X&nbsp;</td>
+                  {{else}}
+                    <td>&nbsp;&nbsp;&nbsp;</td>
+                  {{/if}}
+                </tr>
+              {{/each}}
+            </tbody>
+          </table>
         </div>
-      {{/if}}
-  {{/each}}
-  </section>
-</body>
+      </div>
+    </section>
+
+    <section>
+      <h2>3. Concentric Analysis</h2>
+      {{#each participants as | participant |}}
+        <h3>3.{{~inc @index~}}. Participant {{participant.name~}}</h3>
+        {{#if participant.infos.stages.concentric.completed}}
+        <h4>A. Angles Manually Selected</h4>
+        <div class="content">
+          <div class="table-container">
+            <table id="angles-table">
+              <caption><strong>Table 3.{{~inc @index~}}.1</strong>: list of manually selected angles for each iteration</caption>
+              <thead>
+                <tr>
+                  <th>Iteration</th>
+                  <th>Point A</th>
+                  <th>Point B</th>
+                </tr>
+              </thead>
+              <tbody>
+                {{#each participant.infos.stages.concentric.iterations as | iteration |}}
+                  <tr>
+                    <td>Iteration {{inc @index~}}</td>
+                    {{#each iteration.points.manual as | point |}}
+                      <td>[{{~point.x}}, {{point.y~}}]</td>
+                    {{/each}}
+                  </tr>
+                {{/each}}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <h4>B. Angles Automatically Selected</h4>
+        <div class="content">
+          <div class="table-container">
+            <table id="angles-table">
+              <caption><strong>Table 3.{{~inc @index~}}.1</strong>: list of automatically selected angles for each iteration</caption>
+              <thead>
+                <tr>
+                  <th>Iteration</th>
+                  <th>Point A</th>
+                  <th>Point B</th>
+                </tr>
+              </thead>
+              <tbody>
+                {{#each participant.infos.stages.concentric.iterations as | iteration |}}
+                  <tr>
+                    <td>Iteration {{inc @index~}}</td>
+                    {{#each iteration.points.auto as | point |}}
+                      {{#if point.x}}
+                        <td>[{{~point.x}}, {{point.y~}}]</td>
+                      {{else}}
+                        <td>n/a</td>
+                      {{/if}}
+                    {{/each}}
+                  </tr>
+                {{/each}}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        {{else}}
+          <div class="content">
+            <p><strong><em>Participant is not completed</em></strong></p>
+          </div>
+        {{/if}}
+    {{/each}}
+    </section>
+
+    <section>
+      <h2>4. Eccentric Analysis</h2>
+      {{#each participants as | participant |}}
+        <h3>3.{{~inc @index~}}. Participant {{participant.name~}}</h3>
+        {{#if participant.infos.stages.eccentric.completed}}
+        <h4>A. Angles Manually Selected</h4>
+        <div class="content">
+          <div class="table-container">
+            <table id="angles-table">
+              <caption><strong>Table 3.{{~inc @index~}}.1</strong>: list of manually selected angles for each iteration</caption>
+              <thead>
+                <tr>
+                  <th>Iteration</th>
+                  <th>Point A</th>
+                  <th>Point B</th>
+                </tr>
+              </thead>
+              <tbody>
+                {{#each participant.infos.stages.eccentric.iterations as | iteration |}}
+                  <tr>
+                    <td>Iteration {{inc @index~}}</td>
+                    {{#each iteration.points.manual as | point |}}
+                      <td>[{{~point.x}}, {{point.y~}}]</td>
+                    {{/each}}
+                  </tr>
+                {{/each}}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <h4>B. Angles Automatically Selected</h4>
+        <div class="content">
+          <div class="table-container">
+            <table id="angles-table">
+              <caption><strong>Table 3.{{~inc @index~}}.1</strong>: list of automatically selected angles for each iteration</caption>
+              <thead>
+                <tr>
+                  <th>Iteration</th>
+                  <th>Point A</th>
+                  <th>Point B</th>
+                </tr>
+              </thead>
+              <tbody>
+                {{#each participant.infos.stages.eccentric.iterations as | iteration |}}
+                  <tr>
+                    <td>Iteration {{inc @index~}}</td>
+                    {{#each iteration.points.auto as | point |}}
+                      {{#if point.x}}
+                        <td>[{{~point.x}}, {{point.y~}}]</td>
+                      {{else}}
+                        <td>n/a</td>
+                      {{/if}}
+                    {{/each}}
+                  </tr>
+                {{/each}}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        {{else}}
+          <div class="content">
+            <p><strong><em>Participant is not completed</em></strong></p>
+          </div>
+        {{/if}}
+    {{/each}}
+    </section>
+
+    <div id="footer">
+      <span class="datetime">{{~dateTime}} - </span>
+      <span class="page">
+          <span>Page:</span>
+          <label class="pageNumber"><pdf:pagenumber></label>
+          <span>of</span>
+          <label class="totalPages"><pdf:pagecount></label>
+      </span>
+    </div>
+  </body>
+</html>

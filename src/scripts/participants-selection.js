@@ -3,6 +3,10 @@ import participantCard from '../views/partials/participants-list/participant-car
 import emptyCard from '../views/partials/participants-list/empty-card.hbs';
 import report from '../views/partials/pdf-report/report.hbs';
 
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+
 import { Menu } from './components/menu.js';
 import { Router } from './routes/router.js';
 import { LoaderOverlay } from './components/loader-overlay.js';
@@ -15,6 +19,10 @@ import { Switch } from './utils/switch';
 import { DOMElement } from './utils/dom-element';
 
 const path = nw.require('path');
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault('America/Toronto');
 
 const router = new Router();
 router.disableBackButton();
@@ -335,23 +343,18 @@ if (!(participants?.length > 0)) {
   exportPDFButton.addEventListener('click', async () => {
     loaderOverlay.toggle({ message: 'Creating PDF report...' });
 
-    const sanitizedPDFPath = PathHelper.sanitizePath(
-      path.join(analysisFolderPath, `${analysisType}_report.pdf`)
-    );
-
-    const { PDFReport } = await import('./components/pdf-report');
-    const pdfReport = new PDFReport(sanitizedPDFPath);
-
     try {
-      await pdfReport.create(
+      await metadata.writeHTMLReport(
+        analysisType,
         report({
           analysis: analysisType,
-          participants: participantsObject
+          participants: participantsObject,
+          dateTime: dayjs().format('YYYY-MM-DD hh:mm')
         })
       );
     } catch (error) {
       const errorOverlay = new ErrorOverlay({
-        message: `Error occurs while trying create PDF report`,
+        message: `Error occurs while trying to create HTML report`,
         details: error.message,
         interact: true
       });
@@ -359,7 +362,9 @@ if (!(participants?.length > 0)) {
       errorOverlay.show();
     }
 
-    loaderOverlay.toggle();
+    setTimeout(() => {
+      loaderOverlay.toggle();
+    }, 2000);
   });
 }
 

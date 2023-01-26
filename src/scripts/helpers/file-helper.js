@@ -58,6 +58,17 @@ export class FileHelper {
     }
   }
 
+  static async writeFile(inputPath, content) {
+    TypeHelper.checkStringNotNull(inputPath, { label: 'inputPath' });
+    TypeHelper.checkStringNotNull(content, { label: 'content' });
+
+    try {
+      await fs.promises.writeFile(inputPath, content);
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
   static async writeJSONFile(inputPath, content) {
     TypeHelper.checkStringNotNull(inputPath, { label: 'inputPath' });
     TypeHelper.checkObject(content, { label: 'content' });
@@ -93,6 +104,8 @@ export class FileHelper {
   }
 
   static async listAllFiles(inputPath) {
+    TypeHelper.checkStringNotNull(inputPath, { label: 'inputPath' });
+
     let files;
     try {
       files = await fs.promises.readdir(inputPath);
