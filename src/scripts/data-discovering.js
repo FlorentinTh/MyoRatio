@@ -7,6 +7,7 @@ import { LoaderOverlay } from './components/loader-overlay.js';
 import { Metadata } from './components/metadata.js';
 import { PathHelper } from './helpers/path-helper.js';
 import { Switch } from './utils/switch';
+import { SessionStore } from './utils/session-store';
 
 const os = nw.require('os');
 
@@ -24,7 +25,7 @@ if ('app-error' in sessionStorage) {
   errorOverlay.show();
 }
 
-sessionStorage.clear();
+SessionStore.clear({ keep: ['data-path', 'analysis'] });
 
 const loaderOverlay = new LoaderOverlay();
 
@@ -36,6 +37,7 @@ const folderInput = document.querySelector('.folder-input');
 const dropArea = document.querySelector('.folder-drop-area');
 const chooseButton = document.querySelector('.choose-btn');
 const folderMessage = document.querySelector('.folder-msg');
+const submitButton = document.querySelector('button[type="submit"]');
 
 folderInput.setAttribute('nwworkingdir', os.homedir());
 
@@ -80,9 +82,15 @@ const toggleFolderPath = (path = null) => {
   }
 };
 
-const submitButton = document.querySelector('button[type="submit"]');
+if ('data-path' in sessionStorage) {
+  toggleFolderPath(sessionStorage.getItem('data-path'));
+  submitButton.removeAttribute('disabled');
+}
 
 folderInput.addEventListener('change', event => {
+  console.log({
+    event
+  });
   if (event && event.target.files.length > 0) {
     const folder = event.target.files[0];
 

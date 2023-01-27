@@ -17,6 +17,7 @@ import { PathHelper } from './helpers/path-helper.js';
 import { StringHelper } from './helpers/string-helper';
 import { Switch } from './utils/switch';
 import { DOMElement } from './utils/dom-element';
+import { SessionStore } from './utils/session-store';
 
 const path = nw.require('path');
 
@@ -369,6 +370,6 @@ if (!(participants?.length > 0)) {
 }
 
 changeButton.addEventListener('click', () => {
-  sessionStorage.clear();
+  SessionStore.clear({ keep: ['data-path', 'analysis'] });
   router.switchPage('data-discovering');
 });
