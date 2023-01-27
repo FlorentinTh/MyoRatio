@@ -2,6 +2,7 @@ import '../styles/main.css';
 
 import { LoaderOverlay } from './components/loader-overlay.js';
 import { Router } from './routes/router.js';
+import { PlatformHelper } from './helpers/platform-helper.js';
 
 const path = nw.require('path');
 const { execFile } = nw.require('child_process');
@@ -13,7 +14,11 @@ const router = new Router();
 router.disableBackButton();
 
 const basePath = process.env.INIT_CWD ?? process.cwd();
-const APIExecutablePath = path.join(basePath, 'bin', 'EMGTrignoAPI', 'EMGTrignoAPI.exe');
+let APIExecutablePath;
+
+if (PlatformHelper.isWindowsPlatform()) {
+  APIExecutablePath = path.join(basePath, 'bin', 'EMGTrignoAPI', 'EMGTrignoAPI.exe');
+}
 
 if (!('window-size' in localStorage)) {
   localStorage.setItem('window-size', 0.2);
