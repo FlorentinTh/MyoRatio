@@ -22,12 +22,13 @@ if (!('window-size' in localStorage)) {
   windowSizeInput.value = localStorage.getItem('window-size');
 }
 
-windowSizeInput.addEventListener('input', event => {
+windowSizeInput.addEventListener('keyup', event => {
   const value = event.target.value;
 
   if (!(value === '') && value > 0) {
+    localStorage.setItem('window-size', value);
+
     if (submitButton.disabled) {
-      localStorage.setItem('window-size', value);
       submitButton.removeAttribute('disabled');
     }
   } else {
