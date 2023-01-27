@@ -294,8 +294,11 @@ const updateInfos = () => {
 
   pagerDots[currentIteration].classList.toggle('active');
 
-  if (currentIteration === 2 && currentParticipant + 1 === selectedParticipants.length) {
-    submitButton.innerText = `Terminer`;
+  if (
+    currentIteration === angleFiles[currentParticipant].length - 1 &&
+    currentParticipant + 1 === selectedParticipants.length
+  ) {
+    submitButton.innerText = `Complete`;
     submitButton.classList.add('completed');
   }
 };
@@ -369,7 +372,6 @@ const checkForMetadataExistingPoints = async () => {
 
             nbSelectedPoints = 2;
             plot.data.datasets[1].data.push({ x: plottedPoint.x, y: plottedPoint.y });
-            // plot.data.datasets[0].pointBackgroundColor[i] = '#FF5722';
           }
         }
 
@@ -440,6 +442,7 @@ const writeMetadata = async data => {
 };
 
 allData = plot.data.datasets[0].data;
+
 const loadNextChart = async angleFiles => {
   checkSelectedPoints();
 
@@ -452,7 +455,7 @@ const loadNextChart = async angleFiles => {
   nbSelectedPoints = 0;
   firstElementZoom = null;
 
-  if (currentIteration < 2) {
+  if (currentIteration < angleFiles[currentParticipant].length - 1) {
     currentIteration++;
   } else {
     await writeMetadata({ completed: true });
