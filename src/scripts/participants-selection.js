@@ -12,7 +12,7 @@ import { Router } from './routes/router.js';
 import { LoaderOverlay } from './components/loader-overlay.js';
 import { ErrorOverlay } from './components/error-overlay';
 import { getAllParticipants } from './components/participants';
-import { Metadata } from './components/metadata.js';
+import { Metadata } from './utils/metadata.js';
 import { PathHelper } from './helpers/path-helper.js';
 import { StringHelper } from './helpers/string-helper';
 import { Switch } from './utils/switch';
@@ -99,10 +99,22 @@ const displayParticipantCard = (participant, infos, stage) => {
 const renderParticipantsList = async () => {
   for (const participant of participants) {
     const participantName = StringHelper.formatParticipantName(participant);
-    const infos = await metadata.getParticipantInfo(
-      PathHelper.sanitizePath(analysisType),
-      participantName
-    );
+
+    let infos;
+    try {
+      infos = await metadata.getParticipantInfo(
+        PathHelper.sanitizePath(analysisType),
+        participantName
+      );
+    } catch (error) {
+      const errorOverlay = new ErrorOverlay({
+        message: `Participant ${participant} cannot be processed`,
+        details: error.message,
+        interact: true
+      });
+
+      errorOverlay.show();
+    }
 
     participantsObject.push({
       name: participant,

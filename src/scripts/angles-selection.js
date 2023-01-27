@@ -6,11 +6,12 @@ import { CrosshairPlugin } from 'chartjs-plugin-crosshair';
 import { Menu } from './components/menu.js';
 import { Router } from './routes/router.js';
 import { LoaderOverlay } from './components/loader-overlay.js';
-import { Metadata } from './components/metadata';
+import { Metadata } from './utils/metadata.js';
 import { ChartSetup } from './utils/chart-setup';
 import { ChartHelper } from './helpers/chart-helper.js';
 import { PathHelper } from './helpers/path-helper.js';
 import { FileHelper } from './helpers/file-helper';
+import { ErrorOverlay } from './components/error-overlay';
 
 const path = nw.require('path');
 
@@ -243,15 +244,38 @@ const getAngleFiles = async () => {
   const angleFiles = [];
 
   for (const selectedParticipant of selectedParticipants) {
-    const inputPath = await metadata.getParticipantFolderPath(
-      analysisType,
-      selectedParticipant,
-      {
-        fromSession: true
-      }
-    );
+    let inputPath;
+    try {
+      inputPath = await metadata.getParticipantFolderPath(
+        analysisType,
+        selectedParticipant,
+        {
+          fromSession: true
+        }
+      );
+    } catch (error) {
+      const errorOverlay = new ErrorOverlay({
+        message: `Cannot find files for participant ${selectedParticipant}`,
+        details: error.message,
+        interact: true
+      });
 
-    const files = await FileHelper.listAllFiles(PathHelper.sanitizePath(inputPath));
+      errorOverlay.show();
+    }
+
+    let files;
+    try {
+      files = await FileHelper.listAllFiles(PathHelper.sanitizePath(inputPath));
+    } catch (error) {
+      const errorOverlay = new ErrorOverlay({
+        message: `Cannot find chart data`,
+        details: error.message,
+        interact: true
+      });
+
+      errorOverlay.show();
+    }
+
     angleFiles.push(
       files
         .filter(file => {
@@ -275,9 +299,23 @@ const getAngleFiles = async () => {
 };
 
 const angleFiles = await getAngleFiles();
-const angleFile = await FileHelper.parseJSONFile(
-  PathHelper.sanitizePath(angleFiles[currentParticipant][currentIteration])
-);
+let angleFile;
+
+try {
+  angleFile = await FileHelper.parseJSONFile(
+    PathHelper.sanitizePath(angleFiles[currentParticipant][currentIteration])
+  );
+} catch (error) {
+  const errorOverlay = new ErrorOverlay({
+    message: `Cannot read data of participant ${
+      selectedParticipants[currentParticipant]
+    } for the iteration#${currentIteration + 1}`,
+    details: error.message,
+    interact: true
+  });
+
+  errorOverlay.show();
+}
 
 ChartSetup.data.datasets[0].data = angleFile;
 ChartSetup.data.datasets[1].data = [];
@@ -311,7 +349,20 @@ const autoAngleButtonClickHandler = event => {
 
 const displayAutoAnglesButton = async () => {
   const participant = selectedParticipants[currentParticipant];
-  const participantsInfos = await metadata.getParticipantInfo(analysisType, participant);
+
+  let participantsInfos;
+  try {
+    participantsInfos = await metadata.getParticipantInfo(analysisType, participant);
+  } catch (error) {
+    const errorOverlay = new ErrorOverlay({
+      message: `Participant ${participant} cannot be processed`,
+      details: error.message,
+      interact: true
+    });
+
+    errorOverlay.show();
+  }
+
   const isHidden = autoAnglesButton.classList.contains('top-btn-disabled');
 
   if (participantsInfos.auto_angles) {
@@ -339,10 +390,21 @@ plot.data.datasets[0].pointBackgroundColor = plot.data.datasets[0].data.map(() =
 });
 
 const checkForMetadataExistingPoints = async () => {
-  const infos = await metadata.getParticipantInfo(
-    PathHelper.sanitizePath(analysisType),
-    selectedParticipants[currentParticipant]
-  );
+  let infos;
+  try {
+    infos = await metadata.getParticipantInfo(
+      PathHelper.sanitizePath(analysisType),
+      selectedParticipants[currentParticipant]
+    );
+  } catch (error) {
+    const errorOverlay = new ErrorOverlay({
+      message: `Participant ${selectedParticipants[currentParticipant]} cannot be processed`,
+      details: error.message,
+      interact: true
+    });
+
+    errorOverlay.show();
+  }
 
   const iterations = infos.stages[stage].iterations;
 
@@ -438,7 +500,18 @@ const getPointsObject = (auto = false) => {
 
 const writeMetadata = async data => {
   const participant = selectedParticipants[currentParticipant];
-  await metadata.writeContent(analysisType, participant, data, stage);
+
+  try {
+    await metadata.writeContent(analysisType, participant, data, stage);
+  } catch (error) {
+    const errorOverlay = new ErrorOverlay({
+      message: `Information for participant ${participant} cannot be saved`,
+      details: error.message,
+      interact: true
+    });
+
+    errorOverlay.show();
+  }
 };
 
 allData = plot.data.datasets[0].data;
@@ -463,9 +536,22 @@ const loadNextChart = async angleFiles => {
     currentParticipant++;
   }
 
-  allData = await FileHelper.parseJSONFile(
-    PathHelper.sanitizePath(angleFiles[currentParticipant][currentIteration])
-  );
+  try {
+    allData = await FileHelper.parseJSONFile(
+      PathHelper.sanitizePath(angleFiles[currentParticipant][currentIteration])
+    );
+  } catch (error) {
+    const errorOverlay = new ErrorOverlay({
+      message: `Cannot read data of participant ${
+        selectedParticipants[currentParticipant]
+      } for the iteration#${currentIteration + 1}`,
+      details: error.message,
+      interact: true
+    });
+
+    errorOverlay.show();
+  }
+
   plot.data.datasets[0].data = allData;
   plot.update();
 

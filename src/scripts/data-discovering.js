@@ -4,7 +4,7 @@ import { Menu } from './components/menu.js';
 import { Router } from './routes/router.js';
 import { ErrorOverlay } from './components/error-overlay.js';
 import { LoaderOverlay } from './components/loader-overlay.js';
-import { Metadata } from './components/metadata.js';
+import { Metadata } from './utils/metadata.js';
 import { PathHelper } from './helpers/path-helper.js';
 import { Switch } from './utils/switch';
 import { SessionStore } from './utils/session-store';

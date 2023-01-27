@@ -4,7 +4,7 @@ import previewCard from '../views/partials/angles-preview/preview-card.hbs';
 import { Menu } from './components/menu.js';
 import { Router } from './routes/router.js';
 import { getAllParticipants } from './components/participants';
-import { Metadata } from './components/metadata';
+import { Metadata } from './utils/metadata.js';
 import { LoaderOverlay } from './components/loader-overlay.js';
 import { ErrorOverlay } from './components/error-overlay';
 import { PathHelper } from './helpers/path-helper';
@@ -48,9 +48,33 @@ const displayPreviewCard = (participant, infos, chart) => {
 
 const getChartFiles = async participant => {
   let chartFiles = [];
-  const inputPath = await metadata.getParticipantFolderPath(analysisType, participant);
 
-  const files = await FileHelper.listAllFiles(PathHelper.sanitizePath(inputPath));
+  let inputPath;
+  try {
+    inputPath = await metadata.getParticipantFolderPath(analysisType, participant);
+  } catch (error) {
+    const errorOverlay = new ErrorOverlay({
+      message: `Cannot find files for participant ${participant}`,
+      details: error.message,
+      interact: true
+    });
+
+    errorOverlay.show();
+  }
+
+  let files;
+  try {
+    files = await FileHelper.listAllFiles(PathHelper.sanitizePath(inputPath));
+  } catch (error) {
+    const errorOverlay = new ErrorOverlay({
+      message: `Cannot find chart files`,
+      details: error.message,
+      interact: true
+    });
+
+    errorOverlay.show();
+  }
+
   chartFiles = chartFiles.concat(
     files
       .filter(file => {
@@ -128,10 +152,20 @@ const saveData = async () => {
       }
     }
 
-    await metadata.writeContent(analysisType, participant, {
-      complexity,
-      auto_angles: autoAngles
-    });
+    try {
+      await metadata.writeContent(analysisType, participant, {
+        complexity,
+        auto_angles: autoAngles
+      });
+    } catch (error) {
+      const errorOverlay = new ErrorOverlay({
+        message: `Information for participant ${participant} cannot be saved`,
+        details: error.message,
+        interact: true
+      });
+
+      errorOverlay.show();
+    }
   }
 };
 
@@ -142,10 +176,22 @@ if (participants?.length > 0) {
 
   for (let i = 0; i < participants.length; i++) {
     const participantName = StringHelper.formatParticipantName(participants[i]);
-    const infos = await metadata.getParticipantInfo(
-      PathHelper.sanitizePath(analysisType),
-      participantName
-    );
+
+    let infos;
+    try {
+      infos = await metadata.getParticipantInfo(
+        PathHelper.sanitizePath(analysisType),
+        participantName
+      );
+    } catch (error) {
+      const errorOverlay = new ErrorOverlay({
+        message: `Participant ${participants[i]} cannot be processed`,
+        details: error.message,
+        interact: true
+      });
+
+      errorOverlay.show();
+    }
 
     let currentChart = 0;
 
