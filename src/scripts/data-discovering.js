@@ -8,11 +8,14 @@ import { Metadata } from './components/metadata.js';
 import { PathHelper } from './helpers/path-helper.js';
 import { Switch } from './utils/switch';
 import { SessionStore } from './utils/session-store';
+// import { Configuration } from './utils/configuration.js';
 
 const os = nw.require('os');
 
 const router = new Router();
 router.disableBackButton();
+
+// const configuration = await Configuration.load();
 
 if ('app-error' in sessionStorage) {
   const { message, details } = JSON.parse(sessionStorage.getItem('app-error'));

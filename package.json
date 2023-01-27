@@ -56,7 +56,8 @@
       "**/src/**",
       "package-lock.json",
       "README.md",
-      "webpack.config.js"
+      "webpack.config.js",
+      "env.json.example"
     ],
     "ffmpegIntegration": false,
     "win": {
@@ -120,6 +121,6 @@
     "chartjs": "^0.3.24",
     "chartjs-plugin-crosshair": "^1.2.0",
     "dayjs": "^1.11.7",
-    "html-pdf-node-generator": "^1.0.1"
+    "yup": "^0.32.11"
   }
 }

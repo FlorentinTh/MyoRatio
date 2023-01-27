@@ -192,3 +192,4 @@ bin/EMGTrignoAPI
 build/
 .dccache
 NOTES.md
+env.json
