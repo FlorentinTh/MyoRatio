@@ -78,6 +78,23 @@ export class TypeHelper {
     return Object.prototype.toString.call(arr) === '[object Array]';
   }
 
+  static checkArray(arr, opts = { label: '' }) {
+    checkLabelParameter(opts.label);
+
+    const defaultOpts = { label: '' };
+    opts = { ...defaultOpts, ...opts };
+
+    if (TypeHelper.isUndefinedOrNull(arr)) {
+      throw new Error(`${opts.label} parameter cannot be ${arr}`);
+    } else if (!TypeHelper.isArray(arr)) {
+      throw new Error(
+        `${opts.label} parameter must be of type String. Received: ${TypeHelper.getType(
+          arr
+        )}`
+      );
+    }
+  }
+
   static isObject(obj) {
     return Object.prototype.toString.call(obj) === '[object Object]';
   }
