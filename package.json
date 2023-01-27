@@ -25,7 +25,7 @@
   },
   "window": {
     "title": "EMG Trigno",
-    "icon": "./src/assets/icons/app.png",
+    "icon": "src/assets/icons/app.png",
     "height": 720,
     "width": 1280,
     "resizable": true,
@@ -49,6 +49,15 @@
       "author",
       "dependencies"
     ],
+    "overriddenProperties": {
+      "window": {
+        "icon": "build/public/assets/app.png",
+        "height": 720,
+        "width": 1280,
+        "resizable": true,
+        "position": "center"
+      }
+    },
     "outputPattern": "${NAME}_${VERSION}_${PLATFORM}${ARCH}",
     "excludes": [
       "dist/**/*",
@@ -65,10 +74,10 @@
       "companyName": "LIARA Lab.",
       "fileDescription": "EMG Trigno",
       "copyright": "Copyright LIARA Lab.",
-      "icon": "./src/assets/icons/win/app.ico"
+      "icon": "./src/assets/icons/win/app-256.ico"
     },
     "nsis": {
-      "icon": "./src/assets/icons/win/app.ico",
+      "icon": "./src/assets/icons/win/app-256.ico",
       "unIcon": "./src/assets/icons/win/app.ico",
       "installDirectory": "$APPDATA\\${_COMPANYNAME}\\${_APPNAME}",
       "diffUpdaters": true,
