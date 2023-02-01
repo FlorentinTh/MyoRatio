@@ -12,6 +12,8 @@ import { ChartHelper } from './helpers/chart-helper.js';
 import { PathHelper } from './helpers/path-helper.js';
 import { FileHelper } from './helpers/file-helper';
 import { ErrorOverlay } from './components/error-overlay';
+import { Configuration } from './utils/configuration.js';
+import { StringHelper } from './helpers/string-helper';
 
 const path = nw.require('path');
 
@@ -19,6 +21,7 @@ const router = new Router();
 router.disableBackButton();
 
 const loaderOverlay = new LoaderOverlay();
+const configuration = await Configuration.load();
 
 const menu = new Menu();
 const additionalButton = document.querySelectorAll('.app > div[class*=-btn]');
@@ -284,7 +287,7 @@ const getAngleFiles = async () => {
           if (fileArray[fileArray.length - 1] === 'json') {
             const fileArray = file.split('_');
 
-            if (fileArray.includes('angles') && fileArray.includes('small')) {
+            if (fileArray.includes('angle') && fileArray.includes('small')) {
               return true;
             }
           }
@@ -447,9 +450,6 @@ const checkForMetadataExistingPoints = async () => {
 await checkForMetadataExistingPoints();
 
 const getPointsObject = (auto = false) => {
-  const points = sessionStorage.getItem('selected-points');
-  const pointsArray = points.split(';');
-
   const iteration = currentIteration + 1;
   const iterationObject = {
     iterations: {}
@@ -466,6 +466,9 @@ const getPointsObject = (auto = false) => {
       }
     }
   };
+
+  const points = sessionStorage.getItem('selected-points');
+  const pointsArray = points.split(';');
 
   for (const point of pointsArray) {
     const pointArray = point.split(',');
@@ -514,6 +517,59 @@ const writeMetadata = async data => {
   }
 };
 
+const getFormattedPointsFromSession = () => {
+  const points = sessionStorage.getItem('selected-points');
+  const pointsArray = points.split(';');
+
+  if (pointsArray[0].split(',')[0] > pointsArray[1].split(',')[0]) {
+    return {
+      pointX: pointsArray[1].split(',')[0],
+      pointY: pointsArray[0].split(',')[0]
+    };
+  } else {
+    return {
+      pointX: pointsArray[0].split(',')[0],
+      pointY: pointsArray[1].split(',')[0]
+    };
+  }
+};
+
+const postAnglesData = async (participant, iteration, pointX, pointY) => {
+  return await fetch(`http://${configuration.HOST}:${configuration.PORT}/emg/`, {
+    headers: {
+      'X-API-Key': configuration.API_KEY,
+      'Content-Type': 'application/json'
+    },
+    method: 'POST',
+    body: JSON.stringify({
+      window_size: Number(localStorage.getItem('window-size')),
+      data_path: dataPath,
+      analysis: analysisType,
+      stage,
+      participant,
+      iteration,
+      point_x: Number(pointX),
+      point_y: Number(pointY)
+    })
+  });
+};
+
+const fetchAreas = async participants => {
+  return await fetch(`http://${configuration.HOST}:${configuration.PORT}/areas/`, {
+    headers: {
+      'X-API-Key': configuration.API_KEY,
+      'Content-Type': 'application/json'
+    },
+    method: 'POST',
+    body: JSON.stringify({
+      data_path: dataPath,
+      analysis: analysisType,
+      stage,
+      participants
+    })
+  });
+};
+
 allData = plot.data.datasets[0].data;
 
 const loadNextChart = async angleFiles => {
@@ -560,18 +616,75 @@ const loadNextChart = async angleFiles => {
 };
 
 submitButton.addEventListener('click', async () => {
+  submitButton.setAttribute('disabled', '');
+
   const formattedAngles = getPointsObject();
   await writeMetadata(formattedAngles);
+
+  try {
+    const participant = StringHelper.revertParticipantNameFromSession(
+      selectedParticipants[currentParticipant]
+    );
+    const { pointX, pointY } = getFormattedPointsFromSession();
+    const request = await postAnglesData(participant, currentIteration, pointX, pointY);
+    const response = await request.json();
+
+    if (!(response.code === 201)) {
+      const errorOverlay = new ErrorOverlay({
+        message: response.payload.message,
+        details: response.payload.details,
+        interact: true
+      });
+
+      errorOverlay.show();
+    }
+  } catch (error) {
+    const errorOverlay = new ErrorOverlay({
+      message: `Application cannot process the current selection`,
+      details: error.message,
+      interact: true
+    });
+
+    errorOverlay.show();
+  }
+
   sessionStorage.removeItem('selected-points');
 
   if (submitButton.classList.contains('completed')) {
     loaderOverlay.toggle({ message: 'Saving data...' });
     await writeMetadata({ completed: true });
+
+    try {
+      const participants = selectedParticipants.map(participant =>
+        StringHelper.revertParticipantNameFromSession(participant)
+      );
+      const request = await fetchAreas(participants);
+      const response = await request.json();
+
+      if (!(response.code === 201)) {
+        const errorOverlay = new ErrorOverlay({
+          message: response.payload.message,
+          details: response.payload.details,
+          interact: true
+        });
+
+        errorOverlay.show();
+      }
+    } catch (error) {
+      const errorOverlay = new ErrorOverlay({
+        message: `Application cannot complete processing of selected angles`,
+        details: error.message,
+        interact: true
+      });
+
+      errorOverlay.show();
+    }
+
     sessionStorage.removeItem('selected-participants');
 
     setTimeout(() => {
       router.switchPage('participants-selection');
-    }, 1000);
+    }, 800);
   } else {
     await displayAutoAnglesButton();
     await loadNextChart(angleFiles);
