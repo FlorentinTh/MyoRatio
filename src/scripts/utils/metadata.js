@@ -1,4 +1,5 @@
 import { FileHelper } from '../helpers/file-helper.js';
+import { StringHelper } from '../helpers/string-helper.js';
 import { TypeHelper } from '../helpers/type-helper.js';
 
 const path = nw.require('path');
@@ -152,14 +153,10 @@ export class Metadata {
 
     let participantFolderName;
 
-    const participantArray = participant.split('_');
-
     if (opts.fromSession) {
-      const participantID = participantArray.slice(1, participantArray.length - 1);
-      const participantSex = participantArray[participantArray.length - 1];
-      participantFolderName = `${participantID} (${participantSex.toUpperCase()})`;
+      participantFolderName = StringHelper.revertParticipantNameFromSession(participant);
     } else {
-      participantFolderName = participantArray[0];
+      participantFolderName = participant.split('_')[0];
     }
 
     return path.join(
