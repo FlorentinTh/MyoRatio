@@ -18,6 +18,7 @@ import { StringHelper } from './helpers/string-helper';
 import { Switch } from './utils/switch';
 import { DOMElement } from './utils/dom-element';
 import { SessionStore } from './utils/session-store';
+import { Configuration } from './utils/configuration.js';
 
 const path = nw.require('path');
 
@@ -26,6 +27,7 @@ dayjs.extend(timezone);
 dayjs.tz.setDefault('America/Toronto');
 
 const loaderOverlay = new LoaderOverlay();
+const configuration = await Configuration.load();
 
 const router = new Router();
 router.disableBackButton();
@@ -250,6 +252,20 @@ const initCard = items => {
   disableNotRequiredButton(totalCompleted);
 };
 
+const fetchPDFReport = async () => {
+  return await fetch(`http://${configuration.HOST}:${configuration.PORT}/report/`, {
+    headers: {
+      'X-API-Key': configuration.API_KEY,
+      'Content-Type': 'application/json'
+    },
+    method: 'POST',
+    body: JSON.stringify({
+      data_path: PathHelper.sanitizePath(dataFolderPathSession),
+      analysis: analysisType
+    })
+  });
+};
+
 if (!(participants?.length > 0)) {
   participantsList.classList.add('empty');
   displayEmptyCard();
@@ -376,9 +392,34 @@ if (!(participants?.length > 0)) {
       errorOverlay.show();
     }
 
-    setTimeout(() => {
+    try {
+      const request = await fetchPDFReport();
+      const response = await request.json();
+
+      if (response.code === 201) {
+        loaderOverlay.toggle();
+      } else {
+        loaderOverlay.toggle();
+
+        const errorOverlay = new ErrorOverlay({
+          message: response.payload.message,
+          details: response.payload.details,
+          interact: true
+        });
+
+        errorOverlay.show();
+      }
+    } catch (error) {
       loaderOverlay.toggle();
-    }, 2000);
+
+      const errorOverlay = new ErrorOverlay({
+        message: `Application cannot fetch information of participants`,
+        details: error.message,
+        interact: true
+      });
+
+      errorOverlay.show();
+    }
   });
 }
 
