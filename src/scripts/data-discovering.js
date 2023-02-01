@@ -200,6 +200,16 @@ submitButton.addEventListener('click', async () => {
 
         if (response.code === 201) {
           router.switchPage('participants-selection');
+        } else {
+          loaderOverlay.toggle();
+
+          const errorOverlay = new ErrorOverlay({
+            message: response.payload.message,
+            details: response.payload.details,
+            interact: true
+          });
+
+          errorOverlay.show();
         }
       } catch (error) {
         loaderOverlay.toggle();
