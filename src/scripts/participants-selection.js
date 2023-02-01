@@ -255,7 +255,22 @@ if (!(participants?.length > 0)) {
   displayEmptyCard();
 } else {
   participantItems = document.querySelector('ul.list').children;
+
   await renderParticipantsList();
+
+  try {
+    await metadata.createMetadataParticipantFolder(analysisType, participants);
+  } catch (error) {
+    loaderOverlay.toggle();
+
+    const errorOverlay = new ErrorOverlay({
+      message: `Application cannot initialize metadata folders for participants`,
+      details: error.message,
+      interact: true
+    });
+
+    errorOverlay.show();
+  }
 
   for (const stageSwitchRadio of stageSwitchRadios) {
     stageSwitchRadio.addEventListener(

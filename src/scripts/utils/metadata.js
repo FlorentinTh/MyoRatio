@@ -68,6 +68,27 @@ export class Metadata {
     }
   }
 
+  async createMetadataParticipantFolder(analysisType, participants) {
+    TypeHelper.checkStringNotNull(analysisType, { label: 'analysisType' });
+    TypeHelper.checkArray(participants, { label: 'participants' });
+
+    if (participants.length > 0) {
+      for (const participant of participants) {
+        const metadataParticipantFolderPath = path.join(
+          this.#inputDataPath,
+          this.#metadataRootFolder,
+          `.${analysisType}`,
+          participant
+        );
+
+        await FileHelper.createFileOrDirectoryIfNotExists(metadataParticipantFolderPath, {
+          isDirectory: true,
+          hidden: false
+        });
+      }
+    }
+  }
+
   async getParticipantInfo(analysisType, participant) {
     TypeHelper.checkStringNotNull(analysisType, { label: 'analysisType' });
     TypeHelper.checkStringNotNull(participant, { label: 'participant' });
