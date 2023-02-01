@@ -25,10 +25,10 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.tz.setDefault('America/Toronto');
 
+const loaderOverlay = new LoaderOverlay();
+
 const router = new Router();
 router.disableBackButton();
-
-const loaderOverlay = new LoaderOverlay();
 
 const menu = new Menu();
 
@@ -258,20 +258,6 @@ if (!(participants?.length > 0)) {
 
   await renderParticipantsList();
 
-  try {
-    await metadata.createMetadataParticipantFolder(analysisType, participants);
-  } catch (error) {
-    loaderOverlay.toggle();
-
-    const errorOverlay = new ErrorOverlay({
-      message: `Application cannot initialize metadata folders for participants`,
-      details: error.message,
-      interact: true
-    });
-
-    errorOverlay.show();
-  }
-
   for (const stageSwitchRadio of stageSwitchRadios) {
     stageSwitchRadio.addEventListener(
       'change',
@@ -364,7 +350,7 @@ if (!(participants?.length > 0)) {
 
       setTimeout(() => {
         router.switchPage('angles-selection');
-      }, 1000);
+      }, 800);
     }
   });
 
