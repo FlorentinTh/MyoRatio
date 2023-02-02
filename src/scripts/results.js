@@ -25,10 +25,6 @@ const stage = sessionStorage.getItem('stage');
 
 const title = document.querySelector('.title span');
 
-if (!(analysisType === null) && !(participantResult === null) && !(stage === null)) {
-  title.innerText += ` ${analysisType}s for the ${participantResult} during the ${stage} stage`;
-}
-
 const inputDataPath = PathHelper.sanitizePath(dataPath);
 const metadata = new Metadata(inputDataPath);
 
@@ -70,6 +66,11 @@ try {
   errorOverlay.show();
 }
 
+if (!(analysisType === null) && !(participantResult === null) && !(stage === null)) {
+  const nbIterations = Object.keys(areasFileJSON).length - 1;
+  title.innerText += ` ${nbIterations} ${analysisType}s for the ${participantResult} during the ${stage} stage`;
+}
+
 const computeRatios = () => {
   const meanAreas = areasFileJSON.mean;
 
@@ -82,7 +83,7 @@ const computeRatios = () => {
     for (let j = 0; j <= i; j++) {
       const exists = ratios.find(element => element.muscle === muscles.at(i));
 
-      let ratio = areas[j] / areas[i];
+      let ratio = areas[i] / areas[j];
       ratio = ratio === 1 ? ratio : ratio.toFixed(3);
 
       let values;
