@@ -1,9 +1,16 @@
 import '../styles/results.css';
+import resultsTable from '../views/partials/results/results-table.hbs';
 
 import { createPopper } from '@popperjs/core';
 
 import { Menu } from './components/menu.js';
 import { Router } from './routes/router.js';
+import { Metadata } from './utils/metadata.js';
+import { PathHelper } from './helpers/path-helper';
+import { ErrorOverlay } from './components/error-overlay';
+import { FileHelper } from './helpers/file-helper';
+
+const path = nw.require('path');
 
 const router = new Router();
 router.disableBackButton();
@@ -11,16 +18,104 @@ router.disableBackButton();
 const menu = new Menu();
 menu.init();
 
+const dataPath = sessionStorage.getItem('data-path');
+const analysisType = sessionStorage.getItem('analysis');
+const participantResult = sessionStorage.getItem('participant-result');
+const stage = sessionStorage.getItem('stage');
+
 const title = document.querySelector('.title span');
 
-if (
-  !(sessionStorage.getItem('participant-result') === null) &&
-  !(sessionStorage.getItem('analysis') === null)
-) {
-  title.innerText += ` ${sessionStorage.getItem(
-    'analysis'
-  )}s for the ${sessionStorage.getItem('participant-result')}`;
+if (!(analysisType === null) && !(participantResult === null) && !(stage === null)) {
+  title.innerText += ` ${analysisType}s for the ${participantResult} during the ${stage} stage`;
 }
+
+const inputDataPath = PathHelper.sanitizePath(dataPath);
+const metadata = new Metadata(inputDataPath);
+
+const tableContainer = document.querySelector('.matrix-container');
+
+const getAreasFilePath = async () => {
+  let inputPath;
+
+  try {
+    inputPath = await metadata.getParticipantFolderPath(analysisType, participantResult, {
+      fromSession: true
+    });
+  } catch (error) {
+    const errorOverlay = new ErrorOverlay({
+      message: `Cannot find files for participant ${participantResult}`,
+      details: error.message,
+      interact: true
+    });
+
+    errorOverlay.show();
+  }
+
+  return path.join(inputPath, 'areas.json');
+};
+
+const areasFilePath = await getAreasFilePath();
+
+let areasFileJSON;
+
+try {
+  areasFileJSON = await FileHelper.parseJSONFile(PathHelper.sanitizePath(areasFilePath));
+} catch (error) {
+  const errorOverlay = new ErrorOverlay({
+    message: `Cannot read data of participant ${participantResult}`,
+    details: error.message,
+    interact: true
+  });
+
+  errorOverlay.show();
+}
+
+const computeRatios = () => {
+  const meanAreas = areasFileJSON.mean;
+
+  const muscles = Object.keys(meanAreas);
+  const areas = Object.values(meanAreas);
+
+  const ratios = [];
+
+  for (let i = 0; i < muscles.length; i++) {
+    for (let j = 0; j <= i; j++) {
+      const exists = ratios.find(element => element.muscle === muscles.at(i));
+
+      let ratio = areas[j] / areas[i];
+      ratio = ratio === 1 ? ratio : ratio.toFixed(3);
+
+      let values;
+      if (exists === undefined) {
+        values = new Array(muscles.length).fill(null);
+
+        ratios.push({
+          values,
+          muscle: muscles.at(i)
+        });
+      } else {
+        values = exists.values;
+      }
+
+      values[j] = ratio;
+    }
+  }
+
+  return { muscles, ratios };
+};
+
+const displayResultsTable = () => {
+  const { muscles, ratios } = computeRatios();
+  tableContainer.insertAdjacentHTML(
+    'afterbegin',
+    resultsTable({
+      muscles,
+      ratios
+    })
+  );
+};
+
+displayResultsTable();
 
 const table = document.querySelector('table');
 const rowTooltips = document.querySelectorAll('.tooltip-row');

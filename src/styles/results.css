@@ -114,7 +114,7 @@
   height: 3.5rem;
   line-height: 3.5rem;
   transition: ease-in-out .35s;
-  font-size: 1.35em;
+  font-size: 1.05em;
 }
 
 #matrix:not(:target) thead th {

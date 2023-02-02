@@ -1,0 +1,36 @@
+<div id="vertical-caption">
+  <span>Agonist</span>
+</div>
+<div id="matrix">
+  <table>
+    <caption>Antagonist</caption>
+    <thead>
+      <tr>
+        {{#each muscles as | muscle |}}
+          <th scope="col">
+            <div class="tooltip-col" role="tooltip">
+              {{~muscle~}}
+              <div class="arrow" data-popper-arrow></div>
+            </div>
+            <span>{{~inc @index~}}.</span>
+          </th>
+        {{/each}}
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each ratios as | ratio |}}
+        <tr>
+          {{#each ratio.values as | value |}}
+            <td>{{~value~}}</td>
+          {{/each}}
+          <th scope="row"><span>{{~inc @index~}}.</span></th>
+          <div class="tooltip-row" role="tooltip">
+            {{~ratio.muscle~}}
+            <div class="arrow" data-popper-arrow></div>
+          </div>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</div>
