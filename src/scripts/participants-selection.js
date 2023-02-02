@@ -240,11 +240,8 @@ const initCard = items => {
 
     if (!(resultsButton === null)) {
       resultsButton.addEventListener('click', () => {
-        loaderOverlay.toggle({ message: 'Preparing results...' });
         sessionStorage.setItem('participant-result', participantName.trim());
-        setTimeout(() => {
-          router.switchPage('results');
-        }, 1000);
+        router.switchPage('results');
       });
     }
   }
