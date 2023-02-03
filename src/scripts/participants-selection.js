@@ -63,7 +63,7 @@ const sanitizedAnalysisFolderPath = PathHelper.sanitizePath(analysisFolderPath);
 const participants = await getAllParticipants(sanitizedAnalysisFolderPath);
 const metadata = new Metadata(dataFolderPathSession);
 
-const participantsObject = [];
+const participantsArray = [];
 let selectedParticipants = [];
 
 let participantItems;
@@ -118,10 +118,22 @@ const renderParticipantsList = async () => {
       errorOverlay.show();
     }
 
-    participantsObject.push({
-      name: participant,
-      infos
-    });
+    const index = participantsArray.findIndex(e => e.name === participant);
+
+    if (index > -1) {
+      participantsArray[index] = {
+        ...participantsArray[index],
+        ...{
+          name: participant,
+          infos
+        }
+      };
+    } else {
+      participantsArray.push({
+        name: participant,
+        infos
+      });
+    }
 
     const stage = sessionStorage.getItem('stage');
     displayParticipantCard(participantName, infos, infos.stages[stage]);
@@ -205,6 +217,27 @@ const resetSelectButtons = () => {
   }
 };
 
+const checkSelectedParticipantsAllNotCompleted = () => {
+  let totalNotCompleted = 0;
+  let totalNotCompletedSelected = 0;
+
+  for (const participantItem of participantItems) {
+    const participantItemClasses = participantItem.classList;
+
+    if (participantItemClasses.contains('not-completed')) {
+      if (participantItemClasses.contains('selected')) {
+        totalNotCompletedSelected++;
+      }
+
+      totalNotCompleted++;
+    }
+  }
+
+  if (totalNotCompleted === totalNotCompletedSelected) {
+    toggleSelectButtons(true, totalCompleted, false);
+  }
+};
+
 const initCard = items => {
   if ('selected-participants' in sessionStorage) {
     selectedParticipants = sessionStorage.getItem('selected-participants').split(',');
@@ -221,16 +254,38 @@ const initCard = items => {
       .querySelector('.line-1')
       .innerText.toLowerCase();
 
+    if (
+      selectedParticipants.length > 0 &&
+      selectedParticipants.includes(participantName)
+    ) {
+      participantItem.classList.toggle('selected');
+      checkSelectedParticipantsAllNotCompleted();
+
+      if (participants.length === selectedParticipants.length) {
+        resetSelectButtons();
+        toggleSelectButtons(true, totalCompleted);
+      }
+    }
+
     participantItem.querySelector('.content').addEventListener('click', () => {
       if (participantItem.classList.contains('selected')) {
         selectedParticipants = selectedParticipants.filter(
           participant => participant !== participantName.trim()
         );
+
+        resetSelectButtons();
+        participantItem.classList.toggle('selected');
+        checkSelectedParticipantsAllNotCompleted();
       } else {
         selectedParticipants.push(participantName.trim());
+        participantItem.classList.toggle('selected');
+        checkSelectedParticipantsAllNotCompleted();
       }
 
-      participantItem.classList.toggle('selected');
+      if (participants.length === selectedParticipants.length) {
+        resetSelectButtons();
+        toggleSelectButtons(true, totalCompleted);
+      }
 
       toggleSubmitButton();
       toggleSelectedParticipantStorage();
@@ -283,9 +338,10 @@ if (!(participants?.length > 0)) {
           totalCompleted = 0;
           toggleSelectedParticipantStorage();
           await renderParticipantsList();
-          initCard(participantItems);
+
           resetSelectButtons();
           toggleSubmitButton();
+          initCard(participantItems);
           participantsList.parentElement.classList.remove('change');
         });
       },
@@ -328,11 +384,21 @@ if (!(participants?.length > 0)) {
       for (const participantItem of participantItems) {
         const participantItemClasses = participantItem.classList;
 
-        if (
-          participantItemClasses.contains('not-completed') &&
-          !participantItemClasses.contains('selected')
-        ) {
-          selectParticipant(participantItem);
+        if (participantItemClasses.contains('selected')) {
+          if (!participantItemClasses.contains('not-completed')) {
+            participantItem.classList.toggle('selected');
+            const participantName = participantItem
+              .querySelector('.line-1')
+              .innerText.toLowerCase();
+
+            selectedParticipants = selectedParticipants.filter(
+              participant => participant !== participantName.trim()
+            );
+          }
+        } else {
+          if (participantItemClasses.contains('not-completed')) {
+            selectParticipant(participantItem);
+          }
         }
       }
 
@@ -375,7 +441,7 @@ if (!(participants?.length > 0)) {
         analysisType,
         report({
           analysis: analysisType,
-          participants: participantsObject,
+          participants: participantsArray,
           dateTime: dayjs().format('YYYY-MM-DD hh:mm')
         })
       );
