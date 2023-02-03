@@ -20,6 +20,9 @@ export const ChartSetup = {
         caretPadding: 16,
         bodyFont: {
           size: 14
+        },
+        filter: tooltipItem => {
+          return tooltipItem.datasetIndex === 0;
         }
       },
       crosshair: {
