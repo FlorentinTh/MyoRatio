@@ -523,18 +523,18 @@ const getFormattedPointsFromSession = () => {
 
   if (pointsArray[0].split(',')[0] > pointsArray[1].split(',')[0]) {
     return {
-      pointX: pointsArray[1].split(',')[0],
-      pointY: pointsArray[0].split(',')[0]
+      point1x: pointsArray[1].split(',')[0],
+      point2x: pointsArray[0].split(',')[0]
     };
   } else {
     return {
-      pointX: pointsArray[0].split(',')[0],
-      pointY: pointsArray[1].split(',')[0]
+      point1x: pointsArray[0].split(',')[0],
+      point2x: pointsArray[1].split(',')[0]
     };
   }
 };
 
-const postAnglesData = async (participant, iteration, pointX, pointY) => {
+const postAnglesData = async (participant, iteration, point1x, point2x) => {
   return await fetch(`http://${configuration.HOST}:${configuration.PORT}/emg/`, {
     headers: {
       'X-API-Key': configuration.API_KEY,
@@ -548,8 +548,8 @@ const postAnglesData = async (participant, iteration, pointX, pointY) => {
       stage,
       participant,
       iteration,
-      point_x: Number(pointX),
-      point_y: Number(pointY)
+      point_1x: Number(point1x),
+      point_2x: Number(point2x)
     })
   });
 };
@@ -625,8 +625,8 @@ submitButton.addEventListener('click', async () => {
     const participant = StringHelper.revertParticipantNameFromSession(
       selectedParticipants[currentParticipant]
     );
-    const { pointX, pointY } = getFormattedPointsFromSession();
-    const request = await postAnglesData(participant, currentIteration, pointX, pointY);
+    const { point1x, point2x } = getFormattedPointsFromSession();
+    const request = await postAnglesData(participant, currentIteration, point1x, point2x);
     const response = await request.json();
 
     if (!(response.code === 201)) {
