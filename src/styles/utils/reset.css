@@ -5,6 +5,10 @@
   -webkit-font-smoothing: antialiased;
 }
 
+html, body {
+  overscroll-behavior-x: none;
+}
+
 body {
   font-family: "Avenir Next", Avenir, sans-serif;
   color: #232323;
