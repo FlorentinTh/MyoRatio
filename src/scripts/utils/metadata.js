@@ -42,9 +42,11 @@ export class Metadata {
 
     for (const element of this.#baseContent) {
       if (!folders.has(element)) {
-        throw new Error('Input data folder does not meet file structure requirements');
+        return false;
       }
     }
+
+    return true;
   }
 
   async createMetadataFolderTree() {
@@ -67,6 +69,8 @@ export class Metadata {
 
       await FileHelper.initEmptyJSONFile(metadataFilePath);
     }
+
+    return true;
   }
 
   async createMetadataParticipantFolder(analysisType, participants) {
@@ -88,6 +92,8 @@ export class Metadata {
         });
       }
     }
+
+    return true;
   }
 
   async getParticipantInfo(analysisType, participant) {

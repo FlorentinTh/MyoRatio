@@ -139,13 +139,43 @@ submitButton.addEventListener('click', async () => {
       const sanitizedPath = PathHelper.sanitizePath(dataPath);
       const metadata = new Metadata(sanitizedPath);
 
+      let isBaseFolderContentCompliant;
+
       try {
-        await metadata.checkBaseFolderContent();
+        isBaseFolderContentCompliant = await metadata.checkBaseFolderContent();
       } catch (error) {
         loaderOverlay.toggle();
 
         const errorOverlay = new ErrorOverlay({
-          message: error.message,
+          message: `Cannot verify content of input data folder`,
+          details: error.message,
+          interact: true
+        });
+
+        errorOverlay.show();
+      }
+
+      let isMetadataFolderInit;
+
+      if (isBaseFolderContentCompliant) {
+        try {
+          isMetadataFolderInit = await metadata.createMetadataFolderTree();
+        } catch (error) {
+          loaderOverlay.toggle();
+
+          const errorOverlay = new ErrorOverlay({
+            message: `Application cannot initialize the metadata tree`,
+            details: error.message,
+            interact: true
+          });
+
+          errorOverlay.show();
+        }
+      } else {
+        loaderOverlay.toggle();
+
+        const errorOverlay = new ErrorOverlay({
+          message: `Input data folder does not meet file structure requirements`,
           details: `please ensure you have the three following folders with your data inside: ${metadata.getBaseContent.join(
             ', '
           )}`,
@@ -155,72 +185,62 @@ submitButton.addEventListener('click', async () => {
         errorOverlay.show();
       }
 
-      try {
-        await metadata.createMetadataFolderTree();
-      } catch (error) {
-        loaderOverlay.toggle();
-
-        const errorOverlay = new ErrorOverlay({
-          message: `Application cannot initialize metadata folder tree`,
-          details: error.message,
-          interact: true
-        });
-
-        errorOverlay.show();
-      }
-
       const analysisType = sessionStorage.getItem('analysis');
       const dataFolderPathSession = sessionStorage.getItem('data-path');
       const analysisFolderPath = path.join(dataFolderPathSession, analysisType);
-      const participants = await getAllParticipants(
-        PathHelper.sanitizePath(analysisFolderPath)
-      );
+      let participants;
 
-      try {
-        await metadata.createMetadataParticipantFolder(analysisType, participants);
-      } catch (error) {
-        loaderOverlay.toggle();
-
-        const errorOverlay = new ErrorOverlay({
-          message: `Application cannot initialize metadata folders for participants`,
-          details: error.message,
-          interact: true
-        });
-
-        errorOverlay.show();
+      if (isMetadataFolderInit) {
+        participants = await getAllParticipants(
+          PathHelper.sanitizePath(analysisFolderPath)
+        );
       }
 
-      try {
-        const request = await fetchParticipantIMUData(
-          PathHelper.sanitizePath(dataFolderPathSession),
-          analysisType,
-          participants
-        );
-        const response = await request.json();
+      let isMetadataParticipantsFolderCreated;
 
-        if (response.code === 201) {
-          router.switchPage('participants-selection');
-        } else {
+      if (!(participants === undefined)) {
+        try {
+          isMetadataParticipantsFolderCreated =
+            await metadata.createMetadataParticipantFolder(analysisType, participants);
+        } catch (error) {
           loaderOverlay.toggle();
-
           const errorOverlay = new ErrorOverlay({
-            message: response.payload.message,
-            details: response.payload.details,
+            message: `Application cannot initialize metadata tree for participants`,
+            details: error.message,
             interact: true
           });
-
           errorOverlay.show();
         }
-      } catch (error) {
-        loaderOverlay.toggle();
+      }
 
-        const errorOverlay = new ErrorOverlay({
-          message: `Application cannot fetch information of participants`,
-          details: error.message,
-          interact: true
-        });
-
-        errorOverlay.show();
+      if (isMetadataParticipantsFolderCreated) {
+        try {
+          const request = await fetchParticipantIMUData(
+            PathHelper.sanitizePath(dataFolderPathSession),
+            analysisType,
+            participants
+          );
+          const response = await request.json();
+          if (response.code === 201) {
+            router.switchPage('participants-selection');
+          } else {
+            loaderOverlay.toggle();
+            const errorOverlay = new ErrorOverlay({
+              message: response.payload.message,
+              details: response.payload.details,
+              interact: true
+            });
+            errorOverlay.show();
+          }
+        } catch (error) {
+          loaderOverlay.toggle();
+          const errorOverlay = new ErrorOverlay({
+            message: `Application cannot fetch information of participants`,
+            details: error.message,
+            interact: true
+          });
+          errorOverlay.show();
+        }
       }
     }
   }
