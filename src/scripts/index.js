@@ -18,6 +18,8 @@ let APIExecutablePath;
 
 if (PlatformHelper.isWindowsPlatform()) {
   APIExecutablePath = path.join(basePath, 'bin', 'EMGTrignoAPI', 'EMGTrignoAPI.exe');
+} else if (PlatformHelper.isMacOsPlatform()) {
+  APIExecutablePath = path.join(basePath, 'bin', 'EMGTrignoAPI', 'EMGTrignoAPI');
 }
 
 if (!('window-size' in localStorage)) {
