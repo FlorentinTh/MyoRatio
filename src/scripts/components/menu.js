@@ -83,6 +83,7 @@ export class Menu {
       });
     } else {
       HPFConverterLink.setAttribute('disabled', '');
+      HPFConverterLink.classList.add('disabled');
     }
   }
 
