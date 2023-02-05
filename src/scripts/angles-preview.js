@@ -90,7 +90,7 @@ const getChartFiles = async participant => {
 
         return false;
       })
-      .map(file => path.join(inputPath, file))
+      .map(file => path.join('file://', inputPath, file))
   );
 
   return chartFiles;
