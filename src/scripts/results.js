@@ -83,10 +83,18 @@ const computeRatios = () => {
     for (let j = 0; j <= i; j++) {
       const exists = ratios.find(element => element.muscle === muscles.at(i));
 
-      let ratio = areas[i] / areas[j];
+      let ratio;
+
+      if (analysisType === 'extension') {
+        ratio = areas[i] / areas[j];
+      } else if (analysisType === 'flexion') {
+        ratio = 1 / (areas[i] / areas[j]);
+      }
+
       ratio = ratio === 1 ? ratio : ratio.toFixed(3);
 
       let values;
+
       if (exists === undefined) {
         values = new Array(muscles.length).fill(null);
 
