@@ -87,7 +87,7 @@
 }
 
 .column-hover span {
-  background-color: #16A085;
+  background-color: #78909C;
 }
 
 #vertical-caption span {
@@ -162,7 +162,11 @@ table thead th[scope="col"] {
   border-radius: 60px;
 }
 
-#matrix:not(:target) tbody td:hover:not(:empty),
+#matrix:not(:target) tbody td:hover:not(:empty) {
+  font-weight: bold;
+  transition: none;
+}
+
 #matrix:not(:target) tbody td:hover:not(:empty)~th span {
   background-color: #16A085;
   font-weight: bold;
@@ -184,5 +188,5 @@ table thead th[scope="col"] {
   font-size: .9em;
   font-weight: bold;
   letter-spacing: .02em;
-  color: #16A085;
+  color: #78909C;
 }
