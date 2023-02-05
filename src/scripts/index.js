@@ -5,7 +5,7 @@ import { Router } from './routes/router.js';
 import { PlatformHelper } from './helpers/platform-helper.js';
 
 const path = nw.require('path');
-const { execFile } = nw.require('child_process');
+const { spawn } = nw.require('child_process');
 
 const loaderOverlay = new LoaderOverlay();
 loaderOverlay.toggle({ message: 'Loading Application Components...' });
@@ -26,16 +26,28 @@ if (!('window-size' in localStorage)) {
   localStorage.setItem('window-size', 0.2);
 }
 
-execFile(APIExecutablePath, error => {
-  if (error) {
-    sessionStorage.setItem(
-      'app-error',
-      JSON.stringify({
-        message: 'Some required components cannot be launched',
-        details: error.message
-      })
-    );
-  }
+let childProcess;
+
+try {
+  childProcess = spawn(APIExecutablePath, []);
+} catch (error) {
+  sessionStorage.setItem(
+    'app-error',
+    JSON.stringify({
+      message: 'Some required components cannot be launched',
+      details: error.message
+    })
+  );
+}
+
+process.on('SIGINT', () => {
+  childProcess.kill();
+  process.exit();
+});
+
+process.on('SIGTERM', () => {
+  childProcess.kill();
+  process.exit();
 });
 
 setTimeout(() => {
