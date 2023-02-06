@@ -220,7 +220,9 @@ submitButton.addEventListener('click', async () => {
             analysisType,
             participants
           );
+
           const response = await request.json();
+
           if (response.code === 201) {
             router.switchPage('participants-selection');
           } else {
