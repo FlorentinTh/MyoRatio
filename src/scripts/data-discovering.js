@@ -196,9 +196,9 @@ submitButton.addEventListener('click', async () => {
         );
       }
 
-      let isMetadataParticipantsFolderCreated;
-
       if (!(participants === undefined)) {
+        let isMetadataParticipantsFolderCreated;
+
         try {
           isMetadataParticipantsFolderCreated =
             await metadata.createMetadataParticipantFolder(analysisType, participants);
@@ -211,37 +211,38 @@ submitButton.addEventListener('click', async () => {
           });
           errorOverlay.show();
         }
-      }
 
-      if (isMetadataParticipantsFolderCreated) {
-        try {
-          const request = await fetchParticipantIMUData(
-            PathHelper.sanitizePath(dataFolderPathSession),
-            analysisType,
-            participants
-          );
+        if (isMetadataParticipantsFolderCreated) {
+          try {
+            const request = await fetchParticipantIMUData(
+              PathHelper.sanitizePath(dataFolderPathSession),
+              analysisType,
+              participants
+            );
 
-          const response = await request.json();
+            const response = await request.json();
 
-          if (response.code === 201) {
-            router.switchPage('participants-selection');
-          } else {
+            if (response.code === 201) {
+              router.switchPage('participants-selection');
+            } else {
+              loaderOverlay.toggle();
+              console.log(response.payload.details);
+              const errorOverlay = new ErrorOverlay({
+                message: response.payload.message,
+                details: response.payload.details,
+                interact: true
+              });
+              errorOverlay.show();
+            }
+          } catch (error) {
             loaderOverlay.toggle();
             const errorOverlay = new ErrorOverlay({
-              message: response.payload.message,
-              details: response.payload.details,
+              message: `Application cannot fetch information of participants`,
+              details: error.message,
               interact: true
             });
             errorOverlay.show();
           }
-        } catch (error) {
-          loaderOverlay.toggle();
-          const errorOverlay = new ErrorOverlay({
-            message: `Application cannot fetch information of participants`,
-            details: error.message,
-            interact: true
-          });
-          errorOverlay.show();
         }
       }
     }
