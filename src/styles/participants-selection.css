@@ -355,8 +355,8 @@ ul.list > li.item > .actions {
   display: inline-flex;
   width: 155px;
   margin-right: 25px;
-  justify-content: right;
-  align-items: center;
+  justify-content: center;
+  flex-direction: column;
 }
 
 ul.list > li.item > .actions button {

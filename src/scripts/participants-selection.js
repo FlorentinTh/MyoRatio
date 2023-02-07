@@ -291,7 +291,7 @@ const initCard = items => {
       toggleSelectedParticipantStorage();
     });
 
-    const resultsButton = participantItem.querySelector('.actions > button');
+    const resultsButton = participantItem.querySelector('.actions > button#results');
 
     if (!(resultsButton === null)) {
       resultsButton.addEventListener('click', () => {
