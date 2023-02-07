@@ -3,10 +3,6 @@ import menuTemplate from '../../views/partials/components/menu.hbs';
 
 import { TypeHelper } from '../helpers/type-helper.js';
 import { PlatformHelper } from '../helpers/platform-helper.js';
-import { ErrorOverlay } from '../components/error-overlay.js';
-
-const path = nw.require('path');
-const { execFile } = nw.require('child_process');
 
 export class Menu {
   #toggleNavButton;
@@ -62,26 +58,7 @@ export class Menu {
   #setHPFConverterItem() {
     const HPFConverterLink = document.getElementById('hpf-converter');
 
-    if (PlatformHelper.isWindowsPlatform()) {
-      const basePath = process.env.INIT_CWD ?? process.cwd();
-      const delsysExecutablePath = path.join(basePath, 'bin', 'DelsysFileUtil.exe');
-
-      HPFConverterLink.addEventListener('click', () => {
-        this.#toggle();
-
-        execFile(delsysExecutablePath, err => {
-          if (err) {
-            const errorOverlay = new ErrorOverlay({
-              message: 'Cannot launch converter',
-              details: err.message,
-              interact: true
-            });
-
-            errorOverlay.show();
-          }
-        });
-      });
-    } else {
+    if (!PlatformHelper.isWindowsPlatform()) {
       HPFConverterLink.setAttribute('disabled', '');
       HPFConverterLink.classList.add('disabled');
     }
