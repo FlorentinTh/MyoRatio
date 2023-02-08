@@ -132,3 +132,28 @@
 .pager span.dot.active {
   background-color: #16A085;
 }
+
+button[type="submit"] > span.spinner {
+  padding: 12px 8px;
+  display: inline;
+}
+
+button[type="submit"] > span.spinner.hide {
+  display: none;
+}
+
+button[type="submit"] > span.spinner > i {
+  font-size: 0.85em;
+
+  /* animation: rotate 1s linear infinite; */
+}
+
+/* @keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+} */

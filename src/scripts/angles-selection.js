@@ -53,7 +53,7 @@ const inputDataPath = PathHelper.sanitizePath(dataPath);
 const metadata = new Metadata(inputDataPath);
 
 if (!(analysisType === null)) {
-  infoAnalysis.innerText = analysisType;
+  infoAnalysis.innerText = `${analysisType} (${stage})`;
 }
 
 if ('selected-points' in sessionStorage) {
@@ -339,7 +339,8 @@ const updateInfos = () => {
     currentIteration === angleFiles[currentParticipant].length - 1 &&
     currentParticipant + 1 === selectedParticipants.length
   ) {
-    submitButton.innerText = `Complete`;
+    const buttonLabel = submitButton.querySelector('span.submit-label');
+    buttonLabel.innerText = `Complete`;
     submitButton.classList.add('completed');
   }
 };
@@ -521,15 +522,15 @@ const getFormattedPointsFromSession = () => {
   const points = sessionStorage.getItem('selected-points');
   const pointsArray = points.split(';');
 
-  if (pointsArray[0].split(',')[0] > pointsArray[1].split(',')[0]) {
+  if (Number(pointsArray[0].split(',')[0]) > Number(pointsArray[1].split(',')[0])) {
     return {
-      point1x: pointsArray[1].split(',')[0],
-      point2x: pointsArray[0].split(',')[0]
+      point1x: Number(pointsArray[1].split(',')[0]),
+      point2x: Number(pointsArray[0].split(',')[0])
     };
   } else {
     return {
-      point1x: pointsArray[0].split(',')[0],
-      point2x: pointsArray[1].split(',')[0]
+      point1x: Number(pointsArray[0].split(',')[0]),
+      point2x: Number(pointsArray[1].split(',')[0])
     };
   }
 };
@@ -618,6 +619,9 @@ const loadNextChart = async angleFiles => {
 submitButton.addEventListener('click', async () => {
   submitButton.setAttribute('disabled', '');
 
+  const spinner = submitButton.querySelector('span.spinner');
+  spinner.classList.toggle('hide');
+
   const formattedAngles = getPointsObject();
   await writeMetadata(formattedAngles);
 
@@ -662,6 +666,8 @@ submitButton.addEventListener('click', async () => {
       const response = await request.json();
 
       if (!(response.code === 201)) {
+        loaderOverlay.toggle();
+
         const errorOverlay = new ErrorOverlay({
           message: response.payload.message,
           details: response.payload.details,
@@ -671,6 +677,8 @@ submitButton.addEventListener('click', async () => {
         errorOverlay.show();
       }
     } catch (error) {
+      loaderOverlay.toggle();
+
       const errorOverlay = new ErrorOverlay({
         message: `Application cannot complete processing of selected angles`,
         details: error.message,
@@ -688,6 +696,7 @@ submitButton.addEventListener('click', async () => {
   } else {
     await displayAutoAnglesButton();
     await loadNextChart(angleFiles);
+    spinner.classList.toggle('hide');
   }
 });
 
