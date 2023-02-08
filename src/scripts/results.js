@@ -115,6 +115,7 @@ const computeRatios = () => {
 
 const displayResultsTable = () => {
   const { muscles, ratios } = computeRatios();
+
   tableContainer.insertAdjacentHTML(
     'afterbegin',
     resultsTable({
