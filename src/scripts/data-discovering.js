@@ -139,16 +139,18 @@ submitButton.addEventListener('click', async () => {
       const sanitizedPath = PathHelper.sanitizePath(dataPath);
       const metadata = new Metadata(sanitizedPath);
 
+      let isRootAnalysisFolder = true;
       let isBaseFolderContentCompliant;
 
       try {
         isBaseFolderContentCompliant = await metadata.checkBaseFolderContent();
       } catch (error) {
+        isRootAnalysisFolder = false;
         loaderOverlay.toggle();
 
         const errorOverlay = new ErrorOverlay({
           message: `Cannot verify content of input data folder`,
-          details: error.message,
+          details: `please ensure you have a folder named "analysis" under the selected root folder`,
           interact: true
         });
 
@@ -172,22 +174,29 @@ submitButton.addEventListener('click', async () => {
           errorOverlay.show();
         }
       } else {
-        loaderOverlay.toggle();
+        if (isRootAnalysisFolder) {
+          loaderOverlay.toggle();
 
-        const errorOverlay = new ErrorOverlay({
-          message: `Input data folder does not meet file structure requirements`,
-          details: `please ensure you have the three following folders with your data inside: ${metadata.getBaseContent.join(
-            ', '
-          )}`,
-          interact: true
-        });
+          const errorOverlay = new ErrorOverlay({
+            message: `Input data folder does not meet file structure requirements`,
+            details: `please ensure that the "analysis" folder contains the following three folders: ${metadata.getBaseContent.join(
+              ', '
+            )} with your data organized by folders named after each participant`,
+            interact: true
+          });
 
-        errorOverlay.show();
+          errorOverlay.show();
+        }
       }
 
       const analysisType = sessionStorage.getItem('analysis');
       const dataFolderPathSession = sessionStorage.getItem('data-path');
-      const analysisFolderPath = path.join(dataFolderPathSession, analysisType);
+      const analysisFolderPath = path.join(
+        dataFolderPathSession,
+        'analysis',
+        analysisType
+      );
+
       let participants;
 
       if (isMetadataFolderInit) {
@@ -226,7 +235,6 @@ submitButton.addEventListener('click', async () => {
               router.switchPage('participants-selection');
             } else {
               loaderOverlay.toggle();
-              console.log(response.payload.details);
               const errorOverlay = new ErrorOverlay({
                 message: response.payload.message,
                 details: response.payload.details,

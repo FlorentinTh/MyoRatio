@@ -34,7 +34,7 @@ analysisTitle.innerText += ` ${analysisType}`;
 
 const allComplexitiesSelected = [];
 
-const participantsFolderPath = path.join(dataFolderPathSession, analysisType);
+const participantsFolderPath = path.join(dataFolderPathSession, 'analysis', analysisType);
 const sanitizedParticipantsFolderPath = PathHelper.sanitizePath(participantsFolderPath);
 const participants = await getAllParticipants(sanitizedParticipantsFolderPath);
 const metadata = new Metadata(dataFolderPathSession);
@@ -47,24 +47,13 @@ const displayPreviewCard = (participant, infos, chart) => {
 };
 
 const getChartFiles = async participant => {
+  const inputPath = path.join(sanitizedParticipantsFolderPath, participant);
+
   let chartFiles = [];
-
-  let inputPath;
-  try {
-    inputPath = await metadata.getParticipantFolderPath(analysisType, participant);
-  } catch (error) {
-    const errorOverlay = new ErrorOverlay({
-      message: `Cannot find files for participant ${participant}`,
-      details: error.message,
-      interact: true
-    });
-
-    errorOverlay.show();
-  }
 
   let files;
   try {
-    files = await FileHelper.listAllFiles(PathHelper.sanitizePath(inputPath));
+    files = await FileHelper.listAllFiles(inputPath);
   } catch (error) {
     const errorOverlay = new ErrorOverlay({
       message: `Cannot find chart files`,

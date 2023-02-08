@@ -58,7 +58,7 @@ dataPath.querySelector('p').innerText = ` ${
 
 analysisTitle.innerText += ` ${analysisType}`;
 
-const analysisFolderPath = path.join(dataFolderPathSession, analysisType);
+const analysisFolderPath = path.join(dataFolderPathSession, 'analysis', analysisType);
 const sanitizedAnalysisFolderPath = PathHelper.sanitizePath(analysisFolderPath);
 const participants = await getAllParticipants(sanitizedAnalysisFolderPath);
 const metadata = new Metadata(dataFolderPathSession);

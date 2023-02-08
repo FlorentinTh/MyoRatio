@@ -9,7 +9,7 @@ export class Metadata {
   #baseContent = ['flexion', 'extension', 'sit-stand'];
   #stages = ['concentric', 'eccentric'];
   #metadataRootFolder = '.metadata';
-  #metadataFilename = '.data.json';
+  #metadataFilename = 'data.json';
   #inputDataPath;
 
   constructor(inputDataPath) {
@@ -26,12 +26,21 @@ export class Metadata {
   }
 
   async checkBaseFolderContent() {
-    let folders;
     try {
-      folders = await fs.promises.readdir(this.#inputDataPath);
+      await fs.promises.readdir(path.join(this.#inputDataPath, 'analysis'));
+    } catch (error) {
+      throw new Error(error);
+    }
+
+    let folders;
+
+    try {
+      folders = await fs.promises.readdir(path.join(this.#inputDataPath, 'analysis'));
 
       folders = folders.filter(async file => {
-        const stat = await fs.promises.stat(path.join(this.#inputDataPath, file));
+        const stat = await fs.promises.stat(
+          path.join(this.#inputDataPath, 'analysis', file)
+        );
         return stat.isDirectory();
       });
     } catch (error) {
@@ -50,15 +59,19 @@ export class Metadata {
   }
 
   async createMetadataFolderTree() {
-    const metadataFolderPath = path.join(this.#inputDataPath, this.#metadataRootFolder);
+    const metadataFolderPath = path.join(
+      this.#inputDataPath,
+      'analysis',
+      this.#metadataRootFolder
+    );
     await FileHelper.createFileOrDirectoryIfNotExists(metadataFolderPath, {
       hidden: true
     });
 
     for (const folder of this.#baseContent) {
-      const metadataSubfolderPath = path.join(metadataFolderPath, `.${folder}`);
+      const metadataSubfolderPath = path.join(metadataFolderPath, folder);
       await FileHelper.createFileOrDirectoryIfNotExists(metadataSubfolderPath, {
-        hidden: true
+        hidden: false
       });
 
       const metadataFilePath = path.join(metadataSubfolderPath, this.#metadataFilename);
@@ -81,8 +94,9 @@ export class Metadata {
       for (const participant of participants) {
         const metadataParticipantFolderPath = path.join(
           this.#inputDataPath,
+          'analysis',
           this.#metadataRootFolder,
-          `.${analysisType}`,
+          analysisType,
           participant
         );
 
@@ -102,8 +116,9 @@ export class Metadata {
 
     const metadataFilePath = path.join(
       this.#inputDataPath,
+      'analysis',
       this.#metadataRootFolder,
-      `.${analysisType}`,
+      analysisType,
       this.#metadataFilename
     );
 
@@ -167,8 +182,9 @@ export class Metadata {
 
     return path.join(
       this.#inputDataPath,
+      'analysis',
       this.#metadataRootFolder,
-      `.${analysisType}`,
+      analysisType,
       participantFolderName
     );
   }
@@ -186,8 +202,9 @@ export class Metadata {
 
     const metadataFilePath = path.join(
       this.#inputDataPath,
+      'analysis',
       this.#metadataRootFolder,
-      `.${analysisType}`,
+      analysisType,
       this.#metadataFilename
     );
 
@@ -281,8 +298,9 @@ export class Metadata {
 
     const reportOutputPath = path.join(
       this.#inputDataPath,
+      'analysis',
       this.#metadataRootFolder,
-      `.${analysisType}`,
+      analysisType,
       `${analysisType}_report.html`
     );
 
