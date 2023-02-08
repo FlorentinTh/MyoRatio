@@ -51,6 +51,7 @@ div#error-overlay.not-visible {
 .error-msg p.details {
   font-size: 1em;
   font-style: italic;
+  padding: 0 150px;
 }
 
 #interact-btn {
