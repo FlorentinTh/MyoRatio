@@ -1,5 +1,6 @@
 @import url("@fortawesome/fontawesome-free/css/all.css");
 
+div#success-overlay,
 div#error-overlay {
   background: #232323;
   width: 100%;
@@ -14,47 +15,70 @@ div#error-overlay {
   flex-direction: column;
 }
 
+div#success-overlay.not-visible,
 div#error-overlay.not-visible {
   display: none;
 }
 
+.success-wrapper,
 .error-wrapper {
   display: inline-block;
   position: relative;
 }
 
+.success-wrapper i,
 .error-wrapper i {
-  color: #FF8A65;
   font-size: 6em;
   transition: transform 0.2s ease-in-out;
 }
 
+.success-wrapper i {
+  color: #66BB6A;
+}
+
+.error-wrapper i {
+  color: #FF8A65;
+}
+
+.success-wrapper,
 .error-wrapper i:hover {
   transform: scale(1.1);
 }
 
+.success-msg,
 .error-msg {
   margin-top: 25px;
 }
 
+.success-msg p,
 .error-msg p {
-  color: #FF8A65;
   text-align: center;
   letter-spacing: 0.04em;
 }
 
+.success-msg p {
+  color: #66BB6A;
+}
+
+.error-msg p {
+  color: #FF8A65;
+}
+
+.success-msg p.message,
 .error-msg p.message {
   font-size: 1.4em;
   margin-bottom: 10px;
 }
 
+.success-msg p.details,
 .error-msg p.details {
   font-size: 1em;
   font-style: italic;
   padding: 0 150px;
 }
 
-#interact-btn {
+#success-overlay > #interact-btn,
+#error-overlay > #interact-btn {
   width: 25%;
   margin-top: 35px;
   padding: 12px 30px;
@@ -65,16 +89,33 @@ div#error-overlay.not-visible {
   background-size: 0 100%;
   background-repeat: no-repeat;
   transition: ease-out .4s;
-  color: #FF7043;
-  border: 2px solid #FF7043;
   background-color: #232323;
   background-image: linear-gradient(to left, #232323, #232323);
 }
 
-#interact-btn:hover {
+#success-overlay > #interact-btn {
+  color: #66BB6A;
+  border: 2px solid #66BB6A;
+}
+
+#error-overlay > #interact-btn {
+  color: #FF7043;
+  border: 2px solid #FF7043;
+}
+
+#success-overlay > #interact-btn:hover,
+#error-overlay > #interact-btn:hover {
   color: #232323;
   font-weight: bolder;
+  cursor: pointer;
+}
+
+#success-overlay > #interact-btn:hover {
+  background-color: #66BB6A;
+  background-image: linear-gradient(to right, #66BB6A, #66BB6A);
+}
+
+#error-overlay > #interact-btn:hover {
   background-color: #FF7043;
   background-image: linear-gradient(to right, #FF7043, #FF7043);
-  cursor: pointer;
 }

@@ -1,4 +1,4 @@
-import { ErrorOverlay } from './error-overlay';
+import { ErrorOverlay } from './overlay';
 import { TypeHelper } from '../helpers/type-helper';
 
 const path = nw.require('path');

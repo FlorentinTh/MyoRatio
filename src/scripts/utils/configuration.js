@@ -1,5 +1,5 @@
 import * as yup from 'yup';
-import { ErrorOverlay } from '../components/error-overlay';
+import { ErrorOverlay } from '../components/overlay';
 import { FileHelper } from '../helpers/file-helper';
 
 const path = nw.require('path');

@@ -7,7 +7,7 @@ import { Menu } from './components/menu.js';
 import { Router } from './routes/router.js';
 import { Metadata } from './utils/metadata.js';
 import { PathHelper } from './helpers/path-helper';
-import { ErrorOverlay } from './components/error-overlay';
+import { ErrorOverlay } from './components/overlay';
 import { FileHelper } from './helpers/file-helper';
 
 const path = nw.require('path');

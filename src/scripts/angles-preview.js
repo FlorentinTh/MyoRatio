@@ -6,7 +6,7 @@ import { Router } from './routes/router.js';
 import { getAllParticipants } from './components/participants';
 import { Metadata } from './utils/metadata.js';
 import { LoaderOverlay } from './components/loader-overlay.js';
-import { ErrorOverlay } from './components/error-overlay';
+import { ErrorOverlay } from './components/overlay';
 import { PathHelper } from './helpers/path-helper';
 import { StringHelper } from './helpers/string-helper';
 import { DOMElement } from './utils/dom-element.js';

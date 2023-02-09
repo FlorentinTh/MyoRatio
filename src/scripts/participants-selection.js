@@ -10,7 +10,7 @@ import timezone from 'dayjs/plugin/timezone';
 import { Menu } from './components/menu.js';
 import { Router } from './routes/router.js';
 import { LoaderOverlay } from './components/loader-overlay.js';
-import { ErrorOverlay } from './components/error-overlay';
+import { ErrorOverlay } from './components/overlay';
 import { getAllParticipants } from './components/participants';
 import { Metadata } from './utils/metadata.js';
 import { PathHelper } from './helpers/path-helper.js';

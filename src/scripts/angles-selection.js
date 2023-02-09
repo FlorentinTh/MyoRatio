@@ -11,7 +11,7 @@ import { ChartSetup } from './utils/chart-setup';
 import { ChartHelper } from './helpers/chart-helper.js';
 import { PathHelper } from './helpers/path-helper.js';
 import { FileHelper } from './helpers/file-helper';
-import { ErrorOverlay } from './components/error-overlay';
+import { ErrorOverlay } from './components/overlay';
 import { Configuration } from './utils/configuration.js';
 import { StringHelper } from './helpers/string-helper';
 
