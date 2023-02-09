@@ -37,8 +37,8 @@ const menu = new Menu();
 const additionalMenuButtons = document.querySelectorAll('[class^="export-"]');
 menu.init(additionalMenuButtons);
 
-const dataFolderPathSession = sessionStorage.getItem('data-path');
-const analysisType = sessionStorage.getItem('analysis');
+const dataFolderPathSession = sessionStorage.getItem('data-path').toString();
+const analysisType = sessionStorage.getItem('analysis').toString();
 
 const stageSwitchRadios = Switch.init('stage');
 
@@ -53,14 +53,15 @@ const submitButton = document.querySelector('button[type="submit"]');
 const participantsList = document.querySelector('ul.list');
 
 dataPath.querySelector('p').innerText = ` ${
-  sessionStorage.getItem('data-path') || 'ERROR'
+  sessionStorage.getItem('data-path').toString() || 'ERROR'
 }`;
 
 analysisTitle.innerText += ` ${analysisType}`;
 
-const analysisFolderPath = path.join(dataFolderPathSession, 'analysis', analysisType);
-const sanitizedAnalysisFolderPath = PathHelper.sanitizePath(analysisFolderPath);
-const participants = await getAllParticipants(sanitizedAnalysisFolderPath);
+const analysisFolderPath = PathHelper.sanitizePath(
+  path.join(dataFolderPathSession, 'analysis', analysisType)
+);
+const participants = await getAllParticipants(analysisFolderPath);
 const metadata = new Metadata(dataFolderPathSession);
 
 const participantsArray = [];
@@ -101,13 +102,10 @@ const displayParticipantCard = (participant, infos, stage) => {
 const renderParticipantsList = async () => {
   for (const participant of participants) {
     const participantName = StringHelper.formatParticipantName(participant);
-
     let infos;
+
     try {
-      infos = await metadata.getParticipantInfo(
-        PathHelper.sanitizePath(analysisType),
-        participantName
-      );
+      infos = await metadata.getParticipantInfo(analysisType, participantName);
     } catch (error) {
       const errorOverlay = new ErrorOverlay({
         message: `Participant ${participant} cannot be processed`,
@@ -135,7 +133,7 @@ const renderParticipantsList = async () => {
       });
     }
 
-    const stage = sessionStorage.getItem('stage');
+    const stage = sessionStorage.getItem('stage').toString();
     displayParticipantCard(participantName, infos, infos.stages[stage]);
   }
 };
@@ -240,7 +238,10 @@ const checkSelectedParticipantsAllNotCompleted = () => {
 
 const initCard = items => {
   if ('selected-participants' in sessionStorage) {
-    selectedParticipants = sessionStorage.getItem('selected-participants').split(',');
+    selectedParticipants = sessionStorage
+      .getItem('selected-participants')
+      .toString()
+      .split(',');
   }
 
   toggleSubmitButton();
@@ -323,6 +324,18 @@ if (!(participants?.length > 0)) {
   displayEmptyCard();
 } else {
   participantItems = document.querySelector('ul.list').children;
+
+  try {
+    await metadata.cleanParticipantMetadata(analysisType, participants);
+  } catch (error) {
+    const errorOverlay = new ErrorOverlay({
+      message: `Cannot retrieve participants' information`,
+      details: error.message,
+      interact: true
+    });
+
+    errorOverlay.show();
+  }
 
   await renderParticipantsList();
 

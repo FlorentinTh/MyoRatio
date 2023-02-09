@@ -4,6 +4,7 @@ import { TypeHelper } from '../helpers/type-helper.js';
 
 const path = nw.require('path');
 const fs = nw.require('fs');
+const crypto = nw.require('crypto');
 
 export class Metadata {
   #baseContent = ['flexion', 'extension', 'sit-stand'];
@@ -22,7 +23,7 @@ export class Metadata {
   }
 
   get getMetadataRootFolder() {
-    return this.#metadataRootFolder;
+    return path.join(this.#inputDataPath, 'analysis', this.#metadataRootFolder);
   }
 
   async checkBaseFolderContent(converter = false) {
@@ -67,17 +68,12 @@ export class Metadata {
   }
 
   async createMetadataFolderTree() {
-    const metadataFolderPath = path.join(
-      this.#inputDataPath,
-      'analysis',
-      this.#metadataRootFolder
-    );
-    await FileHelper.createFileOrDirectoryIfNotExists(metadataFolderPath, {
+    await FileHelper.createFileOrDirectoryIfNotExists(this.getMetadataRootFolder, {
       hidden: true
     });
 
     for (const folder of this.#baseContent) {
-      const metadataSubfolderPath = path.join(metadataFolderPath, folder);
+      const metadataSubfolderPath = path.join(this.getMetadataRootFolder, folder);
       await FileHelper.createFileOrDirectoryIfNotExists(metadataSubfolderPath, {
         hidden: false
       });
@@ -94,28 +90,51 @@ export class Metadata {
     return true;
   }
 
-  async createMetadataParticipantFolder(analysisType, participants) {
+  async createMetadataParticipantFolder(analysisType, participant) {
     TypeHelper.checkStringNotNull(analysisType, { label: 'analysisType' });
-    TypeHelper.checkArray(participants, { label: 'participants' });
+    TypeHelper.checkStringNotNull(participant, { label: 'participant' });
 
-    if (participants.length > 0) {
-      for (const participant of participants) {
-        const metadataParticipantFolderPath = path.join(
-          this.#inputDataPath,
-          'analysis',
-          this.#metadataRootFolder,
-          analysisType,
-          participant
-        );
+    const metadataParticipantFolderPath = path.join(
+      this.getMetadataRootFolder,
+      analysisType,
+      participant
+    );
 
-        await FileHelper.createFileOrDirectoryIfNotExists(metadataParticipantFolderPath, {
-          isDirectory: true,
-          hidden: false
-        });
-      }
-    }
+    await FileHelper.createFileOrDirectoryIfNotExists(metadataParticipantFolderPath, {
+      isDirectory: true,
+      hidden: false
+    });
 
     return true;
+  }
+
+  async initEmptyParticipantOject(path, content, participant, checksum) {
+    const participantObject = {};
+
+    const value = (participantObject[participant] = {
+      checksum,
+      complexity: 'unknown',
+      auto_angles: false,
+      stages: {}
+    });
+
+    for (const stage of this.#stages) {
+      const stageObject = {};
+
+      stageObject[stage] = {
+        completed: false
+      };
+
+      value.stages = {
+        ...value.stages,
+        ...stageObject
+      };
+    }
+
+    content = { ...content, ...participantObject };
+    await FileHelper.writeJSONFile(path, content);
+
+    return value;
   }
 
   async getParticipantInfo(analysisType, participant) {
@@ -123,48 +142,92 @@ export class Metadata {
     TypeHelper.checkStringNotNull(participant, { label: 'participant' });
 
     const metadataFilePath = path.join(
-      this.#inputDataPath,
-      'analysis',
-      this.#metadataRootFolder,
+      this.getMetadataRootFolder,
       analysisType,
       this.#metadataFilename
     );
 
-    let metadataFileJSON = await FileHelper.parseJSONFile(metadataFilePath);
+    const metadataFileJSON = await FileHelper.parseJSONFile(metadataFilePath);
 
     const participantRecord = Object.keys(metadataFileJSON).filter(
       value => value === participant
     );
 
+    const participantFolderName =
+      StringHelper.revertParticipantNameFromSession(participant);
+
+    const stat = await fs.promises.stat(
+      path.join(this.#inputDataPath, 'analysis', analysisType, participantFolderName)
+    );
+
+    const checksum = crypto
+      .createHash('sha256')
+      .update(stat.ino.toString())
+      .digest('hex');
+
     if (participantRecord.length > 0) {
-      return metadataFileJSON[participant];
-    } else {
-      const participantObject = {};
+      if (!(checksum === metadataFileJSON[participant].checksum)) {
+        delete metadataFileJSON[participant];
 
-      const value = (participantObject[participant] = {
-        complexity: 'unknown',
-        auto_angles: false,
-        stages: {}
-      });
-
-      for (const stage of this.#stages) {
-        const stageObject = {};
-
-        stageObject[stage] = {
-          completed: false
-        };
-
-        value.stages = {
-          ...value.stages,
-          ...stageObject
-        };
+        return await this.initEmptyParticipantOject(
+          metadataFilePath,
+          metadataFileJSON,
+          participant,
+          checksum
+        );
       }
 
-      metadataFileJSON = { ...metadataFileJSON, ...participantObject };
-      await FileHelper.writeJSONFile(metadataFilePath, metadataFileJSON);
-
-      return value;
+      return metadataFileJSON[participant];
+    } else {
+      return await this.initEmptyParticipantOject(
+        metadataFilePath,
+        metadataFileJSON,
+        participant,
+        checksum
+      );
     }
+  }
+
+  async cleanParticipantMetadata(analysisType, participants) {
+    TypeHelper.checkStringNotNull(analysisType, { label: 'analysisType' });
+    TypeHelper.checkArray(participants, { label: 'participants' });
+
+    const metadataFilePath = path.join(
+      this.getMetadataRootFolder,
+      analysisType,
+      this.#metadataFilename
+    );
+
+    participants = participants.map(participant =>
+      StringHelper.formatParticipantName(participant)
+    );
+
+    const metadataFileJSON = await FileHelper.parseJSONFile(metadataFilePath);
+    const cleanParticipants = Object.keys(metadataFileJSON).filter(
+      participant => !participants.includes(participant)
+    );
+
+    for (const cleanParticipant of cleanParticipants) {
+      delete metadataFileJSON[cleanParticipant];
+
+      const cleanParticipantMetadataFolderPath = path.join(
+        path.parse(metadataFilePath).dir,
+        StringHelper.revertParticipantNameFromSession(cleanParticipant)
+      );
+
+      try {
+        await fs.promises.access(cleanParticipantMetadataFolderPath);
+        await fs.promises.rm(cleanParticipantMetadataFolderPath, { recursive: true });
+      } catch (error) {
+        if (error.code === 'ENOENT') {
+          continue;
+        } else {
+          throw new Error(error);
+        }
+      }
+    }
+
+    await FileHelper.writeJSONFile(metadataFilePath, metadataFileJSON);
   }
 
   async getParticipantFolderPath(
@@ -188,13 +251,7 @@ export class Metadata {
       participantFolderName = participant.split('_')[0];
     }
 
-    return path.join(
-      this.#inputDataPath,
-      'analysis',
-      this.#metadataRootFolder,
-      analysisType,
-      participantFolderName
-    );
+    return path.join(this.getMetadataRootFolder, analysisType, participantFolderName);
   }
 
   async writeContent(analysisType, participant, content, stage) {
@@ -209,9 +266,7 @@ export class Metadata {
     }
 
     const metadataFilePath = path.join(
-      this.#inputDataPath,
-      'analysis',
-      this.#metadataRootFolder,
+      this.getMetadataRootFolder,
       analysisType,
       this.#metadataFilename
     );
@@ -305,9 +360,7 @@ export class Metadata {
     TypeHelper.checkStringNotNull(content, { label: 'content' });
 
     const reportOutputPath = path.join(
-      this.#inputDataPath,
-      'analysis',
-      this.#metadataRootFolder,
+      this.getMetadataRootFolder,
       analysisType,
       `${analysisType}_report.html`
     );

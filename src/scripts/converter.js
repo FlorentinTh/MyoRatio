@@ -74,6 +74,12 @@ const toggleFolderPath = (path = null) => {
   }
 };
 
+if ('data-path' in sessionStorage) {
+  dataPath = sessionStorage.getItem('data-path').toString();
+  toggleFolderPath(PathHelper.sanitizePath(dataPath));
+  submitButton.removeAttribute('disabled');
+}
+
 folderInput.addEventListener('change', event => {
   if (event && event.target.files.length > 0) {
     const folder = event.target.files[0];
@@ -172,7 +178,51 @@ submitButton.addEventListener('click', async () => {
           let totalFileCompleted = 0;
           let conversionError = false;
 
+          const notConvertedFilesDistinct = notConvertedFiles.reduce((acc, current) => {
+            if (!acc.filter(x => x.destFolder === current.destFolder).length) {
+              acc.push(current);
+            }
+            return acc;
+          }, []);
+
+          for (const distinctFile of notConvertedFilesDistinct) {
+            const distinctFilePathArray = distinctFile.destFolder.split(path.sep);
+            const participantFolder =
+              distinctFilePathArray[distinctFilePathArray.length - 1];
+            const analysisFolder =
+              distinctFilePathArray[distinctFilePathArray.length - 2];
+
+            const metadataFolderPath = path.join(
+              metadata.getMetadataRootFolder,
+              analysisFolder,
+              participantFolder
+            );
+
+            try {
+              await fs.promises.access(metadataFolderPath);
+              await fs.promises.rm(metadataFolderPath, { recursive: true });
+            } catch (error) {
+              if (error.code === 'ENOENT') {
+                continue;
+              } else {
+                loaderOverlay.toggle();
+
+                const errorOverlay = new ErrorOverlay({
+                  message: `Cannot convert HPF File: ${path.basename(distinctFile.file)}`,
+                  details: error.message,
+                  interact: true
+                });
+
+                errorOverlay.show();
+                break;
+              }
+            }
+          }
+
           for (const notConvertedFile of notConvertedFiles) {
+            totalFileCompleted++;
+            loaderOverlay.loaderMessage.innerText = `Converting ${totalFileCompleted} / ${notConvertedFiles.length} files...`;
+
             try {
               await fs.promises.mkdir(notConvertedFile.destFolder, { recursive: true });
 
@@ -192,9 +242,6 @@ submitButton.addEventListener('click', async () => {
 
               await CSVHelper.normalize(inputFilePath, outputFilePath);
               await fs.promises.unlink(inputFilePath);
-
-              totalFileCompleted++;
-              loaderOverlay.loaderMessage.innerText = `Converting ${totalFileCompleted} / ${notConvertedFiles.length} files...`;
             } catch (error) {
               conversionError = true;
 
