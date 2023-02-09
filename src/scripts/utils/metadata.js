@@ -25,9 +25,19 @@ export class Metadata {
     return this.#metadataRootFolder;
   }
 
-  async checkBaseFolderContent() {
+  async checkBaseFolderContent(converter = false) {
+    TypeHelper.checkBoolean(converter, { label: 'converter' });
+
+    let inputPath;
+
+    if (converter) {
+      inputPath = path.join(this.#inputDataPath, 'hpf');
+    } else {
+      inputPath = path.join(this.#inputDataPath, 'analysis');
+    }
+
     try {
-      await fs.promises.readdir(path.join(this.#inputDataPath, 'analysis'));
+      await fs.promises.readdir(inputPath);
     } catch (error) {
       throw new Error(error);
     }
@@ -35,12 +45,10 @@ export class Metadata {
     let folders;
 
     try {
-      folders = await fs.promises.readdir(path.join(this.#inputDataPath, 'analysis'));
+      folders = await fs.promises.readdir(inputPath);
 
       folders = folders.filter(async file => {
-        const stat = await fs.promises.stat(
-          path.join(this.#inputDataPath, 'analysis', file)
-        );
+        const stat = await fs.promises.stat(path.join(inputPath, file));
         return stat.isDirectory();
       });
     } catch (error) {
