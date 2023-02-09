@@ -17,16 +17,16 @@ const windowSizeInput = document.getElementById('window-size');
 const submitButton = document.querySelector('button[type="submit"]');
 
 if (!('window-size' in localStorage)) {
-  localStorage.setItem('window-size', windowSizeInput.value);
+  localStorage.setItem('window-size', Number(windowSizeInput.value));
 } else {
-  windowSizeInput.value = localStorage.getItem('window-size');
+  windowSizeInput.value = Number(localStorage.getItem('window-size'));
 }
 
 windowSizeInput.addEventListener('keyup', event => {
   const value = event.target.value;
 
   if (!(value === '') && value > 0) {
-    localStorage.setItem('window-size', value);
+    localStorage.setItem('window-size', Number(value));
 
     if (submitButton.disabled) {
       submitButton.removeAttribute('disabled');

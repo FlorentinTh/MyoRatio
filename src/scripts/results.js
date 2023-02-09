@@ -18,10 +18,10 @@ router.disableBackButton();
 const menu = new Menu();
 menu.init();
 
-const dataPath = sessionStorage.getItem('data-path');
-const analysisType = sessionStorage.getItem('analysis');
-const participantResult = sessionStorage.getItem('participant-result');
-const stage = sessionStorage.getItem('stage');
+const dataPath = sessionStorage.getItem('data-path').toString();
+const analysisType = sessionStorage.getItem('analysis').toString();
+const participantResult = sessionStorage.getItem('participant-result').toString();
+const stage = sessionStorage.getItem('stage').toString();
 
 const title = document.querySelector('.title span');
 

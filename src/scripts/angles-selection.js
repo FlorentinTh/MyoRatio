@@ -29,10 +29,14 @@ menu.init(additionalButton);
 
 Chart.register(CrosshairPlugin);
 
-const selectedParticipants = sessionStorage.getItem('selected-participants').split(',');
-const analysisType = sessionStorage.getItem('analysis');
-const dataPath = sessionStorage.getItem('data-path');
-const stage = sessionStorage.getItem('stage');
+const selectedParticipants = sessionStorage
+  .getItem('selected-participants')
+  .toString()
+  .split(',');
+
+const analysisType = sessionStorage.getItem('analysis').toString();
+const dataPath = sessionStorage.getItem('data-path').toString();
+const stage = sessionStorage.getItem('stage').toString();
 
 const autoAnglesButton = document.querySelector('div.auto-angles-btn');
 const infoParticipant = document.getElementById('participant');
@@ -184,7 +188,11 @@ const chartPointOnClickHandler = (event, element, plot) => {
       });
 
       nbSelectedPoints--;
-      removeSessionPoint(activeSelectedPoint.x, activeSelectedPoint.y, true);
+      removeSessionPoint(
+        activeSelectedPoint.x.toString(),
+        activeSelectedPoint.y.toString(),
+        true
+      );
     } else {
       const sortedSelectedPoints = datasetSelected.data.sort((a, b) => {
         if (a.x < b.x) {
@@ -216,7 +224,7 @@ const chartPointOnClickHandler = (event, element, plot) => {
 
       datasetSelected.data.push(datasetRaw.data[rawActivePoint.index]);
 
-      removeSessionPoint(rawActivePoint.x, rawActivePoint.y, true);
+      removeSessionPoint(rawActivePoint.x.toString(), rawActivePoint.y.toString(), true);
       addSessionPoint(rawActivePoint.x, rawActivePoint.y);
     }
   }
@@ -468,7 +476,7 @@ const getPointsObject = (auto = false) => {
     }
   };
 
-  const points = sessionStorage.getItem('selected-points');
+  const points = sessionStorage.getItem('selected-points').toString();
   const pointsArray = points.split(';');
 
   for (const point of pointsArray) {
@@ -482,17 +490,17 @@ const getPointsObject = (auto = false) => {
     }
 
     if (pointsObject[0].x === null && pointsObject[0].y === null) {
-      pointsObject[0].x = pointArray[0];
-      pointsObject[0].y = pointArray[1];
+      pointsObject[0].x = Number(pointArray[0]);
+      pointsObject[0].y = Number(pointArray[1]);
     } else {
-      if (pointsObject[0].x > pointArray[0]) {
-        pointsObject[1].x = pointsObject[0].x;
-        pointsObject[1].y = pointsObject[0].y;
-        pointsObject[0].x = pointArray[0];
-        pointsObject[0].y = pointArray[1];
+      if (Number(pointsObject[0].x) > Number(pointArray[0])) {
+        pointsObject[1].x = Number(pointsObject[0].x);
+        pointsObject[1].y = Number(pointsObject[0].y);
+        pointsObject[0].x = Number(pointArray[0]);
+        pointsObject[0].y = Number(pointArray[1]);
       } else {
-        pointsObject[1].x = pointArray[0];
-        pointsObject[1].y = pointArray[1];
+        pointsObject[1].x = Number(pointArray[0]);
+        pointsObject[1].y = Number(pointArray[1]);
       }
     }
   }
@@ -519,7 +527,7 @@ const writeMetadata = async data => {
 };
 
 const getFormattedPointsFromSession = () => {
-  const points = sessionStorage.getItem('selected-points');
+  const points = sessionStorage.getItem('selected-points').toString();
   const pointsArray = points.split(';');
 
   if (Number(pointsArray[0].split(',')[0]) > Number(pointsArray[1].split(',')[0])) {
@@ -544,7 +552,7 @@ const postAnglesData = async (participant, iteration, point1x, point2x) => {
     method: 'POST',
     body: JSON.stringify({
       window_size: Number(localStorage.getItem('window-size')),
-      data_path: dataPath,
+      data_path: PathHelper.sanitizePath(dataPath),
       analysis: analysisType,
       stage,
       participant,
@@ -563,7 +571,7 @@ const fetchAreas = async participants => {
     },
     method: 'POST',
     body: JSON.stringify({
-      data_path: dataPath,
+      data_path: PathHelper.sanitizePath(dataPath),
       analysis: analysisType,
       stage,
       participants

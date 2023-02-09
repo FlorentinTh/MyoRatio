@@ -22,8 +22,8 @@ const loaderOverlay = new LoaderOverlay();
 const menu = new Menu();
 menu.init();
 
-const dataFolderPathSession = sessionStorage.getItem('data-path');
-const analysisType = sessionStorage.getItem('analysis');
+const dataFolderPathSession = sessionStorage.getItem('data-path').toString();
+const analysisType = sessionStorage.getItem('analysis').toString();
 
 const analysisTitle = document.querySelector('.analysis h3');
 const gridContainer = document.querySelector('.participant-card-container');
@@ -34,9 +34,10 @@ analysisTitle.innerText += ` ${analysisType}`;
 
 const allComplexitiesSelected = [];
 
-const participantsFolderPath = path.join(dataFolderPathSession, 'analysis', analysisType);
-const sanitizedParticipantsFolderPath = PathHelper.sanitizePath(participantsFolderPath);
-const participants = await getAllParticipants(sanitizedParticipantsFolderPath);
+const participantsFolderPath = PathHelper.sanitizePath(
+  path.join(dataFolderPathSession, 'analysis', analysisType)
+);
+const participants = await getAllParticipants(participantsFolderPath);
 const metadata = new Metadata(dataFolderPathSession);
 
 const displayPreviewCard = (participant, infos, chart) => {
@@ -47,7 +48,7 @@ const displayPreviewCard = (participant, infos, chart) => {
 };
 
 const getChartFiles = async participant => {
-  const inputPath = path.join(sanitizedParticipantsFolderPath, participant);
+  const inputPath = path.join(participantsFolderPath, participant);
 
   let chartFiles = [];
 

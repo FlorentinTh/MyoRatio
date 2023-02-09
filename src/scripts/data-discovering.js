@@ -18,7 +18,7 @@ const router = new Router();
 router.disableBackButton();
 
 if ('app-error' in sessionStorage) {
-  const { message, details } = JSON.parse(sessionStorage.getItem('app-error'));
+  const { message, details } = JSON.parse(sessionStorage.getItem('app-error').toString());
 
   const errorOverlay = new ErrorOverlay({
     message,
@@ -102,7 +102,8 @@ const fetchParticipantIMUData = async (dataPath, analysis, participants) => {
 };
 
 if ('data-path' in sessionStorage) {
-  toggleFolderPath(sessionStorage.getItem('data-path'));
+  const dataPath = sessionStorage.getItem('data-path').toString();
+  toggleFolderPath(PathHelper.sanitizePath(dataPath));
   submitButton.removeAttribute('disabled');
 }
 
@@ -119,7 +120,7 @@ folderInput.addEventListener('change', event => {
   } else {
     toggleFolderPath();
 
-    if (!(sessionStorage.getItem('data-path') === null)) {
+    if (!(sessionStorage.getItem('data-path').toString() === null)) {
       sessionStorage.removeItem('data-path');
     }
 
@@ -134,7 +135,7 @@ submitButton.addEventListener('click', async () => {
     loaderOverlay.toggle({ message: 'Discovering data...' });
 
     if ('data-path' in sessionStorage) {
-      const dataPath = sessionStorage.getItem('data-path');
+      const dataPath = sessionStorage.getItem('data-path').toString();
 
       const sanitizedPath = PathHelper.sanitizePath(dataPath);
       const metadata = new Metadata(sanitizedPath);
@@ -189,8 +190,9 @@ submitButton.addEventListener('click', async () => {
         }
       }
 
-      const analysisType = sessionStorage.getItem('analysis');
-      const dataFolderPathSession = sessionStorage.getItem('data-path');
+      const analysisType = sessionStorage.getItem('analysis').toString();
+      const dataFolderPathSession = sessionStorage.getItem('data-path').toString();
+
       const analysisFolderPath = path.join(
         dataFolderPathSession,
         'analysis',
@@ -205,52 +207,51 @@ submitButton.addEventListener('click', async () => {
         );
       }
 
-      if (!(participants === undefined)) {
-        let isMetadataParticipantsFolderCreated;
+      loaderOverlay.loaderMessage.innerText = `Found ${participants.length} participants...`;
 
-        try {
-          isMetadataParticipantsFolderCreated =
-            await metadata.createMetadataParticipantFolder(analysisType, participants);
-        } catch (error) {
-          loaderOverlay.toggle();
-          const errorOverlay = new ErrorOverlay({
-            message: `Application cannot initialize metadata tree for participants`,
-            details: error.message,
-            interact: true
-          });
-          errorOverlay.show();
-        }
-
-        if (isMetadataParticipantsFolderCreated) {
+      if (!(participants === undefined) && participants.length > 0) {
+        for (const participant of participants) {
           try {
-            const request = await fetchParticipantIMUData(
-              PathHelper.sanitizePath(dataFolderPathSession),
-              analysisType,
-              participants
-            );
-
-            const response = await request.json();
-
-            if (response.code === 201) {
-              router.switchPage('participants-selection');
-            } else {
-              loaderOverlay.toggle();
-              const errorOverlay = new ErrorOverlay({
-                message: response.payload.message,
-                details: response.payload.details,
-                interact: true
-              });
-              errorOverlay.show();
-            }
+            await metadata.createMetadataParticipantFolder(analysisType, participant);
           } catch (error) {
             loaderOverlay.toggle();
             const errorOverlay = new ErrorOverlay({
-              message: `Application cannot fetch information of participants`,
+              message: `Application cannot initialize metadata tree for participants`,
               details: error.message,
               interact: true
             });
             errorOverlay.show();
           }
+        }
+
+        loaderOverlay.loaderMessage.innerText = `Initializing ${participants.length} participants...`;
+
+        try {
+          const request = await fetchParticipantIMUData(
+            PathHelper.sanitizePath(dataFolderPathSession),
+            analysisType,
+            participants
+          );
+          const response = await request.json();
+          if (response.code === 201) {
+            router.switchPage('participants-selection');
+          } else {
+            loaderOverlay.toggle();
+            const errorOverlay = new ErrorOverlay({
+              message: response.payload.message,
+              details: response.payload.details,
+              interact: true
+            });
+            errorOverlay.show();
+          }
+        } catch (error) {
+          loaderOverlay.toggle();
+          const errorOverlay = new ErrorOverlay({
+            message: `Application cannot fetch information of participants`,
+            details: error.message,
+            interact: true
+          });
+          errorOverlay.show();
         }
       }
     }
