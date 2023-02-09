@@ -1,4 +1,4 @@
-import '../styles/data-discovering.css';
+import '../styles/components/folder-input.css';
 
 import { Menu } from './components/menu.js';
 import { Router } from './routes/router.js';
