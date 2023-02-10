@@ -472,9 +472,9 @@ if (!(participants?.length > 0)) {
       const request = await fetchPDFReport();
       const response = await request.json();
 
-      if (response.code === 201) {
-        loaderOverlay.toggle();
-      } else {
+      loaderOverlay.toggle();
+
+      if (!(response.code === 201)) {
         loaderOverlay.toggle();
 
         const errorOverlay = new ErrorOverlay({
