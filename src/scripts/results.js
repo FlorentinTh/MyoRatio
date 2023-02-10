@@ -30,7 +30,7 @@ const metadata = new Metadata(inputDataPath);
 
 const tableContainer = document.querySelector('.matrix-container');
 
-const getAreasFilePath = async () => {
+const getRatiosFilePath = async () => {
   let inputPath;
 
   try {
@@ -39,7 +39,7 @@ const getAreasFilePath = async () => {
     });
   } catch (error) {
     const errorOverlay = new ErrorOverlay({
-      message: `Cannot find files for participant ${participantResult}`,
+      message: `Cannot find results for participant ${participantResult}`,
       details: error.message,
       interact: true
     });
@@ -47,18 +47,20 @@ const getAreasFilePath = async () => {
     errorOverlay.show();
   }
 
-  return path.join(inputPath, 'areas.json');
+  return path.join(inputPath, `ratios_${stage}_mean.json`);
 };
 
-const areasFilePath = await getAreasFilePath();
+const ratiosFilePath = await getRatiosFilePath();
 
-let areasFileJSON;
+let ratiosFileJSON;
 
 try {
-  areasFileJSON = await FileHelper.parseJSONFile(PathHelper.sanitizePath(areasFilePath));
+  ratiosFileJSON = await FileHelper.parseJSONFile(
+    PathHelper.sanitizePath(ratiosFilePath)
+  );
 } catch (error) {
   const errorOverlay = new ErrorOverlay({
-    message: `Cannot read data of participant ${participantResult}`,
+    message: `Cannot read results of participant ${participantResult}`,
     details: error.message,
     interact: true
   });
@@ -67,54 +69,13 @@ try {
 }
 
 if (!(analysisType === null) && !(participantResult === null) && !(stage === null)) {
-  const nbIterations = Object.keys(areasFileJSON).length - 1;
+  const nbIterations = ratiosFileJSON.nb_iteration;
   title.innerText += ` ${nbIterations} ${analysisType}s for the ${participantResult} during the ${stage} stage`;
 }
 
-const computeRatios = () => {
-  const meanAreas = areasFileJSON.mean;
-
-  const muscles = Object.keys(meanAreas);
-  const areas = Object.values(meanAreas);
-
-  const ratios = [];
-
-  for (let i = 0; i < muscles.length; i++) {
-    for (let j = 0; j <= i; j++) {
-      const exists = ratios.find(element => element.muscle === muscles.at(i));
-
-      let ratio;
-
-      if (analysisType === 'extension') {
-        ratio = areas[i] / areas[j];
-      } else if (analysisType === 'flexion') {
-        ratio = 1 / (areas[i] / areas[j]);
-      }
-
-      ratio = ratio === 1 ? ratio : ratio.toFixed(3);
-
-      let values;
-
-      if (exists === undefined) {
-        values = new Array(muscles.length).fill(null);
-
-        ratios.push({
-          values,
-          muscle: muscles.at(i)
-        });
-      } else {
-        values = exists.values;
-      }
-
-      values[j] = ratio;
-    }
-  }
-
-  return { muscles, ratios };
-};
-
 const displayResultsTable = () => {
-  const { muscles, ratios } = computeRatios();
+  const muscles = ratiosFileJSON.data.map(item => item.muscle);
+  const ratios = ratiosFileJSON.data;
 
   tableContainer.insertAdjacentHTML(
     'afterbegin',

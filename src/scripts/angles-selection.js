@@ -563,8 +563,8 @@ const postAnglesData = async (participant, iteration, point1x, point2x) => {
   });
 };
 
-const fetchAreas = async participants => {
-  return await fetch(`http://${configuration.HOST}:${configuration.PORT}/areas/`, {
+const fetchResults = async participants => {
+  return await fetch(`http://${configuration.HOST}:${configuration.PORT}/results/`, {
     headers: {
       'X-API-Key': configuration.API_KEY,
       'Content-Type': 'application/json'
@@ -670,7 +670,7 @@ submitButton.addEventListener('click', async () => {
       const participants = selectedParticipants.map(participant =>
         StringHelper.revertParticipantNameFromSession(participant)
       );
-      const request = await fetchAreas(participants);
+      const request = await fetchResults(participants);
       const response = await request.json();
 
       if (!(response.code === 201)) {
