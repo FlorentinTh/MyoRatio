@@ -215,11 +215,13 @@ submitButton.addEventListener('click', async () => {
             await metadata.createMetadataParticipantFolder(analysisType, participant);
           } catch (error) {
             loaderOverlay.toggle();
+
             const errorOverlay = new ErrorOverlay({
               message: `Application cannot initialize metadata tree for participants`,
               details: error.message,
               interact: true
             });
+
             errorOverlay.show();
           }
         }
@@ -237,22 +239,36 @@ submitButton.addEventListener('click', async () => {
             router.switchPage('participants-selection');
           } else {
             loaderOverlay.toggle();
+
             const errorOverlay = new ErrorOverlay({
               message: response.payload.message,
               details: response.payload.details,
               interact: true
             });
+
             errorOverlay.show();
           }
         } catch (error) {
           loaderOverlay.toggle();
+
           const errorOverlay = new ErrorOverlay({
             message: `Application cannot fetch information of participants`,
             details: error.message,
             interact: true
           });
+
           errorOverlay.show();
         }
+      } else {
+        loaderOverlay.toggle();
+
+        const errorOverlay = new ErrorOverlay({
+          message: `Not Found`,
+          details: `No participants could be found. Try to convert the data first`,
+          interact: true
+        });
+
+        errorOverlay.show();
       }
     }
   }
