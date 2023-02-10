@@ -1,0 +1,50 @@
+@import url("./main.css");
+
+a {
+  text-decoration: none;
+  color: #232323;
+}
+
+.person {
+  border: 1px dashed #232323;
+  padding: 15px 0;
+  color: #232323;
+}
+
+.person:not(:last-of-type) {
+  margin-bottom: 25px;
+}
+
+.person h3 {
+  text-transform: uppercase;
+  font-size: 1.05em;
+}
+
+.person div.name {
+  margin-bottom: 15px;
+}
+
+.person address {
+  margin-bottom: 25px;
+}
+
+.person div.contact {
+  margin: 0 auto;
+  margin-bottom: 6px;
+}
+
+.person div.contact a {
+  color: #EDEDED;
+  padding: 10px 100px;
+  border: 1px solid #16A085;
+  background-color: #16a084e4;
+  border-radius: 30px;
+  background-image: linear-gradient(to left, #16A085, #16A085);
+  background-size: 0 100%;
+  background-repeat: no-repeat;
+  transition: ease-out .4s;
+}
+
+.person div.contact a:hover {
+  background-size: 100% 100%;
+}

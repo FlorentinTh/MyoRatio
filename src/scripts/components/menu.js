@@ -68,6 +68,7 @@ export class Menu {
     TypeHelper.checkStringNotNull(itemID, { label: 'itemID' });
 
     const items = document.querySelectorAll('nav.menu ul li a');
+
     for (const item of items) {
       if (!(item.id === itemID)) {
         if (item.classList.contains('active')) {
