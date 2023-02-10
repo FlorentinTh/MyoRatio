@@ -1,10 +1,11 @@
 import { TypeHelper } from './type-helper';
 
+import cmd from '../../libs/node-run-cmd.js';
+
 const path = nw.require('path');
 const fs = nw.require('fs');
 const readline = nw.require('readline');
 const { once } = nw.require('events');
-const cmd = nw.require('node-run-cmd');
 
 export class CSVHelper {
   static async convertFromHPF(fileInput) {
@@ -48,6 +49,7 @@ export class CSVHelper {
       });
 
       await once(readLine, 'close');
+      writeStream.end();
     } catch (error) {
       throw new Error(error);
     }
