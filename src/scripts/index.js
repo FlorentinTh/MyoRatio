@@ -13,7 +13,7 @@ loaderOverlay.toggle({ message: 'Loading Application Components...' });
 const router = new Router();
 router.disableBackButton();
 
-const basePath = process.env.INIT_CWD ?? process.cwd();
+const basePath = nw.App.startPath;
 let APIExecutablePath;
 
 if (PlatformHelper.isWindowsPlatform()) {
