@@ -6,9 +6,14 @@
   "scripts": {
     "lint": "eslint ./src --ext .js,.json && stylelint ./src/**/*.css",
     "start": "webpack serve --mode development",
-    "build": "webpack --mode production",
-    "make:win": "build --tasks win-x64 --concurrent --mirror https://dl.nwjs.io/ .",
-    "make:mac": "build --tasks mac-x64 --concurrent --mirror https://dl.nwjs.io/ .",
+    "prebuild": "webpack --mode production",
+    "build:win": "npm run prebuild && build --tasks win-x64 --concurrent --mirror https://dl.nwjs.io/ . && npm run cp:bin",
+    "build:mac": "npm run prebuild && build --tasks mac-x64 --concurrent --mirror https://dl.nwjs.io/ .",
+    "cp:bin": "cross-var cpy ./bin ./dist/$npm_package_name_$npm_package_version_winx64",
+    "make:win": "innosetup-compiler winx64-installer.iss --verbose",
+    "checksum": "cross-var \"checksum -a sha256 ./dist/$npm_package_name_$npm_package_version_winx64.exe > ./dist/$npm_package_name_$npm_package_version_winx64.sha256sum\"",
+    "publish": "npm run make:win && npm run checksum",
+    "clean": "rimraf build && rimraf dist",
     "commit": "git-cz",
     "release": "standard-version",
     "git:publish": "git push --follow-tags"
@@ -36,10 +41,8 @@
     "appId": "ca.liaralab.emgtrigno",
     "nwVersion": "0.72.0",
     "nwFlavor": "normal",
-    "packed": true,
-    "targets": [
-      "nsis"
-    ],
+    "packed": false,
+    "targets": [],
     "strippedProperties": [
       "build",
       "devDependencies",
@@ -64,9 +67,11 @@
       "**/node_modules/**",
       "**/src/**",
       "package-lock.json",
-      "README.md",
+      "*.md",
       "webpack.config.js",
-      "env.json.example"
+      "env.json.example",
+      "env.json",
+      "bin/**/*"
     ],
     "ffmpegIntegration": false,
     "win": {
@@ -76,19 +81,15 @@
       "copyright": "Copyright LIARA Lab.",
       "icon": "./src/assets/icons/win/app-256.ico"
     },
-    "nsis": {
-      "icon": "./src/assets/icons/win/app-256.ico",
-      "unIcon": "./src/assets/icons/win/app.ico",
-      "installDirectory": "$APPDATA\\${_COMPANYNAME}\\${_APPNAME}",
-      "diffUpdaters": true,
-      "hashCalculation": true
-    },
     "mac": {
       "displayName": "EMG Trigno",
       "copyright": "Copyright LIARA Lab.",
       "icon": "./src/assets/icons/mac/app.icns",
       "plistStrings": {
         "CFBundleIdentifier": "ca.liaralab.emgtrigno",
+        "CFBundleName": "EMG Trigno",
+        "CFBundleShortVersionString": "${VERSION}",
+        "CFBundleVersion": "${VERSION}",
         "CFBundleDocumentTypes": []
       }
     }
@@ -98,7 +99,10 @@
     "@types/chrome": "^0.0.210",
     "@types/node": "^18.11.18",
     "@types/nw.js": "^0.13.16",
+    "checksum": "^1.0.0",
     "copy-webpack-plugin": "^11.0.0",
+    "cpy-cli": "^4.2.0",
+    "cross-var": "^1.1.0",
     "css-loader": "^6.7.2",
     "css-minimizer-webpack-plugin": "^4.2.2",
     "cz-conventional-changelog": "^3.3.0",
@@ -109,11 +113,13 @@
     "eslint-plugin-prettier": "^4.2.1",
     "handlebars-loader": "^1.7.3",
     "html-webpack-plugin": "^5.5.0",
+    "innosetup-compiler": "^6.2.0",
     "mini-css-extract-plugin": "^2.7.1",
     "nw": "^0.72.0-sdk",
     "path-browserify": "^1.0.1",
     "pre-commit": "^1.2.2",
     "prettier": "^2.8.3",
+    "rimraf": "^4.1.2",
     "standard-version": "^9.5.0",
     "style-loader": "^3.3.1",
     "stylelint": "^14.16.1",
@@ -130,7 +136,6 @@
     "chartjs": "^0.3.24",
     "chartjs-plugin-crosshair": "^1.2.0",
     "dayjs": "^1.11.7",
-    "node-run-cmd": "^1.0.1",
     "yup": "^0.32.11"
   }
 }
