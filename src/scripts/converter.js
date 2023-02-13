@@ -224,27 +224,41 @@ submitButton.addEventListener('click', async () => {
             loaderOverlay.loaderMessage.innerText = `Converting ${totalFileCompleted} / ${notConvertedFiles.length} files...`;
 
             try {
-              await fs.promises.mkdir(notConvertedFile.destFolder, { recursive: true });
-
-              await CSVHelper.convertFromHPF(
-                path.normalize(`"${notConvertedFile.file}"`)
-              );
-
-              const inputFilePath = path.join(
-                path.parse(notConvertedFile.file).dir,
-                `${path.basename(notConvertedFile.file, '.hpf')}.csv`
-              );
-
-              const outputFilePath = path.join(
-                notConvertedFile.destFolder,
-                `${path.basename(notConvertedFile.file, '.hpf')}.csv`
-              );
-
-              await CSVHelper.normalize(inputFilePath, outputFilePath);
-              await fs.promises.unlink(inputFilePath);
+              await CSVHelper.convertFromHPF(`"${notConvertedFile.file}"`);
             } catch (error) {
               conversionError = true;
 
+              loaderOverlay.toggle();
+
+              const errorOverlay = new ErrorOverlay({
+                message: `Cannot convert HPF File: ${path.basename(
+                  notConvertedFile.file
+                )}`,
+                details: error.message ?? error,
+                interact: true
+              });
+
+              errorOverlay.show();
+              break;
+            }
+
+            try {
+              await fs.promises.mkdir(notConvertedFile.destFolder, { recursive: true });
+              if (notConvertedFile.file.includes('.hpf')) {
+                const inputFilePath = path.join(
+                  path.parse(notConvertedFile.file).dir,
+                  `${path.basename(notConvertedFile.file, '.hpf')}.csv`
+                );
+                const outputFilePath = path.join(
+                  notConvertedFile.destFolder,
+                  `${path.basename(notConvertedFile.file, '.hpf')}.csv`
+                );
+                await CSVHelper.normalize(inputFilePath, outputFilePath);
+                await fs.promises.unlink(inputFilePath);
+              } else {
+                await fs.promises.unlink(notConvertedFile.file);
+              }
+            } catch (error) {
               loaderOverlay.toggle();
 
               const errorOverlay = new ErrorOverlay({

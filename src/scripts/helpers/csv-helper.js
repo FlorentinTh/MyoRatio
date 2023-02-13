@@ -1,24 +1,53 @@
 import { TypeHelper } from './type-helper';
 
-import cmd from '../../libs/node-run-cmd.js';
-
 const path = nw.require('path');
 const fs = nw.require('fs');
 const readline = nw.require('readline');
 const { once } = nw.require('events');
+const { spawn } = nw.require('child_process');
 
 export class CSVHelper {
   static async convertFromHPF(fileInput) {
     TypeHelper.checkString(fileInput, { label: 'fileInput' });
 
-    const basePath = process.env.INIT_CWD ?? process.cwd();
-    const delsysExecutablePath = path.join(basePath, 'bin', 'DelsysFileUtil.exe');
+    const converterExecutablePath = path.join(
+      nw.App.startPath,
+      'bin',
+      'DelsysFileUtil.exe'
+    );
 
-    try {
-      await cmd.run(`${delsysExecutablePath} -nogui -o CSV -i ${fileInput}`);
-    } catch (error) {
-      throw new Error(error);
-    }
+    return new Promise((resolve, reject) => {
+      let cmd;
+
+      try {
+        cmd = spawn(`"${converterExecutablePath}" -nogui -o CSV -i ${fileInput}`, [], {
+          shell: true
+        });
+      } catch (error) {
+        reject(error);
+      }
+
+      let result = '';
+      let error = '';
+
+      cmd.stdout.on('data', data => {
+        console.log('out', data);
+        result += data;
+      });
+
+      cmd.stderr.on('data', data => {
+        console.log('err', data);
+        error += data;
+      });
+
+      cmd.on('close', code => {
+        if (code === 0) {
+          resolve(result);
+        } else {
+          reject(error);
+        }
+      });
+    });
   }
 
   static async normalize(fileInput, fileOutput) {
