@@ -16,7 +16,7 @@
     "build:mac": "npm run prebuild && build --tasks mac-x64 --concurrent --mirror https://dl.nwjs.io/ . && npm run cp:bin:mac && npm run chmod:mac",
     "rename-dmg": "cross-var 'mv \"./release/macx64/EMG Trigno $npm_package_version.dmg\" ./release/macx64/$npm_package_name_$npm_package_version_macx64.dmg'",
     "checksum:mac": "cd ./release/macx64 && cross-var 'checksum -a sha256 $npm_package_name_$npm_package_version_macx64.dmg > $npm_package_name_$npm_package_version_macx64.sha256sum'",
-    "publish:mac": "mkdir -p /release/macx64 && cross-var 'create-dmg \"./dist/$npm_package_name_$npm_package_version_macx64/EMG Trigno.app\" ./release/macx64' && npm run rename-dmg && npm run checksum:mac",
+    "publish:mac": "mkdir -p ./release/macx64 && cross-var 'create-dmg \"./dist/$npm_package_name_$npm_package_version_macx64/EMG Trigno.app\" ./release/macx64' && npm run rename-dmg && npm run checksum:mac",
     "clean": "rimraf build && rimraf dist",
     "lint": "eslint ./src --ext .js,.json && stylelint ./src/**/*.css",
     "commit": "git-cz",
