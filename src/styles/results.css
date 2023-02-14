@@ -143,19 +143,19 @@
   font-weight: bold;
 }
 
-#matrix:not(:target) tbody [scope=row]:hover,
+#matrix:not(:target) tbody [scope="row"]:hover,
 table thead th[scope="col"] {
   cursor: default;
 }
 
 
-#matrix:not(:target) thead [scope=col] span {
+#matrix:not(:target) thead [scope="col"] span {
   line-height: 3.5rem;
   margin-bottom: 15px;
   border-radius: 60px;
 }
 
-#matrix:not(:target) tbody [scope=row] span {
+#matrix:not(:target) tbody [scope="row"] span {
   height: 3.52rem;
   line-height: 3.52rem;
   margin-left: 15px;

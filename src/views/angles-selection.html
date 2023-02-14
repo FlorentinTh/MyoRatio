@@ -1,57 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-  <title>EMG Trigno</title>
-  <meta charset="utf-8">
-  <link rel="icon" href="./assets/app.png">
-</head>
-
-<body>
-  <div class="app">
-    <div class="menu-container"></div>
-
-    <div class="auto-angles-btn">
-      <i class="fa-solid fa-wand-magic-sparkles"></i>
+  <head>
+    <title>EMG Trigno</title>
+    <meta charset="utf-8" />
+    <link rel="icon" href="./assets/app.png" />
+  </head>
+  <body>
+    <div class="app">
+      <div class="menu-container"></div>
+      <div class="auto-angles-btn">
+        <i class="fa-solid fa-wand-magic-sparkles"></i>
+      </div>
+      <main class="content">
+        <section class="wrapper">
+          <h1>EMG Trigno</h1>
+          <h2>Angle Selection</h2>
+          <div class="infos">
+            <span id="participant">Participant</span>
+            <span>-</span>
+            <span id="analysis">Analysis</span>
+            <span>-</span>
+            <span id="iteration">Iter. #</span>
+          </div>
+          <div class="chart-container">
+            <canvas id="chart" height="300px"></canvas>
+          </div>
+          <div class="pager">
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+          </div>
+          <div class="group no-margin">
+            <div class="button-container">
+              <button type="submit">
+                <span class="submit-label">Next</span>
+                <span class="spinner hide">
+                  <i class="fas fa-circle-notch fa-spin"></i>
+                </span>
+              </button>
+            </div>
+          </div>
+          <div class="group">
+            <div class="button-container">
+              <button type="reset">Cancel</button>
+            </div>
+          </div>
+        </section>
+      </main>
     </div>
-
-    <main class="content">
-      <section class="wrapper">
-        <h1>EMG Trigno</h1>
-        <h2>Angle Selection</h2>
-        <div class="infos">
-          <span id="participant">Participant</span>
-          <span>-</span>
-          <span id="analysis">Analysis</span>
-          <span>-</span>
-          <span id="iteration">Iter. #</span>
-        </div>
-        <div class="chart-container">
-          <canvas id="chart" height="300px"></canvas>
-        </div>
-        <div class="pager">
-          <span class="dot"></span>
-          <span class="dot"></span>
-          <span class="dot"></span>
-        </div>
-        <div class="group no-margin">
-          <div class="button-container">
-            <button type="submit">
-              <span class="submit-label">Next</span>
-              <span class="spinner hide">
-                <i class="fas fa-circle-notch fa-spin"></i>
-              </span>
-            </button>
-          </div>
-        </div>
-        <div class="group">
-          <div class="button-container">
-            <button type="reset">Cancel</button>
-          </div>
-        </div>
-      </section>
-    </main>
-  </div>
-</body>
-
+  </body>
 </html>

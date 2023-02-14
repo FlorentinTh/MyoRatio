@@ -1,4 +1,4 @@
-@import url("./main.css");
+@import url('./main.css');
 
 .group:nth-last-of-type(2) {
   margin-bottom: 35px;
@@ -6,13 +6,13 @@
 
 .group .label p {
   font-weight: bold;
-  color: #16A085;
+  color: #16a085;
 }
 
 .setting-container {
   display: flex;
   flex-wrap: wrap;
-  border: 1px solid #16A085;
+  border: 1px solid #16a085;
 }
 
 .setting-line {
@@ -51,9 +51,9 @@
 
 .setting-container .input-container > .unit {
   background-color: #232323dd;
-  color: #EDEDED;
+  color: #ededed;
   text-transform: uppercase;
-  font-size: .8em;
+  font-size: 0.8em;
   height: 39px;
   padding: 0 15px;
   line-height: 39px;
@@ -67,40 +67,40 @@
   justify-content: right;
   align-items: center;
   flex: 1;
-  background: #EDEDED;
+  background: #ededed;
 }
 
-input[type="checkbox"].switch {
+input[type='checkbox'].switch {
   font-size: 1.3em;
   appearance: none;
   width: 3.5em;
   height: 1.5em;
-  background: #BDBDBD;
+  background: #bdbdbd;
   border-radius: 3em;
   position: relative;
   cursor: pointer;
   outline: none;
-  transition: all .2s ease-in-out;
+  transition: all 0.2s ease-in-out;
   margin: 0;
 }
 
-input[type="checkbox"].switch:checked {
-  background: #16A085;
+input[type='checkbox'].switch:checked {
+  background: #16a085;
 }
 
-input[type="checkbox"].switch::after {
+input[type='checkbox'].switch::after {
   position: absolute;
-  content: "";
+  content: '';
   width: 1.5em;
   height: 1.5em;
   border-radius: 50%;
-  background: #EDEDED;
-  box-shadow: 0 0 .25em rgb(0 0 0 / 30%);
-  transform: scale(.7);
+  background: #ededed;
+  box-shadow: 0 0 0.25em rgb(0 0 0 / 30%);
+  transform: scale(0.7);
   left: 0;
-  transition: all .2s ease-in-out;
+  transition: all 0.2s ease-in-out;
 }
 
-input[type="checkbox"].switch:checked::after {
+input[type='checkbox'].switch:checked::after {
   left: calc(100% - 1.5em);
 }

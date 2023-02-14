@@ -1,57 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-  <title>EMG Trigno</title>
-  <meta charset="utf-8">
-  <link rel="icon" href="./assets/app.png">
-</head>
-
-<body>
-  <div class="app">
-    <div class="menu-container"></div>
-
-    <main class="content">
-      <section class="wrapper">
-        <h1>EMG Trigno</h1>
-        <h2>Data Discovering</h2>
-        <div class="group">
-          <div class="label">
-            <p>Root data folder</p>
+  <head>
+    <title>EMG Trigno</title>
+    <meta charset="utf-8" />
+    <link rel="icon" href="./assets/app.png" />
+  </head>
+  <body>
+    <div class="app">
+      <div class="menu-container"></div>
+      <main class="content">
+        <section class="wrapper">
+          <h1>EMG Trigno</h1>
+          <h2>Data Discovering</h2>
+          <div class="group">
+            <div class="label">
+              <p>Root data folder</p>
+            </div>
+            <div class="folder-drop-area">
+              <span class="choose-btn">Choose a folder</span>
+              <div class="folder-msg">
+                <div id="text">or drag and drop the folder here</div>
+              </div>
+              <input class="folder-input" type="file" nwdirectory />
+            </div>
           </div>
-          <div class="folder-drop-area">
-            <span class="choose-btn">Choose a folder</span>
-            <div class="folder-msg">
-              <div id="text">
-                or drag and drop the folder here
+          <div class="group">
+            <div class="label">
+              <label for="switch-analysis">Type of Analysis</label>
+            </div>
+            <div class="input-container">
+              <div class="switch" id="switch-analysis">
+                <input
+                  type="radio"
+                  id="analysis-opt1"
+                  name="switch-analysis"
+                  value="extension"
+                />
+                <label for="analysis-opt1">Extension</label>
+                <input
+                  type="radio"
+                  id="analysis-opt2"
+                  name="switch-analysis"
+                  value="flexion"
+                />
+                <label for="analysis-opt2">Flexion</label>
+                <input
+                  type="radio"
+                  id="analysis-opt3"
+                  name="switch-analysis"
+                  value="sit-stand"
+                />
+                <label for="analysis-opt3">Sit-Stand</label>
               </div>
             </div>
-            <input class="folder-input" type="file" nwdirectory>
           </div>
-        </div>
-        <div class="group">
-          <div class="label">
-            <label for="switch-analysis">Type of Analysis</label>
-          </div>
-          <div class="input-container">
-            <div class="switch" id="switch-analysis">
-              <input type="radio" id="analysis-opt1" name="switch-analysis" value="extension">
-              <label for="analysis-opt1">Extension</label>
-              <input type="radio" id="analysis-opt2" name="switch-analysis" value="flexion">
-              <label for="analysis-opt2">Flexion</label>
-              <input type="radio" id="analysis-opt3" name="switch-analysis" value="sit-stand">
-              <label for="analysis-opt3">Sit-Stand</label>
+          <div class="group">
+            <div class="button-container">
+              <button type="submit" disabled>Discover Data</button>
             </div>
           </div>
-        </div>
-        <div class="group">
-          <div class="button-container">
-            <button type="submit" disabled>Discover Data</button>
-          </div>
-        </div>
-      </section>
-    </main>
-  </div>
-</body>
-
+        </section>
+      </main>
+    </div>
+  </body>
 </html>
