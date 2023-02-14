@@ -38,7 +38,9 @@ const additionalMenuButtons = document.querySelectorAll('[class^="export-"]');
 menu.init(additionalMenuButtons);
 
 const dataFolderPathSession = sessionStorage.getItem('data-path').toString();
-const analysisType = sessionStorage.getItem('analysis').toString();
+const analysisType = PathHelper.sanitizePath(
+  sessionStorage.getItem('analysis').toString()
+);
 
 const stageSwitchRadios = Switch.init('stage');
 
