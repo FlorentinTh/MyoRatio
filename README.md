@@ -19,7 +19,7 @@ Application to process EMG Trigno data
 
 #### 1. Clone the Repositories
 
-```
+```sh
 $/> git clone https://github.com/FlorentinTh/EMG-Trigno-API.git
 
 $/> git clone https://github.com/FlorentinTh/EMG-Trigno-GUI.git
@@ -27,13 +27,28 @@ $/> git clone https://github.com/FlorentinTh/EMG-Trigno-GUI.git
 
 #### 2. Build the API
 
-```
+```sh
 $/> cd <your_base_path>/EMG-Trigno-API
 ```
 
-2.1. Install project dependencies :
+2.1. Setup project :
+
+_Windows_
+```sh
+> py -m pip install --upgrade pip
+> py -m pip install --user virtualenv
+> py -m venv .\venv
+> .\venv\Scripts\activate
+(venv) > pip install -r requirements.txt
 ```
-$/> pip install -r requirements.txt
+
+_macOS_
+```sh
+$ python3 -m pip install --user --upgrade pip
+$ python3 -m pip install --user virtualenv
+$ python3 -m venv ./venv
+$ source ./venv/bin/activate
+(venv) $ pip install -r requirements.txt
 ```
 
 > change ```configuration.py``` file content according to your needs
@@ -41,8 +56,8 @@ $/> pip install -r requirements.txt
 2.2. Create the release folder :
 
 *Windows:*
-```
-> pyinstaller --paths 'src' \
+```sh
+(venv) > pyinstaller --paths 'src' \
             --collect-all charset_normalizer \
             --collect-all reportlab.graphics.barcode \
             --console \
@@ -53,8 +68,8 @@ $/> pip install -r requirements.txt
 ```
 
 *macOS:*
-```
-$ pyinstaller --paths 'src' \
+```sh
+(venv) $ pyinstaller --paths 'src' \
             --collect-all charset_normalizer \
             --collect-all reportlab.graphics.barcode \
             --console \
@@ -68,29 +83,34 @@ $ pyinstaller --paths 'src' \
 
 #### 3. Build the Release
 
-```
+```sh
 $/> cd <your_base_path>/EMG-Trigno-GUI
 ```
 
 3.1. Install project dependencies :
 
-*npm:*
+_Windows_
+
+```sh
+# npm:
+> npm install --no-optional
+
+# yarn:
+> yarn install --ignore-optional
+
+#pnpm:
+> pnpm install --no-optional
 ```
-$/> npm install
-```
-*yarn:*
-```
-$/> yarn install
-```
-*pnpm:*
-```
-$/> pnpm install
+
+_macOS_
+```sh
+$ (npm | yarn | pnpm) install
 ```
 
 3.2. Configure environment :
 
 *Windows:*
-```cmd
+```sh
 > ren env.json.example env.json
 ```
 
@@ -104,7 +124,7 @@ $ mv env.json.example env.json
 3.3. Include the API application:
 
 *Windows:*
-```cmd
+```powershell
 > xcopy /e /k /h /i <your_base_path>\EMGTrignoAPI\dist\EMGTrignoAPI .\bin\EMGTrignoAPI
 ```
 *macOS:*
@@ -115,57 +135,132 @@ $ cp -r <your_base_path>/EMGTrignoAPI/dist/EMGTrignoAPI ./bin/EMGTrignoAPI
 3.4. Build the Release Application:
 
 *Windows:*
-```cmd
-> npm run build:win && npm run publish:win
+```sh
+> (npm | yarn | pnpm) run build:win && (npm | yarn | pnpm) run publish:win
 ```
-> An ```exe``` setup is created under ```EMG-Trigno-GUI/dist```
+> An ```exe``` setup is created under ```EMG-Trigno-GUI/release/winx64```
 
 *macOS:*
 ```sh
-$ npm run build:mac && npm run publish:mac
+$ (npm | yarn | pnpm) run build:mac && (npm | yarn | pnpm) run publish:mac
 ```
-> A ```dmg``` file is created under ```EMG-Trigno-GUI/dist```
+
+> A ```dmg``` file is created under ```EMG-Trigno-GUI/release/macx64```
 
 ## For Developers
 
 - API:
-> Preferably you should setup and use a virtual environment!
+
+_Windows_
 ```sh
 # Clone the API project:
-$/> git clone https://github.com/FlorentinTh/EMG-Trigno-API.git
+> git clone https://github.com/FlorentinTh/EMG-Trigno-API.git
+
+# Setup project:
+> py -m pip install --upgrade pip
+> py -m pip install --user virtualenv
+> py -m venv .\venv
+> .\venv\Scripts\activate
+
+# Install dependencies
+(venv) > pip install -r requirements.txt
 
 # Edit the configuration.py file if needed
 
-# Install project dependencies:
-$/> pip install -r requirements.txt
+# Run the project:
+(venv) > py app.py
+```
+
+_macOS_
+```sh
+# Clone the API project:
+> git clone https://github.com/FlorentinTh/EMG-Trigno-API.git
+
+# Setup project:
+$ python3 -m pip install --user --upgrade pip
+$ python3 -m pip install --user virtualenv
+$ python3 -m venv ./venv
+$ source ./venv/bin/activate
+
+# Install dependencies
+(venv) $ pip install -r requirements.txt
+
+# Edit the configuration.py file if needed
 
 # Run the project:
-$/> python app.py
+(venv) > python3 app.py
 ```
 
 - GUI:
+
 ```sh
 # Clone the GUI project:
 $/> git clone https://github.com/FlorentinTh/EMG-Trigno-GUI.git
 
 # Rename the env.json file (edit its content if needed):
 ## Windows:
-> ren env.json.example env.json
+  > ren env.json.example env.json
+
 ## macOS:
-$ mv env.json.example env.json
+  $ mv env.json.example env.json
 
 # Install project dependencies:
-$/> npm install
-## or
-$/> yarn install
-## or
-$/> pnpm install
+## Windows:
+> npm install --no-optional # or
+> yarn install --ignore-optional # or
+> pnpm install --no-optional
+
+## macOS:
+> (npm | yarn | pnpm) install
 
 # Run the project:
-$/> npm run start
+$/> (npm | yarn | pnpm) run start
 ```
 
-> **Your commits should follow the conventional commits specification !**
+> **Your commits should follow the [conventional commits specification](https://www.conventionalcommits.org/en/v1.0.0/) !**
+
+- For the API, you can use the following command to proceed your commits:
+
+  ```sh
+  (venv) $/> cz commit
+  ```
+
+- For the GUI, you can use the following command to proceed your commits:
+
+  ```sh
+  $/> (npm | yarn | pnpm) run commit
+  ```
+
+#### Release a New Version
+
+To release a new version you can install the ```standard-version``` version package globally such as:
+
+```sh
+$/> npm install -g standard-version # or
+$/> yarn global add standard-version # or
+$/> pnpm add -g standard-version
+```
+
+- API :
+```sh
+# deactivate the venv:
+(venv) $/> deactivate
+
+# run standard-version:
+$/> standard-version
+
+# publish the new release:
+$/> git push --follow-tags origin main
+```
+
+- GUI :
+```sh
+# run standard-version:
+$/> (npm | yarn | pnpm) run release
+
+#publish the new release:
+$/> (npm | yarn | pnpm) run git:publish
+```
 
 ## Authors
 
