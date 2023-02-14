@@ -13,12 +13,14 @@ loaderOverlay.toggle({ message: 'Loading Application Components...' });
 const router = new Router();
 router.disableBackButton();
 
-const basePath = nw.App.startPath;
+let basePath;
 let APIExecutablePath;
 
 if (PlatformHelper.isWindowsPlatform()) {
+  basePath = nw.App.startPath;
   APIExecutablePath = path.join(basePath, 'bin', 'EMGTrignoAPI', 'EMGTrignoAPI.exe');
 } else if (PlatformHelper.isMacOsPlatform()) {
+  basePath = process.env.INIT_CWD ?? process.cwd();
   APIExecutablePath = path.join(basePath, 'bin', 'EMGTrignoAPI', 'EMGTrignoAPI');
 }
 
