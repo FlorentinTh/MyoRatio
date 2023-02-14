@@ -193,3 +193,4 @@ build/
 .dccache
 NOTES.md
 env.json
+release/
