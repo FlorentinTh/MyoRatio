@@ -36,7 +36,6 @@ $/> cd <your_base_path>/EMG-Trigno-API
 _Windows_
 ```sh
 > py -m pip install --upgrade pip
-> py -m pip install --user virtualenv
 > py -m venv .\venv
 > .\venv\Scripts\activate
 (venv) > pip install -r requirements.txt
@@ -45,7 +44,6 @@ _Windows_
 _macOS_
 ```sh
 $ python3 -m pip install --user --upgrade pip
-$ python3 -m pip install --user virtualenv
 $ python3 -m venv ./venv
 $ source ./venv/bin/activate
 (venv) $ pip install -r requirements.txt
