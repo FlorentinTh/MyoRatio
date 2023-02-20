@@ -61,8 +61,8 @@ $ source ./venv/bin/activate
             --console \
             --clean \
             --name EMGTrignoAPI \
-            --icon='src/assets/icons/win/app.ico' \
-            app.py --noconfirm
+            --icon='assets/icons/win/app.ico' \
+            server.py --noconfirm
 ```
 
 *macOS:*
@@ -73,8 +73,8 @@ $ source ./venv/bin/activate
             --console \
             --clean \
             --name EMGTrignoAPI \
-            --icon='src/assets/icons/mac/app.icns' \
-            app.py --noconfirm
+            --icon='assets/icons/mac/app.icns' \
+            server.py --noconfirm
 ```
 
 > Release folder will be generated under ```EMG-Trigno-API/dist```
@@ -166,7 +166,7 @@ _Windows_
 # Edit the configuration.py file if needed
 
 # Run the project:
-(venv) > py app.py
+(venv) > py server.py
 ```
 
 _macOS_
@@ -186,7 +186,7 @@ $ source ./venv/bin/activate
 # Edit the configuration.py file if needed
 
 # Run the project:
-(venv) > python3 app.py
+(venv) > python3 server.py
 ```
 
 - GUI:
