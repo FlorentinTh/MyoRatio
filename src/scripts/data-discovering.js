@@ -87,7 +87,7 @@ const toggleFolderPath = (path = null) => {
 };
 
 const fetchParticipantIMUData = async (dataPath, analysis, participants) => {
-  return await fetch(`http://${configuration.HOST}:${configuration.PORT}/imu/`, {
+  return await fetch(`http://${configuration.HOST}:${configuration.PORT}/api/data/imu/`, {
     headers: {
       'X-API-Key': configuration.API_KEY,
       'Content-Type': 'application/json'

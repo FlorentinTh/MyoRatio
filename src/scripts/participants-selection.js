@@ -308,7 +308,7 @@ const initCard = items => {
 };
 
 const fetchPDFReport = async () => {
-  return await fetch(`http://${configuration.HOST}:${configuration.PORT}/report/`, {
+  return await fetch(`http://${configuration.HOST}:${configuration.PORT}/api/report/`, {
     headers: {
       'X-API-Key': configuration.API_KEY,
       'Content-Type': 'application/json'
