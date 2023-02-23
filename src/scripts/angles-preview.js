@@ -129,6 +129,7 @@ const getNavButtons = card => {
 
 const saveData = async () => {
   const cards = gridContainer.children;
+
   for (const card of cards) {
     const participant = card.querySelector('h3').innerText.toLowerCase();
     const autoAngles = card.querySelector('.auto-switch').checked;
@@ -168,6 +169,7 @@ if (participants?.length > 0) {
     const participantName = StringHelper.formatParticipantName(participants[i]);
 
     let infos;
+
     try {
       infos = await metadata.getParticipantInfo(
         PathHelper.sanitizePath(analysisType),
