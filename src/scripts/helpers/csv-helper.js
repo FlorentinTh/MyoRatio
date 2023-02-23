@@ -31,12 +31,10 @@ export class CSVHelper {
       let error = '';
 
       cmd.stdout.on('data', data => {
-        console.log('out', data);
         result += data;
       });
 
       cmd.stderr.on('data', data => {
-        console.log('err', data);
         error += data;
       });
 
