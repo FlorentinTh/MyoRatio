@@ -254,6 +254,36 @@ export class Metadata {
     return path.join(this.getMetadataRootFolder, analysisType, participantFolderName);
   }
 
+  #isAnglesExist(content, auto, metadata = false, iteration = 0) {
+    TypeHelper.checkObject(content, { label: 'content' });
+    TypeHelper.checkBoolean(auto, { label: 'auto' });
+    TypeHelper.checkInt(iteration, { label: 'iteration' });
+
+    let angles;
+
+    if (auto) {
+      angles = Object.values(Object.values(content)[iteration].points.auto);
+    } else {
+      angles = Object.values(Object.values(content)[iteration].points.manual);
+    }
+
+    let anglesExist = !!metadata;
+
+    for (const angle of angles) {
+      if (metadata) {
+        if (angle.x === null && angle.y === null) {
+          anglesExist = false;
+        }
+      } else {
+        if (!(angle.x === null) && !(angle.y === null)) {
+          anglesExist = true;
+        }
+      }
+    }
+
+    return anglesExist;
+  }
+
   async writeContent(analysisType, participant, content, stage) {
     TypeHelper.checkStringNotNull(analysisType, { label: 'analysisType' });
     TypeHelper.checkStringNotNull(participant, { label: 'participant' });
@@ -300,6 +330,40 @@ export class Metadata {
           mainContent = JSONFileParticipantObject[contentKey];
         } else {
           mainContent = JSONFileStageObject[stage][contentKey];
+        }
+
+        if (contentKey === 'iterations') {
+          const currentIteration = parseInt(Object.keys(content[contentKey])[0]);
+
+          if (!(mainContent[currentIteration] === undefined)) {
+            const isMainAutoAnglesExist = this.#isAnglesExist(
+              mainContent,
+              true,
+              true,
+              currentIteration - 1
+            );
+
+            const isContentAutoAnglesExist = this.#isAnglesExist(
+              content[contentKey],
+              true
+            );
+
+            if (isMainAutoAnglesExist && !isContentAutoAnglesExist) {
+              Object.values(content[contentKey])[0].points.auto =
+                Object.values(mainContent)[currentIteration - 1].points.auto;
+            }
+
+            const isMainManualAnglesExist = this.#isAnglesExist(mainContent, false, true);
+            const isContentManualAnglesExist = this.#isAnglesExist(
+              content[contentKey],
+              false
+            );
+
+            if (isMainManualAnglesExist && !isContentManualAnglesExist) {
+              Object.values(content[contentKey])[0].points.manual =
+                Object.values(mainContent)[currentIteration - 1].points.manual;
+            }
+          }
         }
 
         keyContentObject[contentKey] = {

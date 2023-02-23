@@ -111,13 +111,29 @@ export const ChartSetup = {
         fill: true,
         interpolate: true,
         lineTension: 0,
-        order: 2
+        order: 3
       },
       {
         drawActiveElementsOnTop: true,
         pointBorderWidth: 1,
         pointHoverRadius: 10,
         pointBackgroundColor: '#FF5722',
+        pointHoverBorderWidth: 2,
+        pointRadius: 6,
+        borderWidth: 5,
+        pointStyle: 'circle',
+        borderColor: '#232323dd',
+        showLine: false,
+        fill: true,
+        interpolate: true,
+        lineTension: 0,
+        order: 2
+      },
+      {
+        drawActiveElementsOnTop: true,
+        pointBorderWidth: 1,
+        pointHoverRadius: 10,
+        pointBackgroundColor: '#3949AB',
         pointHoverBorderWidth: 2,
         pointRadius: 6,
         borderWidth: 5,

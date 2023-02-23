@@ -8,7 +8,7 @@
   <body>
     <div class="app">
       <div class="menu-container"></div>
-      <div class="auto-angles-btn">
+      <div class="auto-angles-btn top-btn-disabled">
         <i class="fa-solid fa-wand-magic-sparkles"></i>
       </div>
       <main class="content">
@@ -21,6 +21,16 @@
             <span id="analysis">Analysis</span>
             <span>-</span>
             <span id="iteration">Iter. #</span>
+          </div>
+          <div class="legend">
+            <div class="auto">
+              <span class="color"></span>
+              <span class="legend-label">Auto-selected Angles</span>
+            </div>
+            <div class="manual">
+              <span class="color"></span>
+              <span class="legend-label">User-selected Angles</span>
+            </div>
           </div>
           <div class="chart-container">
             <canvas id="chart" height="300px"></canvas>

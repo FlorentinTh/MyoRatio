@@ -1,12 +1,12 @@
-@import url("@fortawesome/fontawesome-free/css/all.css");
-@import url("./main.css");
+@import url('@fortawesome/fontawesome-free/css/all.css');
+@import url('./main.css');
 
 .auto-angles-btn {
-  transition-duration: .5s;
+  transition-duration: 0.5s;
   transition-timing-function: swing;
   width: 90px;
   height: 50px;
-  background-color: #16A085;
+  background-color: #16a085;
   position: fixed;
   top: 110px;
   left: 42px;
@@ -16,7 +16,7 @@
 }
 
 .top-btn-disabled {
-  background-color: #BDBDBD;
+  background-color: #bdbdbd;
   cursor: default;
   pointer-events: none;
   box-shadow: 6px 6px 15px -3px rgb(0 0 0 / 30%);
@@ -36,7 +36,47 @@
   top: 14px;
   left: 34px;
   font-size: 1.45em;
-  color: #EDEDED;
+  color: #ededed;
+}
+
+.legend {
+  width: 100%;
+  margin: 0 auto;
+  margin-bottom: 10px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.legend > div {
+  display: inline-flex;
+}
+
+.legend > div:first-of-type {
+  margin-right: 20px;
+}
+
+.legend span.color {
+  height: 12px;
+  width: 12px;
+  align-self: center;
+  border-radius: 100%;
+  border: 1px solid #232323dd;
+  margin-right: 6px;
+}
+
+.legend > .auto > span.color {
+  background-color: #3949ab;
+}
+
+.legend > .manual > span.color {
+  background-color: #ff5722;
+}
+
+.legend span.legend-label {
+  font-size: 0.8em;
+  text-transform: capitalize;
 }
 
 .chart-container {
@@ -59,18 +99,18 @@
   right: 0;
   margin-top: 15px;
   margin-right: 15px;
-  font-size: .9em;
-  color: #EDEDED;
+  font-size: 0.9em;
+  color: #ededed;
   padding: 6px 10px;
   border-radius: 30px;
   text-transform: uppercase;
-  letter-spacing: -.02em;
-  border: 1px solid #16A085;
+  letter-spacing: -0.02em;
+  border: 1px solid #16a085;
   background-color: #232323dd;
   background-size: 0 100%;
   background-image: linear-gradient(to left, #232323dd, #232323dd);
   background-repeat: no-repeat;
-  transition: ease-out .2s;
+  transition: ease-out 0.2s;
   display: block;
 }
 
@@ -88,7 +128,7 @@
   justify-content: center;
   align-items: center;
   text-align: center;
-  margin-bottom: 25px;
+  margin-bottom: 40px;
   border: 1px solid #232323;
   border-radius: 6px;
   padding: 15px;
@@ -96,7 +136,7 @@
 
 .infos span {
   font-size: 1.2em;
-  letter-spacing: .04em;
+  letter-spacing: 0.04em;
   text-transform: capitalize;
 }
 
@@ -119,7 +159,7 @@
   width: 12px;
   margin-top: 6px;
   border-radius: 100%;
-  border: 2px solid #16A085;
+  border: 2px solid #16a085;
   display: inline-flex;
   align-self: center;
   transition: all ease-out 1s;
@@ -130,30 +170,18 @@
 }
 
 .pager span.dot.active {
-  background-color: #16A085;
+  background-color: #16a085;
 }
 
-button[type="submit"] > span.spinner {
+button[type='submit'] > span.spinner {
   padding: 12px 8px;
   display: inline;
 }
 
-button[type="submit"] > span.spinner.hide {
+button[type='submit'] > span.spinner.hide {
   display: none;
 }
 
-button[type="submit"] > span.spinner > i {
+button[type='submit'] > span.spinner > i {
   font-size: 0.85em;
-
-  /* animation: rotate 1s linear infinite; */
 }
-
-/* @keyframes rotate {
-  from {
-    transform: rotate(0deg);
-  }
-
-  to {
-    transform: rotate(360deg);
-  }
-} */

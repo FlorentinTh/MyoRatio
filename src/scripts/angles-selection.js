@@ -52,6 +52,7 @@ let nbSelectedPoints = 0;
 let firstElementZoom = null;
 let currentParticipant = 0;
 let currentIteration = 0;
+let autoAngles = [];
 
 const inputDataPath = PathHelper.sanitizePath(dataPath);
 const metadata = new Metadata(inputDataPath);
@@ -68,13 +69,23 @@ const checkSelectedPoints = () => {
   const sessionPoints = sessionStorage.getItem('selected-points');
 
   if (!(sessionPoints === null)) {
-    if (sessionPoints.split(';').length === 2) {
+    const sessionPointsArray = sessionPoints.split(';');
+
+    if (sessionPointsArray.length === 2) {
+      submitButton.removeAttribute('disabled');
+    } else {
+      if (autoAngles.length === 2 && !(sessionPointsArray.length === 1)) {
+        submitButton.removeAttribute('disabled');
+      } else {
+        submitButton.setAttribute('disabled', '');
+      }
+    }
+  } else {
+    if (autoAngles.length === 2) {
       submitButton.removeAttribute('disabled');
     } else {
       submitButton.setAttribute('disabled', '');
     }
-  } else {
-    submitButton.setAttribute('disabled', '');
   }
 };
 
@@ -159,77 +170,87 @@ const chartAfterZoomHandler = (start, end) => {
 };
 
 const chartPointOnClickHandler = (event, element, plot) => {
-  const datasetRaw = plot.data.datasets[0];
-  const datasetSelected = plot.data.datasets[1];
-
-  const rawActivePoint = getActivePoint(event, datasetRaw);
-
-  if (nbSelectedPoints < 2) {
-    if (!(rawActivePoint.x === 0)) {
-      datasetSelected.data.push(datasetRaw.data[rawActivePoint.index]);
-      nbSelectedPoints++;
-      addSessionPoint(rawActivePoint.x, rawActivePoint.y);
-    } else {
-      const activeSelectedPoint = getActivePoint(event, datasetSelected);
-
-      datasetSelected.data = datasetSelected.data.filter(point => {
-        return point.x !== activeSelectedPoint.x;
-      });
-
-      nbSelectedPoints--;
-      sessionStorage.removeItem('selected-points');
-    }
-  } else {
-    if (rawActivePoint.x === 0 || rawActivePoint.x === datasetRaw.data[1].x) {
-      const activeSelectedPoint = getActivePoint(event, datasetSelected);
-
-      datasetSelected.data = datasetSelected.data.filter(point => {
-        return point.x !== activeSelectedPoint.x;
-      });
-
-      nbSelectedPoints--;
-      removeSessionPoint(
-        activeSelectedPoint.x.toString(),
-        activeSelectedPoint.y.toString(),
-        true
-      );
-    } else {
-      const sortedSelectedPoints = datasetSelected.data.sort((a, b) => {
-        if (a.x < b.x) {
-          return -1;
-        }
-
-        if (a.x > b.x) {
-          return 1;
-        }
-        return 0;
-      });
-
-      const firstSelectedIndex = datasetRaw.data.findIndex(
-        point => point.x === sortedSelectedPoints[0].x
-      );
-
-      const secondSelectedIndex = datasetRaw.data.findIndex(
-        point => point.x === sortedSelectedPoints[1].x
-      );
-
-      const distToFirst = Math.abs(firstSelectedIndex - rawActivePoint.index);
-      const distToSecond = Math.abs(secondSelectedIndex - rawActivePoint.index);
-
-      if (distToFirst < distToSecond) {
-        datasetSelected.data = [sortedSelectedPoints[1]];
-      } else {
-        datasetSelected.data = [sortedSelectedPoints[0]];
-      }
-
-      datasetSelected.data.push(datasetRaw.data[rawActivePoint.index]);
-
-      removeSessionPoint(rawActivePoint.x.toString(), rawActivePoint.y.toString(), true);
-      addSessionPoint(rawActivePoint.x, rawActivePoint.y);
-    }
+  if (plot.data.datasets[1].pointBackgroundColor === '#3949AB') {
+    plot.data.datasets[1].pointBackgroundColor = '#FF5722';
   }
 
-  plot.update();
+  if (element.length > 0 && element[0].datasetIndex < 2) {
+    const datasetRaw = plot.data.datasets[0];
+    const datasetSelected = plot.data.datasets[1];
+    const rawActivePoint = getActivePoint(event, datasetRaw);
+
+    if (nbSelectedPoints < 2) {
+      if (!(rawActivePoint.x === 0)) {
+        datasetSelected.data.push(datasetRaw.data[rawActivePoint.index]);
+        nbSelectedPoints++;
+        addSessionPoint(rawActivePoint.x, rawActivePoint.y);
+      } else {
+        const activeSelectedPoint = getActivePoint(event, datasetSelected);
+
+        datasetSelected.data = datasetSelected.data.filter(point => {
+          return point.x !== activeSelectedPoint.x;
+        });
+
+        nbSelectedPoints--;
+        sessionStorage.removeItem('selected-points');
+        checkSelectedPoints();
+      }
+    } else {
+      if (rawActivePoint.x === 0 || rawActivePoint.x === datasetRaw.data[1].x) {
+        const activeSelectedPoint = getActivePoint(event, datasetSelected);
+
+        datasetSelected.data = datasetSelected.data.filter(point => {
+          return point.x !== activeSelectedPoint.x;
+        });
+
+        nbSelectedPoints--;
+        removeSessionPoint(
+          activeSelectedPoint.x.toString(),
+          activeSelectedPoint.y.toString(),
+          true
+        );
+      } else {
+        const sortedSelectedPoints = datasetSelected.data.sort((a, b) => {
+          if (a.x < b.x) {
+            return -1;
+          }
+
+          if (a.x > b.x) {
+            return 1;
+          }
+          return 0;
+        });
+
+        const firstSelectedIndex = datasetRaw.data.findIndex(
+          point => point.x === sortedSelectedPoints[0].x
+        );
+
+        const secondSelectedIndex = datasetRaw.data.findIndex(
+          point => point.x === sortedSelectedPoints[1].x
+        );
+
+        const distToFirst = Math.abs(firstSelectedIndex - rawActivePoint.index);
+        const distToSecond = Math.abs(secondSelectedIndex - rawActivePoint.index);
+
+        if (distToFirst < distToSecond) {
+          datasetSelected.data = [sortedSelectedPoints[1]];
+        } else {
+          datasetSelected.data = [sortedSelectedPoints[0]];
+        }
+
+        datasetSelected.data.push(datasetRaw.data[rawActivePoint.index]);
+
+        removeSessionPoint(
+          rawActivePoint.x.toString(),
+          rawActivePoint.y.toString(),
+          true
+        );
+        addSessionPoint(rawActivePoint.x, rawActivePoint.y);
+      }
+    }
+
+    plot.update();
+  }
 };
 
 ChartSetup.options.onClick = (event, element, plot) => {
@@ -330,6 +351,7 @@ try {
 
 ChartSetup.data.datasets[0].data = angleFile;
 ChartSetup.data.datasets[1].data = [];
+ChartSetup.data.datasets[2].data = [];
 
 const updateInfos = () => {
   infoParticipant.innerText = selectedParticipants[currentParticipant];
@@ -353,16 +375,50 @@ const updateInfos = () => {
   }
 };
 
-const autoAngleButtonClickHandler = event => {
-  /**
-   * TODO
-   */
+const autoAngleButtonClickHandler = async (participant, event) => {
+  const request = await fetch(
+    `http://${configuration.HOST}:${configuration.PORT}/api/points/`,
+    {
+      headers: {
+        'X-API-Key': configuration.API_KEY,
+        'Content-Type': 'application/json'
+      },
+      method: 'POST',
+      body: JSON.stringify({
+        data_path: PathHelper.sanitizePath(dataPath),
+        analysis: analysisType,
+        stage,
+        participant: StringHelper.revertParticipantNameFromSession(participant),
+        iteration: currentIteration
+      })
+    }
+  );
+
+  const response = await request.json();
+  const points = response.payload.points;
+
+  const formattedPoints = [];
+
+  for (const point of points) {
+    formattedPoints.push({ x: Number(point.x), y: Number(point.y) });
+    autoAngles.push(`${Number(point.x)},${Number(point.y)}`);
+  }
+
+  plot.data.datasets[2].data = formattedPoints;
+  plot.update();
+  autoAnglesButton.classList.add('top-btn-disabled');
+
+  const formattedAngles = getPointsObject(true);
+  await writeMetadata(formattedAngles);
+
+  submitButton.removeAttribute('disabled');
 };
 
 const displayAutoAnglesButton = async () => {
   const participant = selectedParticipants[currentParticipant];
 
   let participantsInfos;
+
   try {
     participantsInfos = await metadata.getParticipantInfo(analysisType, participant);
   } catch (error) {
@@ -377,24 +433,32 @@ const displayAutoAnglesButton = async () => {
 
   const isHidden = autoAnglesButton.classList.contains('top-btn-disabled');
 
+  let state;
+
   if (participantsInfos.auto_angles) {
     if (isHidden) {
       autoAnglesButton.classList.remove('top-btn-disabled');
+      state = true;
     }
-
-    autoAnglesButton.addEventListener('click', autoAngleButtonClickHandler);
   } else {
     if (!isHidden) {
       autoAnglesButton.classList.add('top-btn-disabled');
+      state = false;
     }
-
-    autoAnglesButton.removeEventListener('click', autoAngleButtonClickHandler);
   }
+
+  return state;
 };
 
 updateInfos();
 checkSelectedPoints();
-await displayAutoAnglesButton();
+const isDisplayed = await displayAutoAnglesButton();
+
+if (currentIteration === 0 && isDisplayed) {
+  autoAnglesButton.addEventListener('click', event =>
+    autoAngleButtonClickHandler(selectedParticipants[currentParticipant], event)
+  );
+}
 
 const plot = new Chart(chartContext, ChartSetup);
 plot.data.datasets[0].pointBackgroundColor = plot.data.datasets[0].data.map(() => {
@@ -403,6 +467,7 @@ plot.data.datasets[0].pointBackgroundColor = plot.data.datasets[0].data.map(() =
 
 const checkForMetadataExistingPoints = async () => {
   let infos;
+
   try {
     infos = await metadata.getParticipantInfo(
       PathHelper.sanitizePath(analysisType),
@@ -422,11 +487,22 @@ const checkForMetadataExistingPoints = async () => {
 
   if (iterations) {
     if (iterations[currentIteration + 1]) {
-      const points = iterations[currentIteration + 1].points;
-      const pointAx = points.manual[0].x;
-      const pointBx = points.manual[1].x;
-      const pointAy = points.manual[0].y;
-      const pointBy = points.manual[1].y;
+      const pointsObject = iterations[currentIteration + 1].points;
+
+      let isManualPointsExist = true;
+
+      for (const manualPoint of Object.values(pointsObject.manual)) {
+        if (manualPoint.x === null && manualPoint.y === null) {
+          isManualPointsExist = false;
+        }
+      }
+
+      const points = isManualPointsExist ? pointsObject.manual : pointsObject.auto;
+
+      const pointAx = points[0].x;
+      const pointBx = points[1].x;
+      const pointAy = points[0].y;
+      const pointBy = points[1].y;
 
       if (pointAx && pointAy && pointBx && pointBy) {
         const plottedPoints = plot.data.datasets[0].data;
@@ -446,6 +522,10 @@ const checkForMetadataExistingPoints = async () => {
 
             nbSelectedPoints = 2;
             plot.data.datasets[1].data.push({ x: plottedPoint.x, y: plottedPoint.y });
+
+            if (!isManualPointsExist) {
+              plot.data.datasets[1].pointBackgroundColor = '#3949AB';
+            }
           }
         }
 
@@ -463,6 +543,7 @@ const getPointsObject = (auto = false) => {
   const iterationObject = {
     iterations: {}
   };
+
   const pointsObjectAll = {
     points: {
       manual: {
@@ -476,8 +557,34 @@ const getPointsObject = (auto = false) => {
     }
   };
 
-  const points = sessionStorage.getItem('selected-points').toString();
-  const pointsArray = points.split(';');
+  let pointsArray = [];
+
+  if (auto) {
+    if (autoAngles.length > 0) {
+      pointsArray = autoAngles;
+    } else {
+      const errorOverlay = new ErrorOverlay({
+        message: 'Internal Error',
+        details: 'Cannot use provided angles',
+        interact: true
+      });
+
+      errorOverlay.show();
+    }
+  } else {
+    if ('selected-points' in sessionStorage) {
+      const points = sessionStorage.getItem('selected-points').toString();
+      pointsArray = points.split(';');
+    } else {
+      const errorOverlay = new ErrorOverlay({
+        message: 'Internal Error',
+        details: 'Cannot use provided angles',
+        interact: true
+      });
+
+      errorOverlay.show();
+    }
+  }
 
   for (const point of pointsArray) {
     const pointArray = point.split(',');
@@ -544,7 +651,7 @@ const getFormattedPointsFromSession = () => {
 };
 
 const postAnglesData = async (participant, iteration, point1x, point2x) => {
-  return await fetch(`http://${configuration.HOST}:${configuration.PORT}/emg/`, {
+  return await fetch(`http://${configuration.HOST}:${configuration.PORT}/api/data/emg/`, {
     headers: {
       'X-API-Key': configuration.API_KEY,
       'Content-Type': 'application/json'
@@ -564,7 +671,7 @@ const postAnglesData = async (participant, iteration, point1x, point2x) => {
 };
 
 const fetchResults = async participants => {
-  return await fetch(`http://${configuration.HOST}:${configuration.PORT}/results/`, {
+  return await fetch(`http://${configuration.HOST}:${configuration.PORT}/api/results/`, {
     headers: {
       'X-API-Key': configuration.API_KEY,
       'Content-Type': 'application/json'
@@ -589,9 +696,11 @@ const loadNextChart = async angleFiles => {
   });
 
   plot.data.datasets[1].data = [];
+  plot.data.datasets[2].data = [];
 
   nbSelectedPoints = 0;
   firstElementZoom = null;
+  autoAngles = [];
 
   if (currentIteration < angleFiles[currentParticipant].length - 1) {
     currentIteration++;
@@ -630,14 +739,41 @@ submitButton.addEventListener('click', async () => {
   const spinner = submitButton.querySelector('span.spinner');
   spinner.classList.toggle('hide');
 
-  const formattedAngles = getPointsObject();
-  await writeMetadata(formattedAngles);
+  let formattedAngles;
+  let isAuto = false;
+
+  if ('selected-points' in sessionStorage) {
+    formattedAngles = getPointsObject();
+    await writeMetadata(formattedAngles); // TODO:??
+  } else if (autoAngles.length > 0) {
+    isAuto = true;
+    formattedAngles = getPointsObject(true);
+  } else {
+    const errorOverlay = new ErrorOverlay({
+      message: 'Internal Error',
+      details: 'Cannot use provided angles',
+      interact: true
+    });
+
+    errorOverlay.show();
+  }
 
   try {
     const participant = StringHelper.revertParticipantNameFromSession(
       selectedParticipants[currentParticipant]
     );
-    const { point1x, point2x } = getFormattedPointsFromSession();
+
+    let point1x;
+    let point2x;
+
+    if (!isAuto) {
+      point1x = getFormattedPointsFromSession().point1x;
+      point2x = getFormattedPointsFromSession().point2x;
+    } else {
+      point1x = Number(autoAngles[0].split(',')[0]);
+      point2x = Number(autoAngles[1].split(',')[0]);
+    }
+
     const request = await postAnglesData(participant, currentIteration, point1x, point2x);
     const response = await request.json();
 
