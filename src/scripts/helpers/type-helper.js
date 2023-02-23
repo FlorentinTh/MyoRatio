@@ -17,6 +17,13 @@ export class TypeHelper {
     return Object.prototype.toString.call(str) === '[object String]';
   }
 
+  static isInt(int) {
+    return (
+      Object.prototype.toString.call(int) === '[object Number]' &&
+      Number.isSafeInteger(int)
+    );
+  }
+
   static checkStringNotNull(str, opts = { label: '' }) {
     checkLabelParameter(opts.label);
 
@@ -48,6 +55,23 @@ export class TypeHelper {
       throw new Error(
         `${opts.label} parameter must be of type String. Received: ${TypeHelper.getType(
           str
+        )}`
+      );
+    }
+  }
+
+  static checkInt(int, opts = { label: '' }) {
+    checkLabelParameter(opts.label);
+
+    const defaultOpts = { label: '' };
+    opts = { ...defaultOpts, ...opts };
+
+    if (TypeHelper.isUndefinedOrNull(int)) {
+      throw new Error(`${opts.label} parameter cannot be ${int}`);
+    } else if (!TypeHelper.isInt(int)) {
+      throw new Error(
+        `${opts.label} parameter must be of type Int. Received: ${TypeHelper.getType(
+          int
         )}`
       );
     }
