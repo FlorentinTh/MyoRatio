@@ -170,7 +170,7 @@ const disableNotRequiredButton = total => {
 
 const selectParticipant = participantItem => {
   const participantName = participantItem
-    .querySelector('.line-1')
+    .querySelector('.line-1 > span.name')
     .innerText.toLowerCase();
   selectedParticipants.push(participantName.trim());
   participantItem.classList.toggle('selected');
@@ -254,7 +254,7 @@ const initCard = items => {
     }
 
     const participantName = participantItem
-      .querySelector('.line-1')
+      .querySelector('.line-1 > span.name')
       .innerText.toLowerCase();
 
     if (
@@ -403,7 +403,7 @@ if (!(participants?.length > 0)) {
           if (!participantItemClasses.contains('not-completed')) {
             participantItem.classList.toggle('selected');
             const participantName = participantItem
-              .querySelector('.line-1')
+              .querySelector('.line-1 > span.name')
               .innerText.toLowerCase();
 
             selectedParticipants = selectedParticipants.filter(
