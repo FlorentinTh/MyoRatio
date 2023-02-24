@@ -1,0 +1,49 @@
+div:has(.button-popup) {
+  flex-direction: column;
+}
+
+.button-popup {
+  padding: 8px 15px;
+  font-size: 0.9em;
+  color: #ededed;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  border-radius: 30px;
+  border: none;
+  background-size: 0 100%;
+  background-repeat: no-repeat;
+  transition: ease-out 0.2s;
+  width: 250px;
+}
+
+.button-popup:not(:last-child) {
+  margin-bottom: 10px;
+}
+
+.confirm {
+  border: 2px solid #606060;
+  background-color: #232323dd;
+  background-image: linear-gradient(to left, #232323dd, #232323dd);
+}
+
+.confirm:hover {
+  background-color: #606060;
+  background-image: linear-gradient(to right, #606060, #606060);
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  cursor: pointer;
+}
+
+.cancel {
+  border: 2px solid #16a085;
+  background-color: #16a084e4;
+  background-image: linear-gradient(to left, #16a085, #16a085);
+}
+
+.cancel:hover {
+  background-color: #16a085;
+  background-image: linear-gradient(to right, #16a085, #16a085);
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  cursor: pointer;
+}

@@ -139,6 +139,7 @@
     "chartjs": "^0.3.24",
     "chartjs-plugin-crosshair": "^1.2.0",
     "dayjs": "^1.11.7",
+    "sweetalert2": "^11.7.2",
     "yup": "^1.0.0"
   },
   "optionalDependencies": {

@@ -3,6 +3,8 @@ import '../styles/angles-selection.css';
 import Chart from 'chart.js/auto';
 import { CrosshairPlugin } from 'chartjs-plugin-crosshair';
 
+import Swal from 'sweetalert2';
+
 import { Menu } from './components/menu.js';
 import { Router } from './routes/router.js';
 import { LoaderOverlay } from './components/loader-overlay.js';
@@ -179,6 +181,7 @@ const chartPointOnClickHandler = (event, element, plot) => {
 
     if (!('selected-points' in sessionStorage)) {
       sessionStorage.setItem('selected-points', autoAngles.join(';'));
+      autoAngles = [];
     }
   }
 
@@ -382,26 +385,39 @@ const updateInfos = () => {
   }
 };
 
-const autoAngleButtonClickHandler = async (participant, event) => {
-  const request = await fetch(
-    `http://${configuration.HOST}:${configuration.PORT}/api/points/`,
-    {
-      headers: {
-        'X-API-Key': configuration.API_KEY,
-        'Content-Type': 'application/json'
-      },
-      method: 'POST',
-      body: JSON.stringify({
-        data_path: PathHelper.sanitizePath(dataPath),
-        analysis: analysisType,
-        stage,
-        participant: StringHelper.revertParticipantNameFromSession(participant),
-        iteration: currentIteration
-      })
-    }
-  );
+const processAutoAngles = async participant => {
+  let response;
 
-  const response = await request.json();
+  try {
+    const request = await fetch(
+      `http://${configuration.HOST}:${configuration.PORT}/api/points/`,
+      {
+        headers: {
+          'X-API-Key': configuration.API_KEY,
+          'Content-Type': 'application/json'
+        },
+        method: 'POST',
+        body: JSON.stringify({
+          data_path: PathHelper.sanitizePath(dataPath),
+          analysis: analysisType,
+          stage,
+          participant: StringHelper.revertParticipantNameFromSession(participant),
+          iteration: currentIteration
+        })
+      }
+    );
+
+    response = await request.json();
+  } catch (error) {
+    const errorOverlay = new ErrorOverlay({
+      message: `Automatic selection of points failed`,
+      details: error.message,
+      interact: true
+    });
+
+    errorOverlay.show();
+  }
+
   const points = response.payload.points;
 
   const formattedPoints = [];
@@ -422,6 +438,34 @@ const autoAngleButtonClickHandler = async (participant, event) => {
   await writeMetadata(formattedAngles);
 
   submitButton.removeAttribute('disabled');
+};
+
+const autoAngleButtonClickHandler = async (participant, event) => {
+  const isAutoAnglesDisplayed = plot.data.datasets[1].pointBackgroundColor === '#3949AB';
+
+  if (!isAutoAnglesDisplayed && 'selected-points' in sessionStorage) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Manually selected points will be overwritten by the automatic selection',
+      icon: 'warning',
+      background: '#ededed',
+      customClass: {
+        confirmButton: 'button-popup confirm',
+        cancelButton: 'button-popup cancel'
+      },
+      buttonsStyling: false,
+      padding: '0 0 35px 0',
+      allowOutsideClick: false,
+      showCancelButton: true,
+      confirmButtonText: 'Yes, overwrite!'
+    }).then(async result => {
+      if (result.isConfirmed) {
+        await processAutoAngles(participant);
+      }
+    });
+  } else {
+    await processAutoAngles(participant);
+  }
 };
 
 const displayAutoAnglesButton = async () => {
@@ -502,16 +546,11 @@ const checkForMetadataExistingPoints = async () => {
       let isManualPointsExist = true;
 
       const manualPoints = Object.values(pointsObject.manual);
-      const autoPoints = Object.values(pointsObject.auto);
 
       for (let i = 0; i < manualPoints.length; i++) {
         const manualPoint = manualPoints[i];
-        const autoPoint = autoPoints[i];
 
-        if (
-          (manualPoint.x === null && manualPoint.y === null) ||
-          (manualPoint.x === autoPoint.x && manualPoint.y === autoPoint.y)
-        ) {
+        if (manualPoint.x === null && manualPoint.y === null) {
           isManualPointsExist = false;
         }
       }
@@ -544,6 +583,12 @@ const checkForMetadataExistingPoints = async () => {
 
             if (!isManualPointsExist) {
               plot.data.datasets[1].pointBackgroundColor = '#3949AB';
+
+              if (!autoAnglesButton.classList.contains('top-btn-disabled')) {
+                autoAnglesButton.classList.add('top-btn-disabled');
+              }
+            } else {
+              plot.data.datasets[1].pointBackgroundColor = '#FF5722';
             }
           }
         }
@@ -760,20 +805,13 @@ submitButton.addEventListener('click', async () => {
   let formattedAngles;
   let isAuto = false;
 
-  if ('selected-points' in sessionStorage) {
+  const isAutoAnglesDisplayed = plot.data.datasets[1].pointBackgroundColor === '#3949AB';
+
+  if (!isAutoAnglesDisplayed && 'selected-points' in sessionStorage) {
     formattedAngles = getPointsObject();
     await writeMetadata(formattedAngles);
-  } else if (autoAngles.length > 0) {
+  } else if (autoAngles.length > 0 && !('selected-points' in sessionStorage)) {
     isAuto = true;
-    formattedAngles = getPointsObject(true);
-  } else {
-    const errorOverlay = new ErrorOverlay({
-      message: 'Internal Error',
-      details: 'Cannot use provided angles',
-      interact: true
-    });
-
-    errorOverlay.show();
   }
 
   try {
@@ -791,6 +829,8 @@ submitButton.addEventListener('click', async () => {
       point1x = Number(autoAngles[0].split(',')[0]);
       point2x = Number(autoAngles[1].split(',')[0]);
     }
+
+    console.log({ point1x, point2x });
 
     const request = await postAnglesData(participant, currentIteration, point1x, point2x);
     const response = await request.json();

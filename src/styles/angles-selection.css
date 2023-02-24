@@ -1,5 +1,6 @@
 @import url('@fortawesome/fontawesome-free/css/all.css');
 @import url('./main.css');
+@import url('./components/popup.css');
 
 .auto-angles-btn {
   transition-duration: 0.5s;
