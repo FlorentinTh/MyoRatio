@@ -172,6 +172,14 @@ const chartAfterZoomHandler = (start, end) => {
 const chartPointOnClickHandler = (event, element, plot) => {
   if (plot.data.datasets[1].pointBackgroundColor === '#3949AB') {
     plot.data.datasets[1].pointBackgroundColor = '#FF5722';
+
+    if (autoAnglesButton.classList.contains('top-btn-disabled')) {
+      autoAnglesButton.classList.remove('top-btn-disabled');
+    }
+
+    if (!('selected-points' in sessionStorage)) {
+      sessionStorage.setItem('selected-points', autoAngles.join(';'));
+    }
   }
 
   if (element.length > 0 && element[0].datasetIndex < 2) {
@@ -351,7 +359,6 @@ try {
 
 ChartSetup.data.datasets[0].data = angleFile;
 ChartSetup.data.datasets[1].data = [];
-ChartSetup.data.datasets[2].data = [];
 
 const updateInfos = () => {
   infoParticipant.innerText = selectedParticipants[currentParticipant];
@@ -404,7 +411,10 @@ const autoAngleButtonClickHandler = async (participant, event) => {
     autoAngles.push(`${Number(point.x)},${Number(point.y)}`);
   }
 
-  plot.data.datasets[2].data = formattedPoints;
+  plot.data.datasets[1].data = formattedPoints;
+  plot.data.datasets[1].pointBackgroundColor = '#3949AB';
+  nbSelectedPoints = 2;
+
   plot.update();
   autoAnglesButton.classList.add('top-btn-disabled');
 
@@ -491,8 +501,17 @@ const checkForMetadataExistingPoints = async () => {
 
       let isManualPointsExist = true;
 
-      for (const manualPoint of Object.values(pointsObject.manual)) {
-        if (manualPoint.x === null && manualPoint.y === null) {
+      const manualPoints = Object.values(pointsObject.manual);
+      const autoPoints = Object.values(pointsObject.auto);
+
+      for (let i = 0; i < manualPoints.length; i++) {
+        const manualPoint = manualPoints[i];
+        const autoPoint = autoPoints[i];
+
+        if (
+          (manualPoint.x === null && manualPoint.y === null) ||
+          (manualPoint.x === autoPoint.x && manualPoint.y === autoPoint.y)
+        ) {
           isManualPointsExist = false;
         }
       }
@@ -696,7 +715,6 @@ const loadNextChart = async angleFiles => {
   });
 
   plot.data.datasets[1].data = [];
-  plot.data.datasets[2].data = [];
 
   nbSelectedPoints = 0;
   firstElementZoom = null;
@@ -744,7 +762,7 @@ submitButton.addEventListener('click', async () => {
 
   if ('selected-points' in sessionStorage) {
     formattedAngles = getPointsObject();
-    await writeMetadata(formattedAngles); // TODO:??
+    await writeMetadata(formattedAngles);
   } else if (autoAngles.length > 0) {
     isAuto = true;
     formattedAngles = getPointsObject(true);
