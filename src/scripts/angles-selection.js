@@ -385,7 +385,7 @@ const updateInfos = () => {
   }
 };
 
-const processAutoAngles = async participant => {
+const processAutoAngles = async (participant, override) => {
   let response;
 
   try {
@@ -435,8 +435,7 @@ const processAutoAngles = async participant => {
   autoAnglesButton.classList.add('top-btn-disabled');
 
   const formattedAngles = getPointsObject(true);
-  await writeMetadata(formattedAngles);
-
+  await writeMetadata(formattedAngles, override);
   submitButton.removeAttribute('disabled');
 };
 
@@ -458,11 +457,15 @@ const autoAngleButtonClickHandler = async (participant, event) => {
       allowOutsideClick: false,
       showCancelButton: true,
       confirmButtonText: 'Yes, overwrite!'
-    }).then(async result => {
-      if (result.isConfirmed) {
-        await processAutoAngles(participant);
-      }
-    });
+    })
+      .then(async result => {
+        if (result.isConfirmed) {
+          await processAutoAngles(participant, true);
+        }
+      })
+      .catch(error => {
+        throw new Error(error);
+      });
   } else {
     await processAutoAngles(participant);
   }
@@ -681,11 +684,11 @@ const getPointsObject = (auto = false) => {
   return iterationObject;
 };
 
-const writeMetadata = async data => {
+const writeMetadata = async (data, override = false) => {
   const participant = selectedParticipants[currentParticipant];
 
   try {
-    await metadata.writeContent(analysisType, participant, data, stage);
+    await metadata.writeContent(analysisType, participant, data, stage, override);
   } catch (error) {
     const errorOverlay = new ErrorOverlay({
       message: `Information for participant ${participant} cannot be saved`,

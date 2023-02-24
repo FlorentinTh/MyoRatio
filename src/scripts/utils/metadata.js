@@ -284,7 +284,7 @@ export class Metadata {
     return anglesExist;
   }
 
-  async writeContent(analysisType, participant, content, stage) {
+  async writeContent(analysisType, participant, content, stage, override = false) {
     TypeHelper.checkStringNotNull(analysisType, { label: 'analysisType' });
     TypeHelper.checkStringNotNull(participant, { label: 'participant' });
     TypeHelper.checkObject(content, { label: 'content' });
@@ -359,7 +359,7 @@ export class Metadata {
               false
             );
 
-            if (isMainManualAnglesExist && !isContentManualAnglesExist) {
+            if (isMainManualAnglesExist && !isContentManualAnglesExist && !override) {
               Object.values(content[contentKey])[0].points.manual =
                 Object.values(mainContent)[currentIteration - 1].points.manual;
             }
