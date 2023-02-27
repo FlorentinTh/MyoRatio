@@ -833,8 +833,6 @@ submitButton.addEventListener('click', async () => {
       point2x = Number(autoAngles[1].split(',')[0]);
     }
 
-    console.log({ point1x, point2x });
-
     const request = await postAnglesData(participant, currentIteration, point1x, point2x);
     const response = await request.json();
 
