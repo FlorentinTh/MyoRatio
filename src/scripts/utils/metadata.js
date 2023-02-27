@@ -418,17 +418,4 @@ export class Metadata {
       await FileHelper.writeJSONFile(metadataFilePath, metadataFileJSON);
     }
   }
-
-  async writeHTMLReport(analysisType, content) {
-    TypeHelper.checkStringNotNull(analysisType, { label: 'analysisType' });
-    TypeHelper.checkStringNotNull(content, { label: 'content' });
-
-    const reportOutputPath = path.join(
-      this.getMetadataRootFolder,
-      analysisType,
-      `${analysisType}_report.html`
-    );
-
-    await FileHelper.writeFile(reportOutputPath, content);
-  }
 }

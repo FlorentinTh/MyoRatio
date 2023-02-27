@@ -1,7 +1,6 @@
 import '../styles/participants-selection.css';
 import participantCard from '../views/partials/participants-list/participant-card.hbs';
 import emptyCard from '../views/partials/participants-list/empty-card.hbs';
-import report from '../views/partials/pdf-report/report.hbs';
 
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
@@ -452,29 +451,8 @@ if (!(participants?.length > 0)) {
     loaderOverlay.toggle({ message: 'Creating PDF report...' });
 
     try {
-      await metadata.writeHTMLReport(
-        analysisType,
-        report({
-          analysis: analysisType,
-          participants: participantsArray,
-          dateTime: dayjs().format('YYYY-MM-DD hh:mm')
-        })
-      );
-    } catch (error) {
-      const errorOverlay = new ErrorOverlay({
-        message: `Error occurs while trying to create HTML report`,
-        details: error.message,
-        interact: true
-      });
-
-      errorOverlay.show();
-    }
-
-    try {
       const request = await fetchPDFReport();
       const response = await request.json();
-
-      loaderOverlay.toggle();
 
       if (!(response.code === 201)) {
         loaderOverlay.toggle();
@@ -487,6 +465,8 @@ if (!(participants?.length > 0)) {
 
         errorOverlay.show();
       }
+
+      loaderOverlay.toggle();
     } catch (error) {
       loaderOverlay.toggle();
 
