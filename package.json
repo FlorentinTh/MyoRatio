@@ -4,8 +4,8 @@
   "description": "Application to process EMG Trigno data",
   "main": "./build/public/index.html",
   "scripts": {
-    "start": "webpack serve --mode development",
-    "prebuild": "webpack --mode production",
+    "start": "cross-env NODE_ENV=development webpack serve --mode development",
+    "prebuild": "cross-env NODE_ENV=production webpack --mode production",
     "build:win": "npm run prebuild && build --tasks win-x64 --concurrent --mirror https://dl.nwjs.io/ . && npm run cp:bin:win",
     "cp:bin:win": "cross-var cpy ./bin ./dist/$npm_package_name_$npm_package_version_winx64",
     "make:win": "innosetup-compiler winx64-installer.iss --verbose",
@@ -106,6 +106,7 @@
     "checksum": "^1.0.0",
     "copy-webpack-plugin": "^11.0.0",
     "cpy-cli": "^4.2.0",
+    "cross-env": "^7.0.3",
     "cross-var": "^1.1.0",
     "css-loader": "^6.7.2",
     "css-minimizer-webpack-plugin": "^4.2.2",

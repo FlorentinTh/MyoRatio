@@ -119,6 +119,10 @@ module.exports = (env, argv) => {
           {
             from: path.join(__dirname, 'src', 'assets', 'icons', 'app.png'),
             to: path.join('public', 'assets')
+          },
+          {
+            from: path.join(__dirname, 'src', 'assets', 'report'),
+            to: path.join('public', 'assets', 'report')
           }
         ]
       })
