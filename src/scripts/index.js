@@ -3,9 +3,14 @@ import '../styles/main.css';
 import { LoaderOverlay } from './components/loader-overlay.js';
 import { Router } from './routes/router.js';
 import { PlatformHelper } from './helpers/platform-helper.js';
+import { Configuration } from './utils/configuration.js';
+import { retryFetch } from './helpers/fetch-helper.js';
+import { ErrorOverlay } from './components/overlay.js';
 
 const path = nw.require('path');
 const { spawn } = nw.require('child_process');
+
+const configuration = await Configuration.load();
 
 const loaderOverlay = new LoaderOverlay();
 loaderOverlay.toggle({ message: 'Loading Application Components...' });
@@ -33,13 +38,14 @@ let childProcess;
 try {
   childProcess = spawn(APIExecutablePath, []);
 } catch (error) {
-  sessionStorage.setItem(
-    'app-error',
-    JSON.stringify({
-      message: 'Some required components cannot be launched',
-      details: error.message
-    })
-  );
+  loaderOverlay.toggle();
+
+  const errorOverlay = new ErrorOverlay({
+    message: 'Some required components cannot be launched',
+    details: error.message
+  });
+
+  errorOverlay.show();
 }
 
 process.on('SIGINT', () => {
@@ -52,6 +58,32 @@ process.on('SIGTERM', () => {
   process.exit();
 });
 
-setTimeout(() => {
-  router.switchPage('data-discovering');
-}, 3000);
+retryFetch(
+  `http://${configuration.HOST}:${configuration.PORT}/api/ping/`,
+  {
+    headers: {
+      'X-API-Key': configuration.API_KEY,
+      'Content-Type': 'application/json'
+    },
+    method: 'GET'
+  },
+  10,
+  500
+)
+  .then(response => {
+    setTimeout(() => {
+      router.switchPage('data-discovering');
+    }, 2000);
+  })
+  .catch(error => {
+    const details = error.message ?? 'API is not started';
+
+    loaderOverlay.toggle();
+
+    const errorOverlay = new ErrorOverlay({
+      message: 'Some required components cannot be launched',
+      details
+    });
+
+    errorOverlay.show();
+  });

@@ -17,17 +17,6 @@ const path = nw.require('path');
 const router = new Router();
 router.disableBackButton();
 
-if ('app-error' in sessionStorage) {
-  const { message, details } = JSON.parse(sessionStorage.getItem('app-error').toString());
-
-  const errorOverlay = new ErrorOverlay({
-    message,
-    details
-  });
-
-  errorOverlay.show();
-}
-
 SessionStore.clear({ keep: ['data-path', 'analysis'] });
 
 const loaderOverlay = new LoaderOverlay();
