@@ -25,7 +25,7 @@ UninstallDisplayName={#MyAppName}
 ; Remove the following line to run in administrative install mode (install for all users.)
 PrivilegesRequired=lowest
 OutputDir={#SourcePath}release\winx64
-OutputBaseFilename=EMGTrigno_1.0.0_winx64
+OutputBaseFilename=EMGTrigno_{#MyAppVersion}_winx64
 SetupIconFile={#SourcePath}src\assets\icons\win\app-256.ico
 Compression=lzma
 SolidCompression=yes
