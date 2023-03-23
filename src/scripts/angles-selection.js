@@ -16,6 +16,8 @@ import { FileHelper } from './helpers/file-helper';
 import { ErrorOverlay } from './components/overlay';
 import { Configuration } from './utils/configuration.js';
 import { StringHelper } from './helpers/string-helper';
+import { Switch } from './utils/switch';
+import { SessionStore } from './utils/session-store';
 
 const path = nw.require('path');
 
@@ -28,6 +30,8 @@ const configuration = await Configuration.load();
 const menu = new Menu();
 const additionalButton = document.querySelectorAll('.app > div[class*=-btn]');
 menu.init(additionalButton);
+
+const dataSwitchRadios = Switch.init('data');
 
 Chart.register(CrosshairPlugin);
 
@@ -283,7 +287,7 @@ ChartSetup.options.plugins.crosshair = {
 ChartSetup.data.datasets[0].backgroundColor =
   ChartHelper.generateChartGradient(chartContext);
 
-const getAngleFiles = async () => {
+const getAngleFiles = async (filtered = false) => {
   const angleFiles = [];
 
   for (const selectedParticipant of selectedParticipants) {
@@ -327,8 +331,12 @@ const getAngleFiles = async () => {
           if (fileArray[fileArray.length - 1] === 'json') {
             const fileArray = file.split('_');
 
-            if (fileArray.includes('angle') && fileArray.includes('small')) {
-              return true;
+            if (fileArray.includes('angle')) {
+              const fileNameFilter = filtered ? 'filtered' : 'small';
+
+              if (fileArray.includes(fileNameFilter)) {
+                return true;
+              }
             }
           }
 
@@ -341,26 +349,53 @@ const getAngleFiles = async () => {
   return angleFiles;
 };
 
+const initData = async angleFiles => {
+  let angleFile;
+
+  try {
+    angleFile = await FileHelper.parseJSONFile(
+      PathHelper.sanitizePath(angleFiles[currentParticipant][currentIteration])
+    );
+  } catch (error) {
+    const errorOverlay = new ErrorOverlay({
+      message: `Cannot read data of participant ${
+        selectedParticipants[currentParticipant]
+      } for the iteration#${currentIteration + 1}`,
+      details: error.message,
+      interact: true
+    });
+
+    errorOverlay.show();
+  }
+
+  const selectedAngles = ChartSetup.data.datasets[1].data;
+  if (!(selectedAngles === undefined) && selectedAngles.length === 2) {
+    if ('data' in sessionStorage) {
+      const selectedAnglesIndexes = [];
+
+      for (const selectedAngle of selectedAngles) {
+        selectedAnglesIndexes.push(
+          ChartSetup.data.datasets[0].data.findIndex(
+            element => element.x === selectedAngle.x
+          )
+        );
+      }
+
+      const selectedAnglesData = [];
+
+      for (const selectedAnglesIndex of selectedAnglesIndexes) {
+        selectedAnglesData.push(angleFile[selectedAnglesIndex]);
+      }
+
+      ChartSetup.data.datasets[1].data = selectedAnglesData;
+    }
+  }
+
+  ChartSetup.data.datasets[0].data = angleFile;
+};
+
 const angleFiles = await getAngleFiles();
-let angleFile;
-
-try {
-  angleFile = await FileHelper.parseJSONFile(
-    PathHelper.sanitizePath(angleFiles[currentParticipant][currentIteration])
-  );
-} catch (error) {
-  const errorOverlay = new ErrorOverlay({
-    message: `Cannot read data of participant ${
-      selectedParticipants[currentParticipant]
-    } for the iteration#${currentIteration + 1}`,
-    details: error.message,
-    interact: true
-  });
-
-  errorOverlay.show();
-}
-
-ChartSetup.data.datasets[0].data = angleFile;
+await initData(angleFiles);
 ChartSetup.data.datasets[1].data = [];
 
 const updateInfos = () => {
@@ -427,7 +462,21 @@ const processAutoAngles = async (participant, override) => {
     autoAngles.push(`${Number(point.x)},${Number(point.y)}`);
   }
 
-  plot.data.datasets[1].data = formattedPoints;
+  const formattedPointsIndexes = [];
+
+  for (const formattedPoint of formattedPoints) {
+    formattedPointsIndexes.push(
+      plot.data.datasets[0].data.findIndex(element => element.x === formattedPoint.x)
+    );
+  }
+
+  const formattedPointsData = [];
+
+  for (const formattedPointsIndex of formattedPointsIndexes) {
+    formattedPointsData.push(plot.data.datasets[0].data[formattedPointsIndex]);
+  }
+
+  plot.data.datasets[1].data = formattedPointsData;
   plot.data.datasets[1].pointBackgroundColor = '#3949AB';
   nbSelectedPoints = 2;
 
@@ -755,6 +804,63 @@ const fetchResults = async participants => {
 
 allData = plot.data.datasets[0].data;
 
+for (const dataSwitchRadio of dataSwitchRadios) {
+  dataSwitchRadio.addEventListener('change', async event => {
+    let angleFiles;
+
+    if (dataSwitchRadio.value === 'raw') {
+      angleFiles = await getAngleFiles();
+      ChartSetup.options.onHover = (event, chart) => {
+        event.native.target.style.cursor = chart[0] ? 'pointer' : 'default';
+      };
+      ChartSetup.options.onClick = (event, element, plot) => {
+        chartPointOnClickHandler(event, element, plot);
+      };
+    } else if (dataSwitchRadio.value === 'filtered') {
+      angleFiles = await getAngleFiles(true);
+      ChartSetup.options.onHover = (event, chart) => {
+        event.native.target.style.cursor = 'default';
+      };
+
+      ChartSetup.options.onClick = null;
+
+      const isFilteredDataAlert = JSON.parse(localStorage.getItem('filtered-data-alert'));
+      if (isFilteredDataAlert === null || isFilteredDataAlert) {
+        Swal.fire({
+          title: 'Filtered Data',
+          text: `Points will not be manually selectable on the filtered data chart. However, the automatic detection feature remains available.`,
+          icon: 'info',
+          background: '#ededed',
+          customClass: {
+            confirmButton: 'button-popup confirm',
+            denyButton: 'button-popup cancel'
+          },
+          buttonsStyling: false,
+          padding: '0 0 35px 0',
+          allowOutsideClick: false,
+          showCancelButton: false,
+          showDenyButton: true,
+          confirmButtonText: `Continue notifying`,
+          denyButtonText: `Stop notifying next times`
+        })
+          .then(async result => {
+            if (!result.isConfirmed) {
+              localStorage.setItem('filtered-data-alert', false);
+            } else {
+              localStorage.setItem('filtered-data-alert', true);
+            }
+          })
+          .catch(error => {
+            throw new Error(error);
+          });
+      }
+    }
+
+    await initData(angleFiles);
+    plot.update();
+  });
+}
+
 const loadNextChart = async angleFiles => {
   checkSelectedPoints();
 
@@ -891,20 +997,32 @@ submitButton.addEventListener('click', async () => {
       errorOverlay.show();
     }
 
-    sessionStorage.removeItem('selected-participants');
+    SessionStore.clear({ keep: ['data-path', 'analysis', 'stage'] });
 
     setTimeout(() => {
       router.switchPage('participants-selection');
     }, 800);
   } else {
     await displayAutoAnglesButton();
+
+    for (const dataSwitchRadio of dataSwitchRadios) {
+      if (dataSwitchRadio.value === 'raw') {
+        if (!dataSwitchRadio.checked) {
+          dataSwitchRadio.checked = true;
+        }
+      } else if (dataSwitchRadio.value === 'filtered') {
+        if (!dataSwitchRadio.checked) {
+          dataSwitchRadio.checked = false;
+        }
+      }
+    }
+
     await loadNextChart(angleFiles);
     spinner.classList.toggle('hide');
   }
 });
 
 resetButton.addEventListener('click', () => {
-  sessionStorage.removeItem('selected-points');
-  sessionStorage.removeItem('selected-participants');
+  SessionStore.clear({ keep: ['data-path', 'analysis', 'stage'] });
   router.switchPage('participants-selection');
 });
