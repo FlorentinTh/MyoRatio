@@ -13,8 +13,41 @@ const menu = new Menu();
 menu.init();
 menu.setItemActive('settings');
 
+const notificationStatus = document.querySelector('#notification-status > .accent');
+const notificationButton = document.getElementById('notification-btn');
 const windowSizeInput = document.getElementById('window-size');
 const submitButton = document.querySelector('button[type="submit"]');
+
+if (!('filtered-data-alert' in localStorage)) {
+  localStorage.setItem('filtered-data-alert', true);
+}
+
+const updateNotificationPreferences = () => {
+  let statusText;
+  let buttonText;
+
+  if (JSON.parse(localStorage.getItem('filtered-data-alert'))) {
+    statusText = 'enabled';
+    buttonText = 'disable';
+  } else {
+    statusText = 'disabled';
+    buttonText = 'enable';
+  }
+
+  notificationStatus.textContent = ` ${statusText}.`;
+  notificationButton.textContent = buttonText;
+};
+
+updateNotificationPreferences();
+
+notificationButton.addEventListener('click', () => {
+  localStorage.setItem(
+    'filtered-data-alert',
+    !JSON.parse(localStorage.getItem('filtered-data-alert'))
+  );
+
+  updateNotificationPreferences();
+});
 
 if (!('window-size' in localStorage)) {
   localStorage.setItem('window-size', Number(windowSizeInput.value));

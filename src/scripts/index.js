@@ -29,6 +29,10 @@ if (PlatformHelper.isWindowsPlatform()) {
   APIExecutablePath = path.join(basePath, 'bin', 'EMGTrignoAPI', 'EMGTrignoAPI');
 }
 
+if (!('filtered-data-alert' in localStorage)) {
+  localStorage.setItem('filtered-data-alert', true);
+}
+
 if (!('window-size' in localStorage)) {
   localStorage.setItem('window-size', 0.2);
 }

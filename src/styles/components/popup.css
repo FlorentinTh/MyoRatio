@@ -34,13 +34,15 @@ div:has(.button-popup) {
   cursor: pointer;
 }
 
-.cancel {
+.cancel,
+.deny {
   border: 2px solid #16a085;
   background-color: #16a084e4;
   background-image: linear-gradient(to left, #16a085, #16a085);
 }
 
-.cancel:hover {
+.cancel:hover,
+.deny:hover {
   background-color: #16a085;
   background-image: linear-gradient(to right, #16a085, #16a085);
   background-repeat: no-repeat;
