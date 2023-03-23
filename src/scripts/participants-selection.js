@@ -342,26 +342,22 @@ if (!(participants?.length > 0)) {
   await renderParticipantsList();
 
   for (const stageSwitchRadio of stageSwitchRadios) {
-    stageSwitchRadio.addEventListener(
-      'change',
-      async event => {
-        DOMElement.clear(participantsList);
-        participantsList.parentElement.classList.add('change');
+    stageSwitchRadio.addEventListener('change', async event => {
+      DOMElement.clear(participantsList);
+      participantsList.parentElement.classList.add('change');
 
-        setTimeout(async () => {
-          selectedParticipants = [];
-          totalCompleted = 0;
-          toggleSelectedParticipantStorage();
-          await renderParticipantsList();
+      setTimeout(async () => {
+        selectedParticipants = [];
+        totalCompleted = 0;
+        toggleSelectedParticipantStorage();
+        await renderParticipantsList();
 
-          resetSelectButtons();
-          toggleSubmitButton();
-          initCard(participantItems);
-          participantsList.parentElement.classList.remove('change');
-        });
-      },
-      200
-    );
+        resetSelectButtons();
+        toggleSubmitButton();
+        initCard(participantItems);
+        participantsList.parentElement.classList.remove('change');
+      }, 200);
+    });
   }
 
   initCard(participantItems);
