@@ -1,6 +1,8 @@
 import '../styles/angles-preview.css';
 import previewCard from '../views/partials/angles-preview/preview-card.hbs';
 
+import Swal from 'sweetalert2';
+
 import { Menu } from './components/menu.js';
 import { Router } from './routes/router.js';
 import { getAllParticipants } from './components/participants';
@@ -28,7 +30,6 @@ const analysisType = sessionStorage.getItem('analysis').toString();
 const analysisTitle = document.querySelector('.analysis h3');
 const gridContainer = document.querySelector('.participant-card-container');
 const submitButton = document.querySelector('button[type="submit"]');
-const resetButton = document.querySelector('button[type="reset"]');
 
 analysisTitle.innerText += ` ${analysisType}`;
 
@@ -86,6 +87,39 @@ const getChartFiles = async participant => {
   return chartFiles;
 };
 
+const getNavButtons = card => {
+  return [...card.querySelectorAll('.nav-btn-container .icon-container')];
+};
+
+const initAutoSwitch = (autoSwitch, card, onChange = false) => {
+  if (onChange) {
+    const complexityRadios = getComplexityRadios(card);
+    let isRadioSelected = false;
+
+    if (autoSwitch.checked) {
+      let lowComplexity;
+
+      for (const complexityRadio of complexityRadios) {
+        if (complexityRadio.value.toLowerCase() === 'low') {
+          lowComplexity = complexityRadio;
+        }
+
+        if (complexityRadio.checked) {
+          isRadioSelected = true;
+        }
+      }
+
+      if (!isRadioSelected) {
+        lowComplexity.checked = true;
+
+        if (!allComplexitiesSelected.includes(lowComplexity.name)) {
+          allComplexitiesSelected.push(lowComplexity.name);
+        }
+      }
+    }
+  }
+};
+
 const initComplexityRadio = (complexityRadio, card, onChange = false) => {
   if (complexityRadio.checked) {
     if (onChange) {
@@ -106,25 +140,14 @@ const initComplexityRadio = (complexityRadio, card, onChange = false) => {
   }
 };
 
-const checkAllComplexitiesSelected = () => {
-  if (allComplexitiesSelected.length < gridContainer.children.length) {
-    if (!submitButton.disabled) {
-      submitButton.setAttribute('disabled', '');
-    }
-  } else {
-    if (submitButton.disabled) {
-      submitButton.removeAttribute('disabled');
-    }
-  }
-};
-
 const getComplexityRadios = card => {
   const complexityRadios = [...card.querySelector('.switch').children];
   return complexityRadios.filter(item => item.nodeName === 'INPUT');
 };
 
-const getNavButtons = card => {
-  return [...card.querySelectorAll('.nav-btn-container .icon-container')];
+const getAutoSwitches = card => {
+  const autoSwitches = [...card.querySelector('.angle-auto-select').children];
+  return autoSwitches.filter(item => item.nodeName === 'INPUT');
 };
 
 const saveData = async () => {
@@ -192,6 +215,15 @@ if (participants?.length > 0) {
       displayPreviewCard(participantName, infos, chartPath[currentChart]);
 
       const card = gridContainer.children[i];
+
+      const autoSwitches = getAutoSwitches(card);
+
+      for (const autoSwitch of autoSwitches) {
+        autoSwitch.addEventListener('change', event => {
+          initAutoSwitch(autoSwitch, card, true);
+        });
+      }
+
       const complexityRadios = getComplexityRadios(card);
 
       for (const complexityRadio of complexityRadios) {
@@ -199,7 +231,6 @@ if (participants?.length > 0) {
 
         complexityRadio.addEventListener('change', event => {
           initComplexityRadio(complexityRadio, card, true);
-          checkAllComplexitiesSelected();
         });
       }
 
@@ -231,8 +262,6 @@ if (participants?.length > 0) {
           card.querySelector('img').src = chartPath[currentChart];
         });
       }
-
-      checkAllComplexitiesSelected();
     }, 500);
   }
 } else {
@@ -249,14 +278,66 @@ submitButton.addEventListener('click', async () => {
   if (!submitButton.disabled) {
     loaderOverlay.toggle({ message: 'Saving data...' });
 
-    await saveData();
+    const cards = gridContainer.children;
 
-    setTimeout(() => {
-      router.switchPage('participants-selection');
-    }, 1000);
+    const notSelected = [];
+
+    for (const card of cards) {
+      const complexities = getComplexityRadios(card);
+      let isSelected = false;
+
+      for (const complexity of complexities) {
+        if (complexity.checked) {
+          isSelected = true;
+        }
+      }
+
+      if (!isSelected) {
+        notSelected.push(card);
+      }
+    }
+
+    if (notSelected.length > 0 && notSelected.length <= cards.length) {
+      const complexityText = notSelected.length > 1 ? `complexities` : `complexity`;
+      const verbText = notSelected.length > 1 ? `are` : `is`;
+
+      Swal.fire({
+        title: 'Missing complexities',
+        text: `${notSelected.length} ${complexityText} ${verbText} not set`,
+        icon: 'info',
+        background: '#ededed',
+        customClass: {
+          confirmButton: 'button-popup confirm',
+          denyButton: 'button-popup cancel'
+        },
+        buttonsStyling: false,
+        padding: '0 0 35px 0',
+        allowOutsideClick: false,
+        showCancelButton: false,
+        showDenyButton: true,
+        confirmButtonText: `Set remaining ${complexityText}`,
+        denyButtonText: `Continue`
+      })
+        .then(async result => {
+          if (!result.isConfirmed) {
+            await saveData();
+
+            setTimeout(() => {
+              router.switchPage('participants-selection');
+            }, 1000);
+          } else {
+            loaderOverlay.toggle();
+          }
+        })
+        .catch(error => {
+          throw new Error(error);
+        });
+    } else {
+      await saveData();
+
+      setTimeout(() => {
+        router.switchPage('participants-selection');
+      }, 1000);
+    }
   }
-});
-
-resetButton.addEventListener('click', () => {
-  router.switchPage('participants-selection');
 });

@@ -1,4 +1,5 @@
-@import url("./main.css");
+@import url('./main.css');
+@import url('./components/popup.css');
 
 .wrapper.wrapper-large {
   max-width: 1024px !important;
@@ -28,7 +29,7 @@
   align-items: center;
   height: 100%;
   width: 450px;
-  animation: fade-in .25s ease-in;
+  animation: fade-in 0.25s ease-in;
 }
 
 .placeholder-container > div {
@@ -75,7 +76,7 @@
 }
 
 .angle-auto-select span {
-  letter-spacing: -.02em;
+  letter-spacing: -0.02em;
   font-size: 1.1em;
   color: #232323dd;
   margin-right: 15px;
@@ -86,41 +87,41 @@
   justify-content: left;
   align-items: center;
   flex: 1;
-  background: #EDEDED;
+  background: #ededed;
 }
 
-input[type="checkbox"].auto-switch {
+input[type='checkbox'].auto-switch {
   font-size: 1em;
   appearance: none;
   width: 3em;
   height: 1.5em;
-  background: #BDBDBD;
+  background: #bdbdbd;
   border-radius: 3em;
   position: relative;
   cursor: pointer;
   outline: none;
-  transition: all .2s ease-in-out;
+  transition: all 0.2s ease-in-out;
   margin: 0;
 }
 
-input[type="checkbox"].auto-switch:checked {
-  background: #16A085;
+input[type='checkbox'].auto-switch:checked {
+  background: #16a085;
 }
 
-input[type="checkbox"].auto-switch::after {
+input[type='checkbox'].auto-switch::after {
   position: absolute;
-  content: "";
+  content: '';
   width: 1.5em;
   height: 1.5em;
   border-radius: 50%;
-  background: #EDEDED;
-  box-shadow: 0 0 .25em rgb(0 0 0 / 30%);
-  transform: scale(.7);
+  background: #ededed;
+  box-shadow: 0 0 0.25em rgb(0 0 0 / 30%);
+  transform: scale(0.7);
   left: 0;
-  transition: all .2s ease-in-out;
+  transition: all 0.2s ease-in-out;
 }
 
-input[type="checkbox"].auto-switch:checked::after {
+input[type='checkbox'].auto-switch:checked::after {
   left: calc(100% - 1.5em);
 }
 
@@ -158,30 +159,30 @@ input[type="checkbox"].auto-switch:checked::after {
   align-items: center;
   height: 100%;
   background-color: #16a084e4;
-  border: 2px solid #16A085;
+  border: 2px solid #16a085;
   background-size: 0 100%;
-  background-image: linear-gradient(to left, #16A085, #16A085);
+  background-image: linear-gradient(to left, #16a085, #16a085);
   border-radius: 30px;
   padding: 2px 25px;
-  transition: ease-out .4s;
+  transition: ease-out 0.4s;
 }
 
 .nav-btn-container .icon-container.disabled {
-  background-color: #BDBDBD;
-  border-color: #BDBDBD;
+  background-color: #bdbdbd;
+  border-color: #bdbdbd;
   cursor: default;
   pointer-events: none;
 }
 
 .nav-btn-container .icon-container:hover {
   cursor: pointer;
-  background-color: #16A085;
-  background-image: linear-gradient(to right, #16A085, #16A085);
+  background-color: #16a085;
+  background-image: linear-gradient(to right, #16a085, #16a085);
 }
 
 .nav-btn-container > .nav-btn i {
   font-size: 1.4em;
-  color: #EDEDED;
+  color: #ededed;
 }
 
 .complexity-container {
@@ -194,7 +195,7 @@ input[type="checkbox"].auto-switch:checked::after {
 }
 
 .complexity-container span {
-  letter-spacing: -.02em;
+  letter-spacing: -0.02em;
   font-size: 1.1em;
   color: #232323dd;
 }
