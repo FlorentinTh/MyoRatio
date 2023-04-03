@@ -103,6 +103,7 @@ const displayParticipantCard = (participant, infos, stage) => {
 const renderParticipantsList = async () => {
   for (const participant of participants) {
     const participantName = StringHelper.formatParticipantName(participant);
+
     let infos;
 
     try {
@@ -235,6 +236,8 @@ const checkSelectedParticipantsAllNotCompleted = () => {
   if (totalNotCompleted === totalNotCompletedSelected) {
     toggleSelectButtons(true, totalCompleted, false);
   }
+
+  return totalNotCompleted;
 };
 
 const initCard = items => {
@@ -261,11 +264,14 @@ const initCard = items => {
       selectedParticipants.includes(participantName)
     ) {
       participantItem.classList.toggle('selected');
-      checkSelectedParticipantsAllNotCompleted();
 
-      if (participants.length === selectedParticipants.length) {
-        resetSelectButtons();
-        toggleSelectButtons(true, totalCompleted);
+      const totalNotCompletedParticipant = checkSelectedParticipantsAllNotCompleted();
+
+      if (totalNotCompletedParticipant < selectedParticipants.length) {
+        if (participants.length === selectedParticipants.length) {
+          resetSelectButtons();
+          toggleSelectButtons(true, totalCompleted);
+        }
       }
     }
 
@@ -348,6 +354,8 @@ if (!(participants?.length > 0)) {
 
       setTimeout(async () => {
         selectedParticipants = [];
+        isAllSelected = false;
+        isAllNotCompletedSelected = false;
         totalCompleted = 0;
         toggleSelectedParticipantStorage();
         await renderParticipantsList();

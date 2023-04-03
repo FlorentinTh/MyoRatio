@@ -1,35 +1,42 @@
-@import url("@fortawesome/fontawesome-free/css/all.css");
-@import url("./main.css");
+@import url('@fortawesome/fontawesome-free/css/all.css');
+@import url('./main.css');
 
 .export-pdf-btn {
   top: 110px;
+}
+
+.export-xlsx-btn {
+  top: 170px;
+}
+
+.export-btn {
   left: 42px;
-  transition-duration: .5s;
+  transition-duration: 0.5s;
   transition-timing-function: swing;
   width: 90px;
   height: 50px;
-  background-color: #16A085;
+  background-color: #16a085;
   position: fixed;
   z-index: 9;
   border-radius: 60px;
   box-shadow: 6px 6px 15px -3px rgb(0 0 0 / 60%);
 }
 
-.export-pdf-btn:hover {
+.export-btn:hover {
   cursor: pointer;
   background-color: #232323dd;
 }
 
-.export-pdf-btn.open {
+.export-btn.open {
   transform: translateX(250px);
 }
 
-.export-pdf-btn i {
+.export-btn i {
   position: absolute;
   top: 12px;
   left: 35px;
   font-size: 1.65em;
-  color: #EDEDED;
+  color: #ededed;
 }
 
 .data-wrapper {
@@ -62,17 +69,17 @@
 
 .change-btn-container > button {
   padding: 6px 10px;
-  font-size: .9em;
-  color: #EDEDED;
+  font-size: 0.9em;
+  color: #ededed;
   text-transform: uppercase;
   letter-spacing: -0.02em;
   border-radius: 30px;
-  border: 1px solid #16A085;
+  border: 1px solid #16a085;
   background-color: #16a084e4;
   background-size: 0 100%;
-  background-image: linear-gradient(to left, #16A085, #16A085);
+  background-image: linear-gradient(to left, #16a085, #16a085);
   background-repeat: no-repeat;
-  transition: ease-out .2s;
+  transition: ease-out 0.2s;
   display: block;
 }
 
@@ -95,22 +102,22 @@
 
 .selection button {
   padding: 8px 15px;
-  font-size: .9em;
-  color: #EDEDED;
+  font-size: 0.9em;
+  color: #ededed;
   text-transform: uppercase;
-  letter-spacing: -.02em;
+  letter-spacing: -0.02em;
   border-radius: 30px;
   background-color: #232323dd;
   border: none;
   background-size: 0 100%;
   background-image: linear-gradient(to left, #232323dd, #232323dd);
   background-repeat: no-repeat;
-  transition: ease-out .2s;
+  transition: ease-out 0.2s;
 }
 
 .change-btn-container button:hover {
-  background-color: #16A085;
-  background-image: linear-gradient(to right, #16A085, #16A085);
+  background-color: #16a085;
+  background-image: linear-gradient(to right, #16a085, #16a085);
   background-repeat: no-repeat;
   background-size: 100% 100%;
   cursor: pointer;
@@ -163,12 +170,12 @@
 }
 
 .empty-content span {
-  font-size: .9em;
+  font-size: 0.9em;
 }
 
 .empty-content h4,
 .empty-content span {
-  letter-spacing: -.02em;
+  letter-spacing: -0.02em;
   color: #232323dd;
 }
 
@@ -180,20 +187,20 @@ ul.list {
 }
 
 ul.list > li.item {
-  animation: fade-in .25s ease-in;
+  animation: fade-in 0.25s ease-in;
   display: flex;
   margin: 15px 15px 15px 0;
   min-width: 300px;
   border-radius: 6px;
   color: #232323dd;
-  background-color: #CFD8DC;
-  border-bottom: 4px solid #CFD8DC;
+  background-color: #cfd8dc;
+  border-bottom: 4px solid #cfd8dc;
 }
 
 ul.list > li.item.selected {
-  background-color: #16A085;
-  border-color: #16A085;
-  color: #EDEDED;
+  background-color: #16a085;
+  border-color: #16a085;
+  color: #ededed;
 }
 
 ul.list > li.item > .content {
@@ -202,7 +209,7 @@ ul.list > li.item > .content {
   align-items: center;
   height: 115px;
   width: 100%;
-  transition: ease-in-out .2s;
+  transition: ease-in-out 0.2s;
 }
 
 ul.list > li.item > .content .icon {
@@ -218,12 +225,12 @@ ul.list > li.item > .content .icon i {
 }
 
 ul.list > li.item.selected > .content .icon i {
-  border-color: #EDEDED;
+  border-color: #ededed;
 }
 
 ul.list > li.item > .content .infos {
   align-self: center;
-  letter-spacing: .08em;
+  letter-spacing: 0.08em;
   margin-left: 25px;
 }
 
@@ -237,7 +244,7 @@ ul.list > li.item > .content div.line-1 .auto-angles {
 }
 
 ul.list > li.item > .content div.line-1 .auto-angles i {
-  font-size: .8em;
+  font-size: 0.8em;
 }
 
 ul.list > li.item > .content div.line-2 {
@@ -257,41 +264,41 @@ ul.list > li.item div.line-3 .state {
   width: 6px;
   border-radius: 6px;
   margin-right: 8px;
-  transition: ease-in-out .2s;
+  transition: ease-in-out 0.2s;
 }
 
 ul.list > li.item > .content div.line-2 .text,
 ul.list > li.item > .content div.line-3 .text {
-  font-size: .7em;
+  font-size: 0.7em;
   text-transform: uppercase;
 }
 
 ul.list > li.item.not-completed div.line-2 .text,
 ul.list > li.item div.line-3.high .text {
-  color: #F4511E;
+  color: #f4511e;
 }
 
 ul.list > li.item.not-completed div.line-2 .state,
 ul.list > li.item div.line-3.high .state {
-  background-color: #F4511E;
+  background-color: #f4511e;
 }
 
 ul.list > li.item.completed div.line-2 .text,
 ul.list > li.item div.line-3.low .text {
-  color: #689F38;
+  color: #689f38;
 }
 
 ul.list > li.item.completed div.line-2 .state,
 ul.list > li.item div.line-3.low .state {
-  background-color: #689F38;
+  background-color: #689f38;
 }
 
 ul.list > li.item div.line-3.medium .text {
-  color: #FF8F00;
+  color: #ff8f00;
 }
 
 ul.list > li.item div.line-3.medium .state {
-  background-color: #FF8F00;
+  background-color: #ff8f00;
 }
 
 ul.list > li.item div.line-3.unknown .text {
@@ -304,38 +311,38 @@ ul.list > li.item div.line-3.unknown .state {
 
 ul.list > li.item.selected.not-completed div.line-2 .text,
 ul.list > li.item.selected div.line-3.high .text {
-  color: #FFAB91;
+  color: #ffab91;
 }
 
 ul.list > li.item.selected.not-completed div.line-2 .state,
 ul.list > li.item.selected div.line-3.high .state {
-  background-color: #FFAB91;
+  background-color: #ffab91;
 }
 
 ul.list > li.item.selected.completed div.line-2 .text,
 ul.list > li.item.selected div.line-3.low .text {
-  color: #C5E1A5;
+  color: #c5e1a5;
 }
 
 ul.list > li.item.selected.completed div.line-2 .state,
 ul.list > li.item.selected div.line-3.low .state {
-  background-color: #C5E1A5;
+  background-color: #c5e1a5;
 }
 
 ul.list > li.item.selected div.line-3.medium .text {
-  color: #FFECB3;
+  color: #ffecb3;
 }
 
 ul.list > li.item.selected div.line-3.medium .state {
-  background-color: #FFECB3;
+  background-color: #ffecb3;
 }
 
 ul.list > li.item.selected div.line-3.unknown .text {
-  color: #E0E0E0;
+  color: #e0e0e0;
 }
 
 ul.list > li.item.selected div.line-3.unknown .state {
-  background-color: #E0E0E0;
+  background-color: #e0e0e0;
 }
 
 ul.list > li.item:last-of-type {
@@ -344,7 +351,7 @@ ul.list > li.item:last-of-type {
 
 ul.list > li.item:has(.content:hover) {
   cursor: pointer;
-  border-color: #16A085;
+  border-color: #16a085;
 }
 
 ul.list > li.item.selected:has(.content:hover) {
@@ -361,17 +368,17 @@ ul.list > li.item > .actions {
 
 ul.list > li.item > .actions button {
   padding: 6px 10px;
-  font-size: .9em;
-  color: #EDEDED;
+  font-size: 0.9em;
+  color: #ededed;
   text-transform: uppercase;
   letter-spacing: -0.02em;
   border-radius: 30px;
-  border: 1px solid #16A085;
+  border: 1px solid #16a085;
   background-color: #16a084e4;
   background-size: 0 100%;
-  background-image: linear-gradient(to left, #16A085, #16A085);
+  background-image: linear-gradient(to left, #16a085, #16a085);
   background-repeat: no-repeat;
-  transition: ease-out .2s;
+  transition: ease-out 0.2s;
   display: block;
 }
 
@@ -391,8 +398,8 @@ ul.list > li.item > .actions button:disabled {
 }
 
 ul.list > li.item > .actions button:hover {
-  background-color: #16A085;
-  background-image: linear-gradient(to right, #16A085, #16A085);
+  background-color: #16a085;
+  background-image: linear-gradient(to right, #16a085, #16a085);
   background-repeat: no-repeat;
   background-size: 100% 100%;
   cursor: pointer;
@@ -416,8 +423,8 @@ ul.list > li.item.selected > .actions button:hover {
 }
 
 .data-location span#data-path p {
-  font-size: .9em;
-  letter-spacing: .02em;
+  font-size: 0.9em;
+  letter-spacing: 0.02em;
   padding-top: 2px;
   font-weight: bold;
 }
