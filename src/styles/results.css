@@ -1,5 +1,44 @@
-@import url("@fortawesome/fontawesome-free/css/all.css");
-@import url("./main.css");
+@import url('@fortawesome/fontawesome-free/css/all.css');
+@import url('./main.css');
+
+.highlight-btn {
+  top: 110px;
+  left: 42px;
+  transition-duration: 0.5s;
+  transition-timing-function: swing;
+  width: 90px;
+  height: 50px;
+  background-color: #16a085;
+  position: fixed;
+  z-index: 9;
+  border-radius: 60px;
+  box-shadow: 6px 6px 15px -3px rgb(0 0 0 / 60%);
+}
+
+.highlight-btn:hover {
+  cursor: pointer;
+  background-color: #232323dd;
+}
+
+.highlight-btn.disabled {
+  background-color: #bdbdbd;
+  border-color: #bdbdbd;
+  cursor: default;
+  pointer-events: none;
+  box-shadow: 6px 6px 15px -3px rgb(0 0 0 / 30%);
+}
+
+.highlight-btn.open {
+  transform: translateX(250px);
+}
+
+.highlight-btn i {
+  position: absolute;
+  top: 12px;
+  left: 32px;
+  font-size: 1.65em;
+  color: #ededed;
+}
 
 .title {
   width: 100%;
@@ -23,7 +62,7 @@
 .tooltip-col,
 .tooltip-row {
   background: #3e3e3e;
-  color: #EDEDED;
+  color: #ededed;
   font-weight: bold;
   padding: 6px 10px;
   font-size: 1rem;
@@ -55,27 +94,27 @@
 
 .arrow::before {
   visibility: visible;
-  content: "";
+  content: '';
   transform: rotate(45deg);
 }
 
-.tooltip-col[data-popper-placement^="top"]  >  .arrow,
-.tooltip-row[data-popper-placement^="top"]  >  .arrow {
+.tooltip-col[data-popper-placement^='top'] > .arrow,
+.tooltip-row[data-popper-placement^='top'] > .arrow {
   bottom: -4px;
 }
 
-.tooltip-col[data-popper-placement^="bottom"] > .arrow,
-.tooltip-row[data-popper-placement^="bottom"] > .arrow {
+.tooltip-col[data-popper-placement^='bottom'] > .arrow,
+.tooltip-row[data-popper-placement^='bottom'] > .arrow {
   top: -4px;
 }
 
-.tooltip-col[data-popper-placement^="left"] > .arrow,
-.tooltip-row[data-popper-placement^="left"] > .arrow {
+.tooltip-col[data-popper-placement^='left'] > .arrow,
+.tooltip-row[data-popper-placement^='left'] > .arrow {
   right: -4px;
 }
 
-.tooltip-col[data-popper-placement^="right"] > .arrow,
-.tooltip-row[data-popper-placement^="right"] > .arrow {
+.tooltip-col[data-popper-placement^='right'] > .arrow,
+.tooltip-row[data-popper-placement^='right'] > .arrow {
   left: -4px;
 }
 
@@ -87,17 +126,17 @@
 }
 
 .column-hover span {
-  background-color: #78909C;
+  background-color: #78909c;
 }
 
 #vertical-caption span {
   rotate: -90deg;
   display: inline-flex;
   text-transform: uppercase;
-  font-size: .9em;
+  font-size: 0.9em;
   font-weight: bold;
-  letter-spacing: .02em;
-  color: #16A085;
+  letter-spacing: 0.02em;
+  color: #16a085;
 }
 
 #matrix:not(:target) table {
@@ -113,7 +152,7 @@
   vertical-align: middle;
   height: 3.5rem;
   line-height: 3.5rem;
-  transition: ease-in-out .35s;
+  transition: ease-in-out 0.35s;
   font-size: 1.05em;
 }
 
@@ -124,6 +163,12 @@
 #matrix:not(:target) tbody td:not(:empty) {
   width: 3.5rem;
   text-align: center;
+}
+
+#matrix:not(:target) tbody td.highlight {
+  font-weight: bold;
+  background-color: #232323dd;
+  color: #ededed;
 }
 
 #matrix:not(:target) tbody tr td:not(:empty) {
@@ -137,25 +182,24 @@
   white-space: nowrap;
   transform-origin: 0 0;
   margin-top: 1px;
-  transition: ease-in-out .35s;
+  transition: ease-in-out 0.35s;
   width: 3.5rem;
-  font-size: .8em;
+  font-size: 0.8em;
   font-weight: bold;
 }
 
-#matrix:not(:target) tbody [scope="row"]:hover,
-table thead th[scope="col"] {
+#matrix:not(:target) tbody [scope='row']:hover,
+table thead th[scope='col'] {
   cursor: default;
 }
 
-
-#matrix:not(:target) thead [scope="col"] span {
+#matrix:not(:target) thead [scope='col'] span {
   line-height: 3.5rem;
   margin-bottom: 15px;
   border-radius: 60px;
 }
 
-#matrix:not(:target) tbody [scope="row"] span {
+#matrix:not(:target) tbody [scope='row'] span {
   height: 3.52rem;
   line-height: 3.52rem;
   margin-left: 15px;
@@ -167,8 +211,8 @@ table thead th[scope="col"] {
   transition: none;
 }
 
-#matrix:not(:target) tbody td:hover:not(:empty)~th span {
-  background-color: #16A085;
+#matrix:not(:target) tbody td:hover:not(:empty) ~ th span {
+  background-color: #16a085;
   font-weight: bold;
 }
 
@@ -185,8 +229,8 @@ table thead th[scope="col"] {
   text-align: center;
   margin-top: 25px;
   text-transform: uppercase;
-  font-size: .9em;
+  font-size: 0.9em;
   font-weight: bold;
-  letter-spacing: .02em;
-  color: #78909C;
+  letter-spacing: 0.02em;
+  color: #78909c;
 }

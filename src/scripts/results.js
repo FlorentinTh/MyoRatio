@@ -16,7 +16,9 @@ const router = new Router();
 router.disableBackButton();
 
 const menu = new Menu();
-menu.init();
+
+const highlightButton = document.querySelector('.highlight-btn');
+menu.init(highlightButton);
 
 const dataPath = sessionStorage.getItem('data-path').toString();
 const analysisType = sessionStorage.getItem('analysis').toString();
@@ -49,6 +51,10 @@ const getRatiosFilePath = async () => {
 
   return path.join(inputPath, `ratios_${stage}_mean.json`);
 };
+
+if (!(analysisType === 'extension')) {
+  highlightButton.classList.add('disabled');
+}
 
 const ratiosFilePath = await getRatiosFilePath();
 
@@ -135,6 +141,46 @@ const removeHighlightedColumns = () => {
   }
 };
 
+const getRelevantRatioCoords = analysis => {
+  let antagonist;
+  let agonist;
+
+  if (analysis === 'extension') {
+    antagonist = 'R RECTUS FEMORIS';
+    agonist = 'R BICEPS FEMORIS';
+  }
+
+  const rows = document.querySelectorAll('div.tooltip-row');
+
+  let rowID;
+
+  for (let i = 0; i < rows.length; i++) {
+    const muscleName = rows[i].innerText.trim();
+
+    if (!(muscleName === undefined)) {
+      if (muscleName.toLowerCase().includes(agonist.toLowerCase())) {
+        rowID = i;
+      }
+    }
+  }
+
+  const columns = document.querySelector('table thead tr').children;
+
+  let columnID;
+
+  for (let i = 0; i < columns.length - 1; i++) {
+    const muscleName = columns[i].querySelector('div.tooltip-col').innerText.trim();
+
+    if (!(muscleName === undefined)) {
+      if (muscleName.toLowerCase().includes(antagonist.toLowerCase())) {
+        columnID = i;
+      }
+    }
+  }
+
+  return { rowID, columnID };
+};
+
 table.addEventListener('mouseover', event => {
   const item = event.target;
 
@@ -146,6 +192,17 @@ table.addEventListener('mouseover', event => {
 
 table.addEventListener('mouseout', () => {
   removeHighlightedColumns();
+});
+
+highlightButton.addEventListener('click', () => {
+  if (!highlightButton.disabled) {
+    const { rowID, columnID } = getRelevantRatioCoords(analysisType);
+
+    const rows = document.querySelectorAll('#matrix table tbody tr');
+    const cell = rows[rowID].children[columnID];
+    cell.classList.add('highlight');
+    highlightButton.classList.add('disabled');
+  }
 });
 
 finishButton.addEventListener('click', () => {
