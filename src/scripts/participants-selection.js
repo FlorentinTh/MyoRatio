@@ -6,6 +6,8 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 
+import Swal from 'sweetalert2';
+
 import { Menu } from './components/menu.js';
 import { Router } from './routes/router.js';
 import { LoaderOverlay } from './components/loader-overlay.js';
@@ -444,11 +446,62 @@ if (!(participants?.length > 0)) {
 
   submitButton.addEventListener('click', () => {
     if (!submitButton.disabled) {
-      loaderOverlay.toggle({ message: 'Preparing data...' });
+      const selectedItems = participantsList.querySelectorAll('.selected');
+      const complexityNotSet = [];
 
-      setTimeout(() => {
-        router.switchPage('angles-selection');
-      }, 800);
+      for (const selectedItem of selectedItems) {
+        if (
+          selectedItem.querySelector('.infos').children[2].classList.contains('unknown')
+        ) {
+          complexityNotSet.push(selectedItem);
+        }
+      }
+
+      if (complexityNotSet.length > 0) {
+        const participantText =
+          complexityNotSet.length > 1 ? `participants` : `participant`;
+
+        const complexityText =
+          complexityNotSet.length > 1 ? `complexities` : `complexity`;
+
+        Swal.fire({
+          title: `Missing ${complexityText}`,
+          text: `The complexity of ${complexityNotSet.length} selected ${participantText} is not set. Automatic angle selection will be disabled by default.`,
+          icon: 'info',
+          background: '#ededed',
+          customClass: {
+            confirmButton: 'button-popup confirm',
+            denyButton: 'button-popup cancel'
+          },
+          buttonsStyling: false,
+          padding: '0 0 35px 0',
+          allowOutsideClick: false,
+          showCancelButton: false,
+          showDenyButton: true,
+          confirmButtonText: `Set ${complexityText}`,
+          denyButtonText: `Continue`
+        })
+          .then(async result => {
+            if (!result.isConfirmed) {
+              loaderOverlay.toggle({ message: 'Preparing data...' });
+
+              setTimeout(() => {
+                router.switchPage('angles-selection');
+              }, 800);
+            } else {
+              router.switchPage('angles-preview');
+            }
+          })
+          .catch(error => {
+            throw new Error(error);
+          });
+      } else {
+        loaderOverlay.toggle({ message: 'Preparing data...' });
+
+        setTimeout(() => {
+          router.switchPage('angles-selection');
+        }, 800);
+      }
     }
   });
 

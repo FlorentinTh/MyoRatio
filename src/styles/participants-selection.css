@@ -1,5 +1,6 @@
 @import url('@fortawesome/fontawesome-free/css/all.css');
 @import url('./main.css');
+@import url('./components/popup.css');
 
 .export-pdf-btn {
   top: 110px;
