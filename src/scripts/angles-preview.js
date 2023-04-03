@@ -158,7 +158,7 @@ const saveData = async () => {
     const autoAngles = card.querySelector('.auto-switch').checked;
     const complexityRadios = getComplexityRadios(card);
 
-    let complexity;
+    let complexity = 'unknown';
 
     for (const complexityRadio of complexityRadios) {
       if (complexityRadio.checked) {
@@ -302,7 +302,7 @@ submitButton.addEventListener('click', async () => {
       const verbText = notSelected.length > 1 ? `are` : `is`;
 
       Swal.fire({
-        title: 'Missing complexities',
+        title: `Missing ${complexityText}`,
         text: `${notSelected.length} ${complexityText} ${verbText} not set`,
         icon: 'info',
         background: '#ededed',
@@ -315,7 +315,7 @@ submitButton.addEventListener('click', async () => {
         allowOutsideClick: false,
         showCancelButton: false,
         showDenyButton: true,
-        confirmButtonText: `Set remaining ${complexityText}`,
+        confirmButtonText: `Set missing ${complexityText}`,
         denyButtonText: `Continue`
       })
         .then(async result => {
