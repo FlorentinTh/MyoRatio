@@ -1,5 +1,7 @@
 import '../styles/angles-selection.css';
 
+import alert from '../views/partials/components/alert.hbs';
+
 import Chart from 'chart.js/auto';
 import { CrosshairPlugin } from 'chartjs-plugin-crosshair';
 
@@ -69,6 +71,32 @@ if (!(analysisType === null)) {
 
 if ('selected-points' in sessionStorage) {
   sessionStorage.removeItem('selected-points');
+}
+
+const toggleAlert = message => {
+  const dataSwitch = document
+    .getElementById('group-data')
+    .querySelector('.input-container');
+
+  if (!(message === undefined)) {
+    dataSwitch.insertAdjacentHTML('beforeend', alert({ message }));
+  } else {
+    const alert = document.getElementById('warning-msg');
+
+    if (!(alert === null)) {
+      alert.remove();
+    }
+  }
+};
+
+if ('data' in sessionStorage) {
+  const data = sessionStorage.getItem('data');
+
+  if (data === 'filtered') {
+    toggleAlert(`Angles cannot be selected manually on filtered data`);
+  } else {
+    toggleAlert();
+  }
 }
 
 const checkSelectedPoints = () => {
@@ -809,6 +837,8 @@ for (const dataSwitchRadio of dataSwitchRadios) {
     let angleFiles;
 
     if (dataSwitchRadio.value === 'raw') {
+      toggleAlert();
+
       angleFiles = await getAngleFiles();
       ChartSetup.options.onHover = (event, chart) => {
         event.native.target.style.cursor = chart[0] ? 'pointer' : 'default';
@@ -817,6 +847,8 @@ for (const dataSwitchRadio of dataSwitchRadios) {
         chartPointOnClickHandler(event, element, plot);
       };
     } else if (dataSwitchRadio.value === 'filtered') {
+      toggleAlert(`Angles cannot be selected manually on filtered data`);
+
       angleFiles = await getAngleFiles(true);
       ChartSetup.options.onHover = (event, chart) => {
         event.native.target.style.cursor = 'default';
