@@ -47,6 +47,7 @@ const stageSwitchRadios = Switch.init('stage');
 
 const changeButton = document.getElementById('change-btn');
 const exportPDFButton = document.querySelector('.export-pdf-btn');
+const exportXLSXButton = document.querySelector('.export-xlsx-btn');
 const dataPath = document.getElementById('data-path');
 const analysisTitle = document.querySelector('.analysis h3');
 const previewButton = document.getElementById('btn-preview');
@@ -315,18 +316,38 @@ const initCard = items => {
 };
 
 const fetchPDFReport = async reportTemplatePath => {
-  return await fetch(`http://${configuration.HOST}:${configuration.PORT}/api/report/`, {
-    headers: {
-      'X-API-Key': configuration.API_KEY,
-      'Content-Type': 'application/json'
-    },
-    method: 'POST',
-    body: JSON.stringify({
-      report_template_path: PathHelper.sanitizePath(reportTemplatePath),
-      data_path: PathHelper.sanitizePath(dataFolderPathSession),
-      analysis: analysisType
-    })
-  });
+  return await fetch(
+    `http://${configuration.HOST}:${configuration.PORT}/api/report/pdf`,
+    {
+      headers: {
+        'X-API-Key': configuration.API_KEY,
+        'Content-Type': 'application/json'
+      },
+      method: 'POST',
+      body: JSON.stringify({
+        report_template_path: PathHelper.sanitizePath(reportTemplatePath),
+        data_path: PathHelper.sanitizePath(dataFolderPathSession),
+        analysis: analysisType
+      })
+    }
+  );
+};
+
+const fetchXLSXReport = async () => {
+  return await fetch(
+    `http://${configuration.HOST}:${configuration.PORT}/api/report/xlsx`,
+    {
+      headers: {
+        'X-API-Key': configuration.API_KEY,
+        'Content-Type': 'application/json'
+      },
+      method: 'POST',
+      body: JSON.stringify({
+        data_path: PathHelper.sanitizePath(dataFolderPathSession),
+        analysis: analysisType
+      })
+    }
+  );
 };
 
 if (!(participants?.length > 0)) {
@@ -531,6 +552,39 @@ if (!(participants?.length > 0)) {
 
     try {
       const request = await fetchPDFReport(reportTemplatePath);
+      const response = await request.json();
+
+      if (!(response.code === 201)) {
+        loaderOverlay.toggle();
+
+        const errorOverlay = new ErrorOverlay({
+          message: response.payload.message,
+          details: response.payload.details,
+          interact: true
+        });
+
+        errorOverlay.show();
+      }
+
+      loaderOverlay.toggle();
+    } catch (error) {
+      loaderOverlay.toggle();
+
+      const errorOverlay = new ErrorOverlay({
+        message: `Application cannot fetch information of participants`,
+        details: error.message,
+        interact: true
+      });
+
+      errorOverlay.show();
+    }
+  });
+
+  exportXLSXButton.addEventListener('click', async () => {
+    loaderOverlay.toggle({ message: 'Creating XLSX report...' });
+
+    try {
+      const request = await fetchXLSXReport();
       const response = await request.json();
 
       if (!(response.code === 201)) {
