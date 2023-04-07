@@ -36,7 +36,7 @@ analysisTitle.innerText += ` ${analysisType}`;
 const allComplexitiesSelected = [];
 
 const participantsFolderPath = PathHelper.sanitizePath(
-  path.join(dataFolderPathSession, 'analysis', analysisType)
+  path.join(dataFolderPathSession, 'Analysis', analysisType)
 );
 const participants = await getAllParticipants(participantsFolderPath);
 const metadata = new Metadata(dataFolderPathSession);
@@ -184,9 +184,7 @@ const saveData = async () => {
 };
 
 if (participants?.length > 0) {
-  setTimeout(() => {
-    DOMElement.clear(gridContainer);
-  }, 500);
+  DOMElement.clear(gridContainer);
 
   for (let i = 0; i < participants.length; i++) {
     const participantName = StringHelper.formatParticipantName(participants[i]);
@@ -210,59 +208,57 @@ if (participants?.length > 0) {
 
     let currentChart = 0;
 
-    setTimeout(async () => {
-      const chartPath = await getChartFiles(participants[i]);
-      displayPreviewCard(participantName, infos, chartPath[currentChart]);
+    const chartPath = await getChartFiles(participants[i]);
+    displayPreviewCard(participantName, infos, chartPath[currentChart]);
 
-      const card = gridContainer.children[i];
+    const card = gridContainer.children[i];
 
-      const autoSwitches = getAutoSwitches(card);
+    const autoSwitches = getAutoSwitches(card);
 
-      for (const autoSwitch of autoSwitches) {
-        autoSwitch.addEventListener('change', event => {
-          initAutoSwitch(autoSwitch, card, true);
-        });
-      }
+    for (const autoSwitch of autoSwitches) {
+      autoSwitch.addEventListener('change', event => {
+        initAutoSwitch(autoSwitch, card, true);
+      });
+    }
 
-      const complexityRadios = getComplexityRadios(card);
+    const complexityRadios = getComplexityRadios(card);
 
-      for (const complexityRadio of complexityRadios) {
-        initComplexityRadio(complexityRadio, card);
+    for (const complexityRadio of complexityRadios) {
+      initComplexityRadio(complexityRadio, card);
 
-        complexityRadio.addEventListener('change', event => {
-          initComplexityRadio(complexityRadio, card, true);
-        });
-      }
+      complexityRadio.addEventListener('change', event => {
+        initComplexityRadio(complexityRadio, card, true);
+      });
+    }
 
-      const navButtons = getNavButtons(card);
-      for (const navButton of navButtons) {
-        navButton.addEventListener('click', event => {
-          if (navButton.parentElement.classList.contains('nav-next')) {
-            if (currentChart === 0) {
-              card.querySelector('.nav-prev').children[0].classList.remove('disabled');
-            }
-
-            currentChart++;
-
-            if (currentChart === chartPath.length - 1) {
-              navButton.classList.add('disabled');
-            }
-          } else {
-            if (currentChart === chartPath.length - 1) {
-              card.querySelector('.nav-next').children[0].classList.remove('disabled');
-            }
-
-            currentChart--;
-
-            if (currentChart === 0) {
-              navButton.classList.add('disabled');
-            }
+    const navButtons = getNavButtons(card);
+    for (const navButton of navButtons) {
+      navButton.addEventListener('click', event => {
+        if (navButton.parentElement.classList.contains('nav-next')) {
+          if (currentChart === 0) {
+            card.querySelector('.nav-prev').children[0].classList.remove('disabled');
           }
 
-          card.querySelector('img').src = chartPath[currentChart];
-        });
-      }
-    }, 500);
+          currentChart++;
+
+          if (currentChart === chartPath.length - 1) {
+            navButton.classList.add('disabled');
+          }
+        } else {
+          if (currentChart === chartPath.length - 1) {
+            card.querySelector('.nav-next').children[0].classList.remove('disabled');
+          }
+
+          currentChart--;
+
+          if (currentChart === 0) {
+            navButton.classList.add('disabled');
+          }
+        }
+
+        card.querySelector('img').src = chartPath[currentChart];
+      });
+    }
   }
 } else {
   const errorOverlay = new ErrorOverlay({

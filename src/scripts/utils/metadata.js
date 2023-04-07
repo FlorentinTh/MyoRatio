@@ -23,7 +23,7 @@ export class Metadata {
   }
 
   get getMetadataRootFolder() {
-    return path.join(this.#inputDataPath, 'analysis', this.#metadataRootFolder);
+    return path.join(this.#inputDataPath, 'Analysis', this.#metadataRootFolder);
   }
 
   async checkBaseFolderContent(converter = false) {
@@ -34,7 +34,7 @@ export class Metadata {
     if (converter) {
       inputPath = path.join(this.#inputDataPath, 'hpf');
     } else {
-      inputPath = path.join(this.#inputDataPath, 'analysis');
+      inputPath = path.join(this.#inputDataPath, 'Analysis');
     }
 
     try {
@@ -157,7 +157,7 @@ export class Metadata {
       StringHelper.revertParticipantNameFromSession(participant);
 
     const stat = await fs.promises.stat(
-      path.join(this.#inputDataPath, 'analysis', analysisType, participantFolderName)
+      path.join(this.#inputDataPath, 'Analysis', analysisType, participantFolderName)
     );
 
     const checksum = crypto
