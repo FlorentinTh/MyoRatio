@@ -46,7 +46,7 @@ const analysisType = PathHelper.sanitizePath(
 const stageSwitchRadios = Switch.init('stage');
 
 const changeButton = document.getElementById('change-btn');
-const exportPDFButton = document.querySelector('.export-pdf-btn');
+// const exportPDFButton = document.querySelector('.export-pdf-btn');
 const exportXLSXButton = document.querySelector('.export-xlsx-btn');
 const dataPath = document.getElementById('data-path');
 const analysisTitle = document.querySelector('.analysis h3');
@@ -63,7 +63,7 @@ dataPath.querySelector('p').innerText = ` ${
 analysisTitle.innerText += ` ${analysisType}`;
 
 const analysisFolderPath = PathHelper.sanitizePath(
-  path.join(dataFolderPathSession, 'analysis', analysisType)
+  path.join(dataFolderPathSession, 'Analysis', analysisType)
 );
 const participants = await getAllParticipants(analysisFolderPath);
 const metadata = new Metadata(dataFolderPathSession);
@@ -315,23 +315,23 @@ const initCard = items => {
   disableNotRequiredButton(totalCompleted);
 };
 
-const fetchPDFReport = async reportTemplatePath => {
-  return await fetch(
-    `http://${configuration.HOST}:${configuration.PORT}/api/report/pdf`,
-    {
-      headers: {
-        'X-API-Key': configuration.API_KEY,
-        'Content-Type': 'application/json'
-      },
-      method: 'POST',
-      body: JSON.stringify({
-        report_template_path: PathHelper.sanitizePath(reportTemplatePath),
-        data_path: PathHelper.sanitizePath(dataFolderPathSession),
-        analysis: analysisType
-      })
-    }
-  );
-};
+// const fetchPDFReport = async reportTemplatePath => {
+//   return await fetch(
+//     `http://${configuration.HOST}:${configuration.PORT}/api/report/pdf`,
+//     {
+//       headers: {
+//         'X-API-Key': configuration.API_KEY,
+//         'Content-Type': 'application/json'
+//       },
+//       method: 'POST',
+//       body: JSON.stringify({
+//         report_template_path: PathHelper.sanitizePath(reportTemplatePath),
+//         data_path: PathHelper.sanitizePath(dataFolderPathSession),
+//         analysis: analysisType
+//       })
+//     }
+//   );
+// };
 
 const fetchXLSXReport = async () => {
   return await fetch(
@@ -526,59 +526,59 @@ if (!(participants?.length > 0)) {
     }
   });
 
-  exportPDFButton.addEventListener('click', async () => {
-    loaderOverlay.toggle({ message: 'Creating PDF report...' });
+  // exportPDFButton.addEventListener('click', async () => {
+  //   loaderOverlay.toggle({ message: 'Creating PDF report...' });
 
-    let reportTemplatePath;
+  //   let reportTemplatePath;
 
-    if (!(process.env.INIT_CWD === undefined)) {
-      reportTemplatePath = path.join(
-        process.env.INIT_CWD,
-        'src',
-        'assets',
-        'report',
-        'report.html'
-      );
-    } else {
-      reportTemplatePath = path.join(
-        process.cwd(),
-        'build',
-        'public',
-        'assets',
-        'report',
-        'report.html'
-      );
-    }
+  //   if (!(process.env.INIT_CWD === undefined)) {
+  //     reportTemplatePath = path.join(
+  //       process.env.INIT_CWD,
+  //       'src',
+  //       'assets',
+  //       'report',
+  //       'report.html'
+  //     );
+  //   } else {
+  //     reportTemplatePath = path.join(
+  //       process.cwd(),
+  //       'build',
+  //       'public',
+  //       'assets',
+  //       'report',
+  //       'report.html'
+  //     );
+  //   }
 
-    try {
-      const request = await fetchPDFReport(reportTemplatePath);
-      const response = await request.json();
+  //   try {
+  //     const request = await fetchPDFReport(reportTemplatePath);
+  //     const response = await request.json();
 
-      if (!(response.code === 201)) {
-        loaderOverlay.toggle();
+  //     if (!(response.code === 201)) {
+  //       loaderOverlay.toggle();
 
-        const errorOverlay = new ErrorOverlay({
-          message: response.payload.message,
-          details: response.payload.details,
-          interact: true
-        });
+  //       const errorOverlay = new ErrorOverlay({
+  //         message: response.payload.message,
+  //         details: response.payload.details,
+  //         interact: true
+  //       });
 
-        errorOverlay.show();
-      }
+  //       errorOverlay.show();
+  //     }
 
-      loaderOverlay.toggle();
-    } catch (error) {
-      loaderOverlay.toggle();
+  //     loaderOverlay.toggle();
+  //   } catch (error) {
+  //     loaderOverlay.toggle();
 
-      const errorOverlay = new ErrorOverlay({
-        message: `Application cannot fetch information of participants`,
-        details: error.message,
-        interact: true
-      });
+  //     const errorOverlay = new ErrorOverlay({
+  //       message: `Application cannot fetch information of participants`,
+  //       details: error.message,
+  //       interact: true
+  //     });
 
-      errorOverlay.show();
-    }
-  });
+  //     errorOverlay.show();
+  //   }
+  // });
 
   exportXLSXButton.addEventListener('click', async () => {
     loaderOverlay.toggle({ message: 'Creating XLSX report...' });

@@ -2,11 +2,11 @@
 @import url('./main.css');
 @import url('./components/popup.css');
 
-.export-pdf-btn {
+.export-xlsx-btn {
   top: 110px;
 }
 
-.export-xlsx-btn {
+.export-pdf-btn {
   top: 170px;
 }
 
