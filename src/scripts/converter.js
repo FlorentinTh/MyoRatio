@@ -156,7 +156,7 @@ submitButton.addEventListener('click', async () => {
 
           const analysisFilePath = path.join(
             sanitizedPath,
-            'analysis',
+            'Analysis',
             analysisFolder,
             participantFolder,
             `${parsedFilePath.name}.csv`
@@ -173,6 +173,8 @@ submitButton.addEventListener('click', async () => {
             }
           }
         }
+
+        const analysisFoldersFromFiles = [];
 
         if (notConvertedFiles.length > 0) {
           let totalFileCompleted = 0;
@@ -197,6 +199,10 @@ submitButton.addEventListener('click', async () => {
               analysisFolder,
               participantFolder
             );
+
+            if (!analysisFoldersFromFiles.includes(analysisFolder)) {
+              analysisFoldersFromFiles.push(analysisFolder);
+            }
 
             try {
               await fs.promises.access(metadataFolderPath);
@@ -300,6 +306,26 @@ submitButton.addEventListener('click', async () => {
           });
 
           successOverlay.show();
+        }
+
+        const analysisFolders = ['Extension', 'Flexion', 'Sit-Stand'];
+
+        if (!(analysisFoldersFromFiles.length === analysisFolders.length)) {
+          analysisFolders.filter(async value => {
+            if (!analysisFoldersFromFiles.includes(value)) {
+              const missingAnalysisFolderPath = path.join(
+                sanitizedPath,
+                'Analysis',
+                value
+              );
+
+              await FileHelper.createFileOrDirectoryIfNotExists(
+                missingAnalysisFolderPath
+              );
+            }
+
+            return value;
+          });
         }
       } else {
         loaderOverlay.toggle();
