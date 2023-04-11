@@ -910,6 +910,36 @@ const loadNextChart = async angleFiles => {
     currentIteration++;
   } else {
     await writeMetadata({ completed: true });
+
+    const participants = [
+      StringHelper.revertParticipantNameFromSession(
+        selectedParticipants[currentParticipant]
+      )
+    ];
+
+    try {
+      const request = await fetchResults(participants);
+      const response = await request.json();
+
+      if (!(response.code === 201)) {
+        const errorOverlay = new ErrorOverlay({
+          message: response.payload.message,
+          details: response.payload.details,
+          interact: true
+        });
+
+        errorOverlay.show();
+      }
+    } catch (error) {
+      const errorOverlay = new ErrorOverlay({
+        message: `Application cannot complete processing of selected angles`,
+        details: error.message,
+        interact: true
+      });
+
+      errorOverlay.show();
+    }
+
     currentIteration = 0;
     currentParticipant++;
   }
