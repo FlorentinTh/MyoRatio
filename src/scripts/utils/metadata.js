@@ -115,6 +115,7 @@ export class Metadata {
       checksum,
       complexity: 'unknown',
       auto_angles: false,
+      invalid: false,
       stages: {}
     });
 

@@ -156,6 +156,7 @@ const saveData = async () => {
   for (const card of cards) {
     const participant = card.querySelector('h3').innerText.toLowerCase();
     const autoAngles = card.querySelector('.auto-switch').checked;
+    const invalidParticipant = card.querySelector('.invalid-switch').checked;
     const complexityRadios = getComplexityRadios(card);
 
     let complexity = 'unknown';
@@ -169,7 +170,8 @@ const saveData = async () => {
     try {
       await metadata.writeContent(analysisType, participant, {
         complexity,
-        auto_angles: autoAngles
+        auto_angles: autoAngles,
+        invalid: invalidParticipant
       });
     } catch (error) {
       const errorOverlay = new ErrorOverlay({
@@ -232,6 +234,7 @@ if (participants?.length > 0) {
     }
 
     const navButtons = getNavButtons(card);
+
     for (const navButton of navButtons) {
       navButton.addEventListener('click', event => {
         if (navButton.parentElement.classList.contains('nav-next')) {

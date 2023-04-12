@@ -65,32 +65,34 @@
 }
 
 .angle-auto-select {
+  margin: 25px 0 35px;
+}
+
+.invalid {
+  margin-bottom: 15px;
+}
+
+.angle-auto-select,
+.invalid {
   display: flex;
   width: 100%;
   justify-content: center;
   align-items: center;
-  margin: 25px 0 35px;
   border: 1px dashed #232323dd;
   border-radius: 6px;
   padding: 15px 0;
 }
 
-.angle-auto-select span {
+.angle-auto-select span,
+.invalid span {
   letter-spacing: -0.02em;
   font-size: 1.1em;
   color: #232323dd;
   margin-right: 15px;
 }
 
-.angle-auto-select .switch-box {
-  display: flex;
-  justify-content: left;
-  align-items: center;
-  flex: 1;
-  background: #ededed;
-}
-
-input[type='checkbox'].auto-switch {
+input[type='checkbox'].auto-switch,
+input[type='checkbox'].invalid-switch {
   font-size: 1em;
   appearance: none;
   width: 3em;
@@ -104,11 +106,13 @@ input[type='checkbox'].auto-switch {
   margin: 0;
 }
 
-input[type='checkbox'].auto-switch:checked {
+input[type='checkbox'].auto-switch:checked,
+input[type='checkbox'].invalid-switch:checked {
   background: #16a085;
 }
 
-input[type='checkbox'].auto-switch::after {
+input[type='checkbox'].auto-switch::after,
+input[type='checkbox'].invalid-switch::after {
   position: absolute;
   content: '';
   width: 1.5em;
@@ -121,7 +125,8 @@ input[type='checkbox'].auto-switch::after {
   transition: all 0.2s ease-in-out;
 }
 
-input[type='checkbox'].auto-switch:checked::after {
+input[type='checkbox'].auto-switch:checked::after,
+input[type='checkbox'].invalid-switch:checked::after {
   left: calc(100% - 1.5em);
 }
 
@@ -204,7 +209,7 @@ input[type='checkbox'].auto-switch:checked::after {
   display: flex;
   overflow: hidden;
   justify-content: center;
-  margin: 15px 0 0;
+  margin: 15px 0 5px;
 }
 
 .complexity-container .switch label {

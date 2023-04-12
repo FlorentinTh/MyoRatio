@@ -47,4 +47,13 @@
       <label for="radio-opt3-{{~participant~}}">High</label>
     </div>
   </div>
+
+  <div class="invalid">
+    <span>Invalid</span>
+    {{#if infos.invalid}}
+      <input type="checkbox" class="invalid-switch" checked>
+    {{else}}
+      <input type="checkbox" class="invalid-switch">
+    {{/if}}
+  </div>
 </div>
