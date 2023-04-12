@@ -22,20 +22,26 @@
           </span>
         {{/if}}
       </div>
-      <div class="line-2">
-        <span class="state"></span>
-        <span class="text">
-          {{~#if stage.completed~}}
-            completed
-          {{~else~}}
-            not completed
-          {{~/if~}}
-        </span>
-      </div>
-      <div class="line-3 {{ infos.complexity~}}">
-        <span class="state"></span>
-        <span class="text">{{~infos.complexity~}}</span>
-      </div>
+      {{~#unless infos.invalid~}}
+        <div class="line-2">
+          <span class="state"></span>
+          <span class="text">
+            {{~#if stage.completed~}}
+              completed
+            {{~else~}}
+              not completed
+            {{~/if~}}
+          </span>
+        </div>
+        <div class="line-3 {{ infos.complexity~}}">
+          <span class="state"></span>
+          <span class="text">{{~infos.complexity~}}</span>
+        </div>
+      {{~else~}}
+        <div class="line-2">
+          <span class="invalid"><i class="fa-solid fa-circle-exclamation"></i> invalid</span>
+        </div>
+      {{~/unless~}}
     </div>
   </div>
     {{#if stage.completed}}

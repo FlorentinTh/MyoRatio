@@ -285,27 +285,31 @@ const initCard = items => {
     }
 
     participantItem.querySelector('.content').addEventListener('click', () => {
-      if (participantItem.classList.contains('selected')) {
-        selectedParticipants = selectedParticipants.filter(
-          participant => participant !== participantName.trim()
-        );
+      const isInvalid = participantItem.querySelector('.infos:has(.invalid)');
 
-        resetSelectButtons();
-        participantItem.classList.toggle('selected');
-        checkSelectedParticipantsAllNotCompleted();
-      } else {
-        selectedParticipants.push(participantName.trim());
-        participantItem.classList.toggle('selected');
-        checkSelectedParticipantsAllNotCompleted();
+      if (isInvalid === null) {
+        if (participantItem.classList.contains('selected')) {
+          selectedParticipants = selectedParticipants.filter(
+            participant => participant !== participantName.trim()
+          );
+
+          resetSelectButtons();
+          participantItem.classList.toggle('selected');
+          checkSelectedParticipantsAllNotCompleted();
+        } else {
+          selectedParticipants.push(participantName.trim());
+          participantItem.classList.toggle('selected');
+          checkSelectedParticipantsAllNotCompleted();
+        }
+
+        if (participants.length === selectedParticipants.length) {
+          resetSelectButtons();
+          toggleSelectButtons(true, totalCompleted);
+        }
+
+        toggleSubmitButton();
+        toggleSelectedParticipantStorage();
       }
-
-      if (participants.length === selectedParticipants.length) {
-        resetSelectButtons();
-        toggleSelectButtons(true, totalCompleted);
-      }
-
-      toggleSubmitButton();
-      toggleSelectedParticipantStorage();
     });
 
     const resultsButton = participantItem.querySelector('.actions > button#results');
@@ -411,16 +415,24 @@ if (!(participants?.length > 0)) {
   selectButtonAll.addEventListener('click', () => {
     if (!isAllSelected) {
       for (const participantItem of participantItems) {
-        if (!participantItem.classList.contains('selected')) {
-          selectParticipant(participantItem);
+        const isInvalid = participantItem.querySelector('.infos:has(.invalid)');
+
+        if (isInvalid === null) {
+          if (!participantItem.classList.contains('selected')) {
+            selectParticipant(participantItem);
+          }
         }
       }
 
       toggleSelectButtons(true, totalCompleted);
     } else {
       for (const participantItem of participantItems) {
-        participantItem.classList.toggle('selected');
-        selectedParticipants.pop();
+        const isInvalid = participantItem.querySelector('.infos:has(.invalid)');
+
+        if (isInvalid === null) {
+          participantItem.classList.toggle('selected');
+          selectedParticipants.pop();
+        }
       }
 
       toggleSelectButtons(false, totalCompleted);
@@ -433,22 +445,26 @@ if (!(participants?.length > 0)) {
   selectButtonNotCompleted.addEventListener('click', () => {
     if (!isAllNotCompletedSelected) {
       for (const participantItem of participantItems) {
-        const participantItemClasses = participantItem.classList;
+        const isInvalid = participantItem.querySelector('.infos:has(.invalid)');
 
-        if (participantItemClasses.contains('selected')) {
-          if (!participantItemClasses.contains('not-completed')) {
-            participantItem.classList.toggle('selected');
-            const participantName = participantItem
-              .querySelector('.line-1 > span.name')
-              .innerText.toLowerCase();
+        if (isInvalid === null) {
+          const participantItemClasses = participantItem.classList;
 
-            selectedParticipants = selectedParticipants.filter(
-              participant => participant !== participantName.trim()
-            );
-          }
-        } else {
-          if (participantItemClasses.contains('not-completed')) {
-            selectParticipant(participantItem);
+          if (participantItemClasses.contains('selected')) {
+            if (!participantItemClasses.contains('not-completed')) {
+              participantItem.classList.toggle('selected');
+              const participantName = participantItem
+                .querySelector('.line-1 > span.name')
+                .innerText.toLowerCase();
+
+              selectedParticipants = selectedParticipants.filter(
+                participant => participant !== participantName.trim()
+              );
+            }
+          } else {
+            if (participantItemClasses.contains('not-completed')) {
+              selectParticipant(participantItem);
+            }
           }
         }
       }

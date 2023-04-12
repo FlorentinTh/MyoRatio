@@ -204,6 +204,11 @@ ul.list > li.item.selected {
   color: #ededed;
 }
 
+ul.list > li.item:has(.invalid) {
+  background-color: #e57373;
+  border-color: #e57373;
+}
+
 ul.list > li.item > .content {
   display: flex;
   background-color: transparent;
@@ -294,6 +299,12 @@ ul.list > li.item div.line-3.low .state {
   background-color: #689f38;
 }
 
+ul.list > li.item > .content div.line-2 .invalid {
+  text-transform: uppercase;
+  font-size: 0.8em;
+  font-weight: 600;
+}
+
 ul.list > li.item div.line-3.medium .text {
   color: #ff8f00;
 }
@@ -350,7 +361,7 @@ ul.list > li.item:last-of-type {
   margin-bottom: 0;
 }
 
-ul.list > li.item:has(.content:hover) {
+ul.list > li.item:not(:has(.invalid)):has(.content:hover) {
   cursor: pointer;
   border-color: #16a085;
 }
