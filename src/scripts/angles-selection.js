@@ -840,9 +840,11 @@ for (const dataSwitchRadio of dataSwitchRadios) {
       toggleAlert();
 
       angleFiles = await getAngleFiles();
+
       ChartSetup.options.onHover = (event, chart) => {
         event.native.target.style.cursor = chart[0] ? 'pointer' : 'default';
       };
+
       ChartSetup.options.onClick = (event, element, plot) => {
         chartPointOnClickHandler(event, element, plot);
       };
@@ -850,6 +852,7 @@ for (const dataSwitchRadio of dataSwitchRadios) {
       toggleAlert(`Angles cannot be selected manually on filtered data`);
 
       angleFiles = await getAngleFiles(true);
+
       ChartSetup.options.onHover = (event, chart) => {
         event.native.target.style.cursor = 'default';
       };
@@ -857,6 +860,7 @@ for (const dataSwitchRadio of dataSwitchRadios) {
       ChartSetup.options.onClick = null;
 
       const isFilteredDataAlert = JSON.parse(localStorage.getItem('filtered-data-alert'));
+
       if (isFilteredDataAlert === null || isFilteredDataAlert) {
         Swal.fire({
           title: 'Filtered Data',
@@ -969,6 +973,16 @@ const loadNextChart = async angleFiles => {
 
 submitButton.addEventListener('click', async () => {
   submitButton.setAttribute('disabled', '');
+
+  toggleAlert();
+
+  ChartSetup.options.onHover = (event, chart) => {
+    event.native.target.style.cursor = chart[0] ? 'pointer' : 'default';
+  };
+
+  ChartSetup.options.onClick = (event, element, plot) => {
+    chartPointOnClickHandler(event, element, plot);
+  };
 
   const spinner = submitButton.querySelector('span.spinner');
   spinner.classList.toggle('hide');
