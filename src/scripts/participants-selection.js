@@ -20,6 +20,7 @@ import { Switch } from './utils/switch';
 import { DOMElement } from './utils/dom-element';
 import { SessionStore } from './utils/session-store';
 import { Configuration } from './utils/configuration.js';
+import { FileHelper } from './helpers/file-helper';
 
 const path = nw.require('path');
 
@@ -70,6 +71,11 @@ const metadata = new Metadata(dataFolderPathSession);
 
 const participantsArray = [];
 let selectedParticipants = [];
+
+let stage =
+  sessionStorage.getItem('stage') === undefined
+    ? 'concentric'
+    : sessionStorage.getItem('stage');
 
 let participantItems;
 let isAllSelected = false;
@@ -344,7 +350,8 @@ const fetchXLSXReport = async () => {
       method: 'POST',
       body: JSON.stringify({
         data_path: PathHelper.sanitizePath(dataFolderPathSession),
-        analysis: analysisType
+        analysis: analysisType,
+        stage
       })
     }
   );
@@ -372,6 +379,8 @@ if (!(participants?.length > 0)) {
 
   for (const stageSwitchRadio of stageSwitchRadios) {
     stageSwitchRadio.addEventListener('change', async event => {
+      stage = stageSwitchRadio.value;
+
       DOMElement.clear(participantsList);
       participantsList.parentElement.classList.add('change');
 
@@ -583,13 +592,33 @@ if (!(participants?.length > 0)) {
   exportXLSXButton.addEventListener('click', async () => {
     loaderOverlay.toggle({ message: 'Creating XLSX report...' });
 
+    const resultFolderPath = path.join(
+      PathHelper.sanitizePath(dataFolderPathSession),
+      'Results',
+      StringHelper.capitalize(analysisType),
+      StringHelper.capitalize(stage)
+    );
+
+    try {
+      FileHelper.createFileOrDirectoryIfNotExists(resultFolderPath);
+    } catch (error) {
+      loaderOverlay.toggle();
+
+      const errorOverlay = new ErrorOverlay({
+        message: `Application cannot initialize the export of the information of the participants`,
+        details: error.message,
+        interact: true
+      });
+
+      errorOverlay.show();
+    }
+
     try {
       const request = await fetchXLSXReport();
       const response = await request.json();
+      loaderOverlay.toggle();
 
       if (!(response.code === 201)) {
-        loaderOverlay.toggle();
-
         const errorOverlay = new ErrorOverlay({
           message: response.payload.message,
           details: response.payload.details,
@@ -598,8 +627,6 @@ if (!(participants?.length > 0)) {
 
         errorOverlay.show();
       }
-
-      loaderOverlay.toggle();
     } catch (error) {
       loaderOverlay.toggle();
 

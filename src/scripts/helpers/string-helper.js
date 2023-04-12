@@ -24,4 +24,9 @@ export class StringHelper {
       ? `${participantID}`
       : `${participantID} (${participantIndicator.toUpperCase()})`;
   }
+
+  static capitalize(str) {
+    TypeHelper.checkStringNotNull(str, { label: 'str' });
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
 }

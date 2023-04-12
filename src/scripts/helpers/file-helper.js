@@ -24,7 +24,7 @@ export class FileHelper {
       if (error.code === 'ENOENT') {
         try {
           if (opts.isDirectory) {
-            await fs.promises.mkdir(inputPath);
+            await fs.promises.mkdir(inputPath, { recursive: true });
           } else {
             await fs.promises.open(inputPath, 'a+');
           }
