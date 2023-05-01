@@ -452,23 +452,22 @@ const processAutoAngles = async (participant, override) => {
   let response;
 
   try {
-    const request = await fetch(
-      `http://${configuration.HOST}:${configuration.PORT}/api/points/`,
-      {
-        headers: {
-          'X-API-Key': configuration.API_KEY,
-          'Content-Type': 'application/json'
-        },
-        method: 'POST',
-        body: JSON.stringify({
-          data_path: PathHelper.sanitizePath(dataPath),
-          analysis: analysisType,
-          stage,
-          participant: StringHelper.revertParticipantNameFromSession(participant),
-          iteration: currentIteration
-        })
-      }
-    );
+    const port = localStorage.getItem('port') ?? configuration.PORT;
+
+    const request = await fetch(`http://${configuration.HOST}:${port}/api/points/`, {
+      headers: {
+        'X-API-Key': configuration.API_KEY,
+        'Content-Type': 'application/json'
+      },
+      method: 'POST',
+      body: JSON.stringify({
+        data_path: PathHelper.sanitizePath(dataPath),
+        analysis: analysisType,
+        stage,
+        participant: StringHelper.revertParticipantNameFromSession(participant),
+        iteration: currentIteration
+      })
+    });
 
     response = await request.json();
   } catch (error) {
@@ -795,7 +794,9 @@ const getFormattedPointsFromSession = () => {
 };
 
 const postAnglesData = async (participant, iteration, point1x, point2x) => {
-  return await fetch(`http://${configuration.HOST}:${configuration.PORT}/api/data/emg/`, {
+  const port = localStorage.getItem('port') ?? configuration.PORT;
+
+  return await fetch(`http://${configuration.HOST}:${port}/api/data/emg/`, {
     headers: {
       'X-API-Key': configuration.API_KEY,
       'Content-Type': 'application/json'
@@ -1060,6 +1061,12 @@ submitButton.addEventListener('click', async () => {
         });
 
         errorOverlay.show();
+      } else {
+        SessionStore.clear({ keep: ['data-path', 'analysis', 'stage'] });
+
+        setTimeout(() => {
+          router.switchPage('participants-selection');
+        }, 800);
       }
     } catch (error) {
       loaderOverlay.toggle();
@@ -1072,12 +1079,6 @@ submitButton.addEventListener('click', async () => {
 
       errorOverlay.show();
     }
-
-    SessionStore.clear({ keep: ['data-path', 'analysis', 'stage'] });
-
-    setTimeout(() => {
-      router.switchPage('participants-selection');
-    }, 800);
   } else {
     await displayAutoAnglesButton();
 

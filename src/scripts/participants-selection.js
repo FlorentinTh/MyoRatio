@@ -325,40 +325,21 @@ const initCard = items => {
   disableNotRequiredButton(totalCompleted);
 };
 
-// const fetchPDFReport = async reportTemplatePath => {
-//   return await fetch(
-//     `http://${configuration.HOST}:${configuration.PORT}/api/report/pdf`,
-//     {
-//       headers: {
-//         'X-API-Key': configuration.API_KEY,
-//         'Content-Type': 'application/json'
-//       },
-//       method: 'POST',
-//       body: JSON.stringify({
-//         report_template_path: PathHelper.sanitizePath(reportTemplatePath),
-//         data_path: PathHelper.sanitizePath(dataFolderPathSession),
-//         analysis: analysisType
-//       })
-//     }
-//   );
-// };
-
 const fetchXLSXReport = async () => {
-  return await fetch(
-    `http://${configuration.HOST}:${configuration.PORT}/api/report/xlsx`,
-    {
-      headers: {
-        'X-API-Key': configuration.API_KEY,
-        'Content-Type': 'application/json'
-      },
-      method: 'POST',
-      body: JSON.stringify({
-        data_path: PathHelper.sanitizePath(dataFolderPathSession),
-        analysis: analysisType,
-        stage
-      })
-    }
-  );
+  const port = localStorage.getItem('port') ?? configuration.PORT;
+
+  return await fetch(`http://${configuration.HOST}:${port}/api/report/xlsx`, {
+    headers: {
+      'X-API-Key': configuration.API_KEY,
+      'Content-Type': 'application/json'
+    },
+    method: 'POST',
+    body: JSON.stringify({
+      data_path: PathHelper.sanitizePath(dataFolderPathSession),
+      analysis: analysisType,
+      stage
+    })
+  });
 };
 
 if (!(participants?.length > 0)) {
@@ -550,60 +531,6 @@ if (!(participants?.length > 0)) {
       }
     }
   });
-
-  // exportPDFButton.addEventListener('click', async () => {
-  //   loaderOverlay.toggle({ message: 'Creating PDF report...' });
-
-  //   let reportTemplatePath;
-
-  //   if (!(process.env.INIT_CWD === undefined)) {
-  //     reportTemplatePath = path.join(
-  //       process.env.INIT_CWD,
-  //       'src',
-  //       'assets',
-  //       'report',
-  //       'report.html'
-  //     );
-  //   } else {
-  //     reportTemplatePath = path.join(
-  //       process.cwd(),
-  //       'build',
-  //       'public',
-  //       'assets',
-  //       'report',
-  //       'report.html'
-  //     );
-  //   }
-
-  //   try {
-  //     const request = await fetchPDFReport(reportTemplatePath);
-  //     const response = await request.json();
-
-  //     if (!(response.code === 201)) {
-  //       loaderOverlay.toggle();
-
-  //       const errorOverlay = new ErrorOverlay({
-  //         message: response.payload.message,
-  //         details: response.payload.details,
-  //         interact: true
-  //       });
-
-  //       errorOverlay.show();
-  //     }
-
-  //     loaderOverlay.toggle();
-  //   } catch (error) {
-  //     loaderOverlay.toggle();
-
-  //     const errorOverlay = new ErrorOverlay({
-  //       message: `Application cannot fetch information of participants`,
-  //       details: error.message,
-  //       interact: true
-  //     });
-
-  //     errorOverlay.show();
-  //   }
-  // });
 
   exportXLSXButton.addEventListener('click', async () => {
     loaderOverlay.toggle({ message: 'Creating XLSX report...' });

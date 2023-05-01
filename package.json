@@ -41,6 +41,7 @@
     "resizable": true,
     "position": "center"
   },
+  "single-instance": false,
   "chromium-args": "--disable-raf-throttling",
   "build": {
     "appId": "ca.liaralab.emgtrigno",
