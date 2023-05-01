@@ -9,6 +9,7 @@ import { Metadata } from './utils/metadata.js';
 import { PathHelper } from './helpers/path-helper';
 import { ErrorOverlay } from './components/overlay';
 import { FileHelper } from './helpers/file-helper';
+import { DOMElement } from './utils/dom-element';
 
 const path = nw.require('path');
 
@@ -49,7 +50,7 @@ const getRatiosFilePath = async () => {
     errorOverlay.show();
   }
 
-  return path.join(inputPath, `ratios_${stage}_mean.json`);
+  return path.join(inputPath, `ratios_${stage}.json`);
 };
 
 if (!(analysisType === 'extension')) {
@@ -80,8 +81,10 @@ if (!(analysisType === null) && !(participantResult === null) && !(stage === nul
 }
 
 const displayResultsTable = () => {
-  const muscles = ratiosFileJSON.data.map(item => item.muscle);
-  const ratios = ratiosFileJSON.data;
+  const muscles = ratiosFileJSON.mean.map(item => item.muscle);
+  const ratios = ratiosFileJSON.mean;
+
+  DOMElement.clear(tableContainer);
 
   tableContainer.insertAdjacentHTML(
     'afterbegin',
