@@ -25,7 +25,9 @@ const menu = new Menu();
 menu.init();
 
 const dataFolderPathSession = sessionStorage.getItem('data-path').toString();
-const analysisType = sessionStorage.getItem('analysis').toString();
+const analysisType = PathHelper.sanitizePath(
+  sessionStorage.getItem('analysis').toString()
+);
 
 const analysisTitle = document.querySelector('.analysis h3');
 const gridContainer = document.querySelector('.participant-card-container');
@@ -154,7 +156,9 @@ const saveData = async () => {
   const cards = gridContainer.children;
 
   for (const card of cards) {
-    const participant = card.querySelector('h3').innerText.toLowerCase();
+    const participant = PathHelper.sanitizePath(
+      card.querySelector('h3').innerText.toLowerCase()
+    );
     const autoAngles = card.querySelector('.auto-switch').checked;
     const invalidParticipant = card.querySelector('.invalid-switch').checked;
     const complexityRadios = getComplexityRadios(card);

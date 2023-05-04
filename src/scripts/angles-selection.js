@@ -980,7 +980,9 @@ const mutexUnlock = async () => {
     );
 
     try {
-      fs.promises.unlink(path.join(metadataRootPath, `${participant}.lock`));
+      fs.promises.unlink(
+        PathHelper.sanitizePath(path.join(metadataRootPath, `${participant}.lock`))
+      );
     } catch (error) {
       const errorOverlay = new ErrorOverlay({
         message: `Participant ${participant} cannot be processed`,
