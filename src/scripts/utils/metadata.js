@@ -157,14 +157,16 @@ export class Metadata {
     const participantFolderName =
       StringHelper.revertParticipantNameFromSession(participant);
 
-    const stat = await fs.promises.stat(
-      path.join(this.#inputDataPath, 'Analysis', analysisType, participantFolderName)
+    const participantFolderPath = path.join(
+      this.#inputDataPath,
+      'Analysis',
+      analysisType,
+      participantFolderName
     );
 
-    const checksum = crypto
-      .createHash('sha256')
-      .update(stat.ino.toString())
-      .digest('hex');
+    const participantFolderStat = await fs.promises.stat(participantFolderPath);
+    const digest = `${participantFolderName}-${participantFolderStat.birthtimeMs}`;
+    const checksum = crypto.createHash('sha256').update(digest).digest('hex');
 
     if (participantRecord.length > 0) {
       if (!(checksum === metadataFileJSON[participant].checksum)) {
