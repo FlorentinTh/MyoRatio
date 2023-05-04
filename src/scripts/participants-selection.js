@@ -23,6 +23,7 @@ import { Configuration } from './utils/configuration.js';
 import { FileHelper } from './helpers/file-helper';
 
 const path = nw.require('path');
+const fs = nw.require('fs');
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -342,6 +343,52 @@ const fetchXLSXReport = async () => {
   });
 };
 
+const mutexLock = async () => {
+  const firstParticipant = StringHelper.revertParticipantNameFromSession(
+    selectedParticipants[0]
+  );
+
+  const firstParticipantMetadataPath = await metadata.getParticipantFolderPath(
+    analysisType,
+    selectedParticipants[0],
+    { fromSession: true }
+  );
+
+  const metadataRootPath = path.parse(firstParticipantMetadataPath).dir;
+
+  try {
+    await fs.promises.access(
+      path.join(metadataRootPath, `${firstParticipant}.lock`),
+      fs.constants.F_OK
+    );
+    loaderOverlay.toggle();
+    const errorOverlay = new ErrorOverlay({
+      message: `Participant ${firstParticipant} cannot be processed`,
+      details: `Another user is currently processing the participant ${firstParticipant}. Please try again later or remove this participant from your selection`,
+      interact: true
+    });
+    errorOverlay.show();
+  } catch (error) {
+    try {
+      await fs.promises.writeFile(
+        PathHelper.sanitizePath(path.join(metadataRootPath, `${firstParticipant}.lock`)),
+        ''
+      );
+      setTimeout(() => {
+        router.switchPage('angles-selection');
+      }, 800);
+    } catch (error) {
+      loaderOverlay.toggle();
+      const errorOverlay = new ErrorOverlay({
+        message: `Participant ${firstParticipant} cannot be processed`,
+        details: error.message,
+        interact: true
+      });
+      errorOverlay.show();
+    }
+  }
+};
+
 if (!(participants?.length > 0)) {
   participantsList.classList.add('empty');
   displayEmptyCard();
@@ -471,7 +518,7 @@ if (!(participants?.length > 0)) {
     toggleSelectedParticipantStorage();
   });
 
-  submitButton.addEventListener('click', () => {
+  submitButton.addEventListener('click', async () => {
     if (!submitButton.disabled) {
       const selectedItems = participantsList.querySelectorAll('.selected');
       const complexityNotSet = [];
@@ -511,10 +558,7 @@ if (!(participants?.length > 0)) {
           .then(async result => {
             if (!result.isConfirmed) {
               loaderOverlay.toggle({ message: 'Preparing data...' });
-
-              setTimeout(() => {
-                router.switchPage('angles-selection');
-              }, 800);
+              await mutexLock();
             } else {
               router.switchPage('angles-preview');
             }
@@ -524,10 +568,7 @@ if (!(participants?.length > 0)) {
           });
       } else {
         loaderOverlay.toggle({ message: 'Preparing data...' });
-
-        setTimeout(() => {
-          router.switchPage('angles-selection');
-        }, 800);
+        await mutexLock();
       }
     }
   });

@@ -22,6 +22,7 @@ import { Switch } from './utils/switch';
 import { SessionStore } from './utils/session-store';
 
 const path = nw.require('path');
+const fs = nw.require('fs');
 
 const router = new Router();
 router.disableBackButton();
@@ -898,6 +899,108 @@ for (const dataSwitchRadio of dataSwitchRadios) {
   });
 }
 
+const mutexLock = async () => {
+  const participant = StringHelper.revertParticipantNameFromSession(
+    selectedParticipants[currentParticipant]
+  );
+
+  const participantMetadataPath = await metadata.getParticipantFolderPath(
+    analysisType,
+    selectedParticipants[currentParticipant],
+    { fromSession: true }
+  );
+
+  const metadataRootPath = path.parse(participantMetadataPath).dir;
+
+  try {
+    await fs.promises.access(
+      path.join(metadataRootPath, `${participant}.lock`),
+      fs.constants.F_OK
+    );
+
+    Swal.fire({
+      title: `Conflict detected`,
+      text: `Another user is currently working on the participant ${participant}. You cannot process this participant at the same time, as this could compromise the data.`,
+      icon: 'warning',
+      background: '#ededed',
+      customClass: {
+        confirmButton: 'button-popup cancel'
+      },
+      buttonsStyling: false,
+      allowOutsideClick: false,
+      showCancelButton: false,
+      showDenyButton: false,
+      confirmButtonText: `Skip participant ${participant}`
+    })
+      .then(async result => {
+        if (result.isConfirmed) {
+          selectedParticipants.splice(currentParticipant, 1);
+          infoParticipant.innerText = selectedParticipants[currentParticipant];
+          await mutexLock();
+        }
+      })
+      .catch(error => {
+        throw new Error(error);
+      });
+  } catch (error) {
+    try {
+      await fs.promises.writeFile(
+        PathHelper.sanitizePath(path.join(metadataRootPath, `${participant}.lock`)),
+        ''
+      );
+    } catch (error) {
+      const errorOverlay = new ErrorOverlay({
+        message: `Participant ${participant} cannot be processed`,
+        details: error.message,
+        interact: true
+      });
+
+      errorOverlay.show();
+    }
+  }
+};
+
+const mutexUnlock = async () => {
+  const participant = StringHelper.revertParticipantNameFromSession(
+    selectedParticipants[currentParticipant]
+  );
+
+  const participantMetadataPath = await metadata.getParticipantFolderPath(
+    analysisType,
+    selectedParticipants[currentParticipant],
+    { fromSession: true }
+  );
+
+  const metadataRootPath = path.parse(participantMetadataPath).dir;
+
+  try {
+    await fs.promises.access(
+      path.join(metadataRootPath, `${participant}.lock`),
+      fs.constants.F_OK
+    );
+
+    try {
+      fs.promises.unlink(path.join(metadataRootPath, `${participant}.lock`));
+    } catch (error) {
+      const errorOverlay = new ErrorOverlay({
+        message: `Participant ${participant} cannot be processed`,
+        details: error.message,
+        interact: true
+      });
+
+      errorOverlay.show();
+    }
+  } catch (error) {
+    const errorOverlay = new ErrorOverlay({
+      message: `Participant ${participant} cannot be processed`,
+      details: error.message,
+      interact: true
+    });
+
+    errorOverlay.show();
+  }
+};
+
 const loadNextChart = async angleFiles => {
   checkSelectedPoints();
 
@@ -945,8 +1048,12 @@ const loadNextChart = async angleFiles => {
       errorOverlay.show();
     }
 
+    await mutexUnlock();
+
     currentIteration = 0;
     currentParticipant++;
+
+    await mutexLock();
   }
 
   try {
@@ -1043,6 +1150,7 @@ submitButton.addEventListener('click', async () => {
   if (submitButton.classList.contains('completed')) {
     loaderOverlay.toggle({ message: 'Saving data...' });
     await writeMetadata({ completed: true });
+    await mutexUnlock();
 
     try {
       const participants = selectedParticipants.map(participant =>
@@ -1099,7 +1207,8 @@ submitButton.addEventListener('click', async () => {
   }
 });
 
-resetButton.addEventListener('click', () => {
+resetButton.addEventListener('click', async () => {
+  await mutexUnlock();
   SessionStore.clear({ keep: ['data-path', 'analysis', 'stage'] });
   router.switchPage('participants-selection');
 });
