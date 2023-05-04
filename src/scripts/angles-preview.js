@@ -279,8 +279,6 @@ if (participants?.length > 0) {
 
 submitButton.addEventListener('click', async () => {
   if (!submitButton.disabled) {
-    loaderOverlay.toggle({ message: 'Saving data...' });
-
     const cards = gridContainer.children;
 
     const notSelected = [];
@@ -323,6 +321,8 @@ submitButton.addEventListener('click', async () => {
       })
         .then(async result => {
           if (!result.isConfirmed) {
+            loaderOverlay.toggle({ message: 'Saving data...' });
+
             await saveData();
 
             setTimeout(() => {
@@ -336,6 +336,8 @@ submitButton.addEventListener('click', async () => {
           throw new Error(error);
         });
     } else {
+      loaderOverlay.toggle({ message: 'Saving data...' });
+
       await saveData();
 
       setTimeout(() => {
