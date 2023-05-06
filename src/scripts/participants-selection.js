@@ -81,6 +81,7 @@ let stage =
 let participantItems;
 let isAllSelected = false;
 let isAllNotCompletedSelected = false;
+let totalInvalid = 0;
 let totalCompleted = 0;
 
 const displayEmptyCard = () => {
@@ -171,7 +172,7 @@ const toggleSelectedParticipantStorage = () => {
 };
 
 const disableNotRequiredButton = total => {
-  if (total === participants.length) {
+  if (total === participants.length - totalInvalid) {
     selectButtonNotCompleted.setAttribute('disabled', '');
   } else if (!(total > 0)) {
     selectButtonAll.setAttribute('disabled', '');
@@ -217,13 +218,19 @@ const toggleSelectButtons = (selected, total, all = true) => {
 const resetSelectButtons = () => {
   selectButtonAll.innerText = 'All';
   selectButtonNotCompleted.innerText = 'Not Completed';
+
   isAllSelected = false;
   isAllNotCompletedSelected = false;
+
   selectButtonNotCompleted.removeAttribute('disabled');
   selectButtonAll.removeAttribute('disabled');
 
   if (!(totalCompleted > 0)) {
     selectButtonAll.setAttribute('disabled', '');
+  }
+
+  if (totalCompleted + totalInvalid === participants.length) {
+    selectButtonNotCompleted.setAttribute('disabled', '');
   }
 };
 
@@ -243,8 +250,10 @@ const checkSelectedParticipantsAllNotCompleted = () => {
     }
   }
 
-  if (totalNotCompleted === totalNotCompletedSelected) {
-    toggleSelectButtons(true, totalCompleted, false);
+  if (totalNotCompleted > 0) {
+    if (totalNotCompleted === totalNotCompletedSelected) {
+      toggleSelectButtons(true, totalCompleted, false);
+    }
   }
 
   return totalNotCompleted;
@@ -263,6 +272,8 @@ const initCard = items => {
   for (const participantItem of items) {
     if (participantItem.classList.contains('completed')) {
       totalCompleted++;
+    } else if (participantItem.classList.contains('invalid')) {
+      totalInvalid++;
     }
 
     const participantName = participantItem
@@ -277,7 +288,7 @@ const initCard = items => {
 
       const totalNotCompletedParticipant = checkSelectedParticipantsAllNotCompleted();
 
-      if (totalNotCompletedParticipant < selectedParticipants.length) {
+      if (totalNotCompletedParticipant < selectedParticipants.length - totalInvalid) {
         if (participants.length === selectedParticipants.length) {
           resetSelectButtons();
           toggleSelectButtons(true, totalCompleted);
@@ -323,6 +334,7 @@ const initCard = items => {
     }
   }
 
+  resetSelectButtons();
   disableNotRequiredButton(totalCompleted);
 };
 
@@ -421,10 +433,9 @@ if (!(participants?.length > 0)) {
         isAllSelected = false;
         isAllNotCompletedSelected = false;
         totalCompleted = 0;
+        totalInvalid = 0;
         toggleSelectedParticipantStorage();
         await renderParticipantsList();
-
-        resetSelectButtons();
         toggleSubmitButton();
         initCard(participantItems);
         participantsList.parentElement.classList.remove('change');

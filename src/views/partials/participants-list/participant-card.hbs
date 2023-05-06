@@ -1,7 +1,11 @@
 {{#if stage.completed}}
   <li class="item completed">
 {{else}}
-  <li class="item not-completed">
+  {{#if infos.invalid}}
+    <li class="item invalid">
+  {{else}}
+    <li class="item not-completed">
+  {{/if}}
 {{/if}}
   <div class="content">
     <div class="icon">
