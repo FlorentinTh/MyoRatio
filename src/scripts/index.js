@@ -43,7 +43,7 @@ let port;
 try {
   port = await NetHelper.findNextAvailablePort(configuration.PORT);
 } catch (error) {
-  console.lor(error);
+  console.log(error);
 }
 
 if (!(port === undefined)) {

@@ -142,7 +142,6 @@ const initInvalidSwitch = (invalidSwitch, card, onChange = false) => {
         complexityRadio.setAttribute('disabled', '');
       }
     } else {
-      console.log(autoSwitch);
       autoSwitch.removeAttribute('disabled');
 
       for (const complexityRadio of complexityRadios) {
