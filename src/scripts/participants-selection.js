@@ -259,6 +259,57 @@ const checkSelectedParticipantsAllNotCompleted = () => {
   return totalNotCompleted;
 };
 
+const xlsxExportButtonClickHandler = async () => {
+  loaderOverlay.toggle({ message: 'Creating XLSX report...' });
+
+  const resultFolderPath = path.join(
+    PathHelper.sanitizePath(dataFolderPathSession),
+    'Results',
+    StringHelper.capitalize(analysisType),
+    StringHelper.capitalize(stage)
+  );
+
+  try {
+    FileHelper.createFileOrDirectoryIfNotExists(resultFolderPath);
+  } catch (error) {
+    loaderOverlay.toggle();
+
+    const errorOverlay = new ErrorOverlay({
+      message: `Application cannot initialize the export of the information of the participants`,
+      details: error.message,
+      interact: true
+    });
+
+    errorOverlay.show();
+  }
+
+  try {
+    const request = await fetchXLSXReport();
+    const response = await request.json();
+    loaderOverlay.toggle();
+
+    if (!(response.code === 201)) {
+      const errorOverlay = new ErrorOverlay({
+        message: response.payload.message,
+        details: response.payload.details,
+        interact: true
+      });
+
+      errorOverlay.show();
+    }
+  } catch (error) {
+    loaderOverlay.toggle();
+
+    const errorOverlay = new ErrorOverlay({
+      message: `Application cannot fetch information of participants`,
+      details: error.message,
+      interact: true
+    });
+
+    errorOverlay.show();
+  }
+};
+
 const initCard = items => {
   if ('selected-participants' in sessionStorage) {
     selectedParticipants = sessionStorage
@@ -336,6 +387,14 @@ const initCard = items => {
 
   resetSelectButtons();
   disableNotRequiredButton(totalCompleted);
+
+  if (!(totalCompleted > 0)) {
+    exportXLSXButton.classList.add('export-btn-disabled');
+    exportXLSXButton.removeEventListener('click', xlsxExportButtonClickHandler);
+  } else {
+    exportXLSXButton.classList.remove('export-btn-disabled');
+    exportXLSXButton.addEventListener('click', xlsxExportButtonClickHandler);
+  }
 };
 
 const fetchXLSXReport = async () => {
@@ -584,56 +643,7 @@ if (!(participants?.length > 0)) {
     }
   });
 
-  exportXLSXButton.addEventListener('click', async () => {
-    loaderOverlay.toggle({ message: 'Creating XLSX report...' });
-
-    const resultFolderPath = path.join(
-      PathHelper.sanitizePath(dataFolderPathSession),
-      'Results',
-      StringHelper.capitalize(analysisType),
-      StringHelper.capitalize(stage)
-    );
-
-    try {
-      FileHelper.createFileOrDirectoryIfNotExists(resultFolderPath);
-    } catch (error) {
-      loaderOverlay.toggle();
-
-      const errorOverlay = new ErrorOverlay({
-        message: `Application cannot initialize the export of the information of the participants`,
-        details: error.message,
-        interact: true
-      });
-
-      errorOverlay.show();
-    }
-
-    try {
-      const request = await fetchXLSXReport();
-      const response = await request.json();
-      loaderOverlay.toggle();
-
-      if (!(response.code === 201)) {
-        const errorOverlay = new ErrorOverlay({
-          message: response.payload.message,
-          details: response.payload.details,
-          interact: true
-        });
-
-        errorOverlay.show();
-      }
-    } catch (error) {
-      loaderOverlay.toggle();
-
-      const errorOverlay = new ErrorOverlay({
-        message: `Application cannot fetch information of participants`,
-        details: error.message,
-        interact: true
-      });
-
-      errorOverlay.show();
-    }
-  });
+  exportXLSXButton.addEventListener('click', xlsxExportButtonClickHandler);
 }
 
 changeButton.addEventListener('click', () => {

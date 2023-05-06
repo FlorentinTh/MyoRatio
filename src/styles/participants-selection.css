@@ -28,6 +28,16 @@
   background-color: #232323dd;
 }
 
+.export-btn-disabled {
+  background-color: #bdbdbd;
+  box-shadow: 6px 6px 15px -3px rgb(0 0 0 / 30%);
+}
+
+.export-btn-disabled:hover {
+  cursor: default;
+  background-color: #bdbdbd;
+}
+
 .export-btn.open {
   transform: translateX(250px);
 }
