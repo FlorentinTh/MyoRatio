@@ -122,6 +122,36 @@ const initAutoSwitch = (autoSwitch, card, onChange = false) => {
   }
 };
 
+const initInvalidSwitch = (invalidSwitch, card, onChange = false) => {
+  if (onChange) {
+    const autoSwitch = getAutoSwitches(card)[0];
+    const complexityRadios = getComplexityRadios(card);
+
+    if (invalidSwitch.checked) {
+      for (const complexityRadio of complexityRadios) {
+        if (autoSwitch.checked) {
+          autoSwitch.checked = false;
+        }
+
+        autoSwitch.setAttribute('disabled', '');
+
+        if (complexityRadio.checked) {
+          complexityRadio.checked = false;
+        }
+
+        complexityRadio.setAttribute('disabled', '');
+      }
+    } else {
+      console.log(autoSwitch);
+      autoSwitch.removeAttribute('disabled');
+
+      for (const complexityRadio of complexityRadios) {
+        complexityRadio.removeAttribute('disabled');
+      }
+    }
+  }
+};
+
 const initComplexityRadio = (complexityRadio, card, onChange = false) => {
   if (complexityRadio.checked) {
     if (onChange) {
@@ -149,6 +179,11 @@ const getComplexityRadios = card => {
 
 const getAutoSwitches = card => {
   const autoSwitches = [...card.querySelector('.angle-auto-select').children];
+  return autoSwitches.filter(item => item.nodeName === 'INPUT');
+};
+
+const getInvalidSwitches = card => {
+  const autoSwitches = [...card.querySelector('.invalid').children];
   return autoSwitches.filter(item => item.nodeName === 'INPUT');
 };
 
@@ -227,6 +262,14 @@ if (participants?.length > 0) {
       });
     }
 
+    const invalidSwitches = getInvalidSwitches(card);
+
+    for (const invalidSwitch of invalidSwitches) {
+      invalidSwitch.addEventListener('change', event => {
+        initInvalidSwitch(invalidSwitch, card, true);
+      });
+    }
+
     const complexityRadios = getComplexityRadios(card);
 
     for (const complexityRadio of complexityRadios) {
@@ -288,7 +331,7 @@ submitButton.addEventListener('click', async () => {
       let isSelected = false;
 
       for (const complexity of complexities) {
-        if (complexity.checked) {
+        if (complexity.checked || complexity.disabled) {
           isSelected = true;
         }
       }
@@ -329,7 +372,7 @@ submitButton.addEventListener('click', async () => {
               router.switchPage('participants-selection');
             }, 1000);
           } else {
-            loaderOverlay.toggle();
+            Swal.close();
           }
         })
         .catch(error => {

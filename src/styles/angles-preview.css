@@ -111,6 +111,11 @@ input[type='checkbox'].invalid-switch:checked {
   background: #16a085;
 }
 
+input[type='checkbox'].auto-switch:disabled,
+input[type='checkbox'].invalid-switch:disabled {
+  cursor: default;
+}
+
 input[type='checkbox'].auto-switch::after,
 input[type='checkbox'].invalid-switch::after {
   position: absolute;
@@ -216,4 +221,8 @@ input[type='checkbox'].invalid-switch:checked::after {
   line-height: 1.99em;
   padding: 0 24px;
   height: 2em;
+}
+
+.angle-auto-select:has(input[type='checkbox'].auto-switch:disabled) > span {
+  opacity: 0.7;
 }
