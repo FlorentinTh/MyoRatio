@@ -163,24 +163,16 @@ export class Metadata {
       participantFolderName
     );
 
-    let checksum;
-
     const files = await fs.promises.readdir(participantFolderPath);
+    const checksumFile = files.filter(
+      file => path.parse(file).ext.toLowerCase() === '.sha256sum'
+    );
 
-    for (const file of files) {
-      const fileStat = await fs.promises.stat(path.join(participantFolderPath, file));
-
-      if (fileStat.isFile()) {
-        const fileParse = path.parse(file);
-        if (fileParse.ext.toLowerCase() === '.sha256sum') {
-          checksum = fileParse.name;
-        }
-      }
-    }
-
-    if (checksum === undefined) {
+    if (checksumFile[0] === undefined) {
       throw new Error(`Cannot initialize participant: ${participantFolderName}`);
     }
+
+    const checksum = path.parse(checksumFile[0]).name.split('.')[1];
 
     if (participantRecord.length > 0) {
       if (!(checksum === metadataFileJSON[participant].checksum)) {
