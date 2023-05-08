@@ -85,7 +85,8 @@ export class FileHelper {
     TypeHelper.checkStringNotNull(inputPath, { label: 'inputPath' });
 
     if (PlatformHelper.isWindowsPlatform()) {
-      const exec = execSync(`attrib +h ${inputPath}`);
+      const exec = execSync(`attrib +h /s /d "${inputPath}"`);
+
       if (!(exec.toString() === '')) {
         throw new Error(`Cannot hide ${inputPath}`);
       }
