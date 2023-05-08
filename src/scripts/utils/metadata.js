@@ -4,7 +4,6 @@ import { TypeHelper } from '../helpers/type-helper.js';
 
 const path = nw.require('path');
 const fs = nw.require('fs');
-const crypto = nw.require('crypto');
 
 export class Metadata {
   #baseContent = ['flexion', 'extension', 'sit-stand'];
@@ -164,9 +163,24 @@ export class Metadata {
       participantFolderName
     );
 
-    const participantFolderStat = await fs.promises.stat(participantFolderPath);
-    const digest = `${participantFolderName}-${participantFolderStat.birthtimeMs}`;
-    const checksum = crypto.createHash('sha256').update(digest).digest('hex');
+    let checksum;
+
+    const files = await fs.promises.readdir(participantFolderPath);
+
+    for (const file of files) {
+      const fileStat = await fs.promises.stat(path.join(participantFolderPath, file));
+
+      if (fileStat.isFile()) {
+        const fileParse = path.parse(file);
+        if (fileParse.ext.toLowerCase() === '.sha256sum') {
+          checksum = fileParse.name;
+        }
+      }
+    }
+
+    if (checksum === undefined) {
+      throw new Error(`Cannot initialize participant: ${participantFolderName}`);
+    }
 
     if (participantRecord.length > 0) {
       if (!(checksum === metadataFileJSON[participant].checksum)) {

@@ -13,6 +13,7 @@ import { FileHelper } from './helpers/file-helper';
 const os = nw.require('os');
 const path = nw.require('path');
 const fs = nw.require('fs');
+const crypto = nw.require('crypto');
 
 const router = new Router();
 router.disableBackButton();
@@ -225,6 +226,8 @@ submitButton.addEventListener('click', async () => {
             }
           }
 
+          let currentFolder;
+
           for (const notConvertedFile of notConvertedFiles) {
             totalFileCompleted++;
             loaderOverlay.loaderMessage.innerText = `Converting ${totalFileCompleted} / ${notConvertedFiles.length} files...`;
@@ -232,9 +235,9 @@ submitButton.addEventListener('click', async () => {
             try {
               await CSVHelper.convertFromHPF(`"${notConvertedFile.file}"`);
             } catch (error) {
-              conversionError = true;
-
               loaderOverlay.toggle();
+
+              conversionError = true;
 
               const errorOverlay = new ErrorOverlay({
                 message: `Cannot convert HPF File: ${path.basename(
@@ -250,22 +253,50 @@ submitButton.addEventListener('click', async () => {
 
             try {
               await fs.promises.mkdir(notConvertedFile.destFolder, { recursive: true });
+
+              if (currentFolder !== notConvertedFile.destFolder) {
+                currentFolder = notConvertedFile.destFolder;
+
+                const currentFolderStat = await fs.promises.stat(currentFolder);
+
+                const currentFolderName = path.parse(currentFolder).base;
+
+                const digest = `${currentFolderName}-${currentFolderStat.birthtimeMs}`;
+
+                const checksum = crypto.createHash('sha256').update(digest).digest('hex');
+
+                const checksumFilePath = path.join(
+                  currentFolder,
+                  `.${checksum}.sha256sum`
+                );
+
+                FileHelper.createFileOrDirectoryIfNotExists(checksumFilePath, {
+                  isDirectory: false,
+                  hidden: true
+                });
+              }
+
               if (notConvertedFile.file.includes('.hpf')) {
                 const inputFilePath = path.join(
                   path.parse(notConvertedFile.file).dir,
                   `${path.basename(notConvertedFile.file, '.hpf')}.csv`
                 );
+
                 const outputFilePath = path.join(
                   notConvertedFile.destFolder,
                   `${path.basename(notConvertedFile.file, '.hpf')}.csv`
                 );
+
                 await CSVHelper.normalize(inputFilePath, outputFilePath);
+
                 await fs.promises.unlink(inputFilePath);
               } else {
                 await fs.promises.unlink(notConvertedFile.file);
               }
             } catch (error) {
               loaderOverlay.toggle();
+
+              conversionError = true;
 
               const errorOverlay = new ErrorOverlay({
                 message: `Cannot convert HPF File: ${path.basename(
