@@ -2,6 +2,56 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.2.0](https://github.com/FlorentinTh/EMG-Trigno-GUI/compare/v1.0.0...v1.2.0) (2023-05-09)
+
+
+### Features
+
+* **angles-preview:** add an option to indicate that a participant cannot be analyzed ([0cc5c88](https://github.com/FlorentinTh/EMG-Trigno-GUI/commit/0cc5c88f0a620d3a1c83d8ad3c5908b71bca1e1d))
+* **angles-selection:** add alert when filtered data selected to inform manual selection is disabled ([107b53a](https://github.com/FlorentinTh/EMG-Trigno-GUI/commit/107b53a794dd96028b4034f8f47662fecc332cf2))
+* **angles-selection:** add automatic removal of auto-angles as another point is manually selected ([d3b3c2a](https://github.com/FlorentinTh/EMG-Trigno-GUI/commit/d3b3c2a787efdc21e1ad10dd012ba9f8154777b6))
+* **angles-selection:** add filtered IMU data switch with all related functions required ([3e8c8e0](https://github.com/FlorentinTh/EMG-Trigno-GUI/commit/3e8c8e0e8c0f94c2395ce775a37b03b090e466de))
+* **angles-selection:** complete auto-angles selection feature and related metadata handling ([c835439](https://github.com/FlorentinTh/EMG-Trigno-GUI/commit/c835439fa09bbd2cc11800f20969e39bad14f1a1))
+* **data-discovering:** add rolling messages to waiting screen for participants initialization ([0bce400](https://github.com/FlorentinTh/EMG-Trigno-GUI/commit/0bce400825737c567c27547ec09080883bb64319))
+* **database:** implement database lock on the participant currently processed ([29a21cd](https://github.com/FlorentinTh/EMG-Trigno-GUI/commit/29a21cd1ca6ec44714b839b7bbfeed566abd028a))
+* **index:** add support for multiple app instances ([fb12cd6](https://github.com/FlorentinTh/EMG-Trigno-GUI/commit/fb12cd66967f1461c33495408aa083a1c057cba7))
+* **participants-selection:** add a popup when selected participants do not have a complexity set ([5c78326](https://github.com/FlorentinTh/EMG-Trigno-GUI/commit/5c7832647d9d98fdb99c79df318d1023bd685376))
+* **participants-selection:** add xlsx export fetch query to dedicated button ([04b1104](https://github.com/FlorentinTh/EMG-Trigno-GUI/commit/04b1104419f6c615380ece4ae26f0fe551b46ce7))
+* **participants-selection:** disable xlsx export button when no participant completed ([cd86936](https://github.com/FlorentinTh/EMG-Trigno-GUI/commit/cd86936c797c490e29a9e4cf91250b3c153fcae1))
+* **participants-selection:** hanlde invalid participant in the list, related to previous commit ([766249d](https://github.com/FlorentinTh/EMG-Trigno-GUI/commit/766249d262da2e05ea83bc25b7cfc08c2c950715))
+* **results:** add a button to highlight the most relevant ratio given the type of analysis ([3c9a3c7](https://github.com/FlorentinTh/EMG-Trigno-GUI/commit/3c9a3c7ee0cd45f6a407258faa697cb7231102c1))
+* **results:** add matrix placeholder to avoid content glitch at loading ([8c08f5a](https://github.com/FlorentinTh/EMG-Trigno-GUI/commit/8c08f5a0400c3abbc855b23f1764ebdb0c1f278a))
+* **settings:** add a setting entry to control application notifications preference ([863d969](https://github.com/FlorentinTh/EMG-Trigno-GUI/commit/863d9690125d86c938853b3998541b2dc0be915b))
+* **type-helper:** add missing Integer type checking ([499c55c](https://github.com/FlorentinTh/EMG-Trigno-GUI/commit/499c55c0612e6c065bb90672ed44517544cf53f0))
+
+
+### Bug Fixes
+
+* **angles-preview:** add missing ui components restrictions when invalid switch is checked ([82686c0](https://github.com/FlorentinTh/EMG-Trigno-GUI/commit/82686c0babc3c1bdcc930a8b734bb2ab9a798c3b))
+* **angles-preview:** fix bug related to wrong use of intervals now removed ([2b0a830](https://github.com/FlorentinTh/EMG-Trigno-GUI/commit/2b0a830bc1e13c66fa23fe420c91ad7a4d7ab560))
+* **angles-preview:** fix issue with popup firing after loader ([9f6abe1](https://github.com/FlorentinTh/EMG-Trigno-GUI/commit/9f6abe1463c2a75e4ead685157f990f8d8fe6c53))
+* **angles-preview:** fix issue with the value of the complexity when not selected ([85c375b](https://github.com/FlorentinTh/EMG-Trigno-GUI/commit/85c375b13f81c2ab8ab46bfe6970cc448c2d4821))
+* **angles-selection:** add missing override parameter to fix issue with auto selection feature ([4d87739](https://github.com/FlorentinTh/EMG-Trigno-GUI/commit/4d87739dbb03ddbd292325f487ca663ba7326f6a))
+* **angles-selection:** fix all issues and complete missing elements for the auto selection feature ([bd8a0e0](https://github.com/FlorentinTh/EMG-Trigno-GUI/commit/bd8a0e09e235d4a38d24ce17ab50c05d90e33883))
+* **angles-selection:** fix issue with results when process is canceled before completed ([288c31b](https://github.com/FlorentinTh/EMG-Trigno-GUI/commit/288c31b6c60daf57154636c92d0b76e588f2a75e))
+* **angles-selection:** fix missing reset data alert and constraints when submit button is clicked ([de2fb01](https://github.com/FlorentinTh/EMG-Trigno-GUI/commit/de2fb01c24bb4b391d47d27459698c42c78b7542))
+* **app:** fix minor issues related to debug logs ([84c7f9d](https://github.com/FlorentinTh/EMG-Trigno-GUI/commit/84c7f9ddbf3977afd5232e7ac537e50d1096ecd5))
+* **converter:** now creates required analysis directories even if there are no related source files ([4c63eb9](https://github.com/FlorentinTh/EMG-Trigno-GUI/commit/4c63eb9089dfe89eb7931737601ffa7bbe97b844))
+* **file-helper:** fix an issue with windows hidden attribute command ([7679a33](https://github.com/FlorentinTh/EMG-Trigno-GUI/commit/7679a33c77730af225c3b1cc59f655ca28f1cfb9))
+* **index:** fix major issue with API executable path on macOS application ([eb657f9](https://github.com/FlorentinTh/EMG-Trigno-GUI/commit/eb657f91449255aeeb9b540316fb429c4ee9c62a))
+* **index:** now correctly check and wait for the API to start ([0870f37](https://github.com/FlorentinTh/EMG-Trigno-GUI/commit/0870f37ac7471e0bba4bbd19a7f46a6b10acbaed))
+* **installer:** add dynamic version for output installer ([fa555b6](https://github.com/FlorentinTh/EMG-Trigno-GUI/commit/fa555b6064c4d08fdf87daeaafb3498fac0c174b))
+* **lint:** fix few linting issues ([3142d38](https://github.com/FlorentinTh/EMG-Trigno-GUI/commit/3142d388b605640a51aa7809c55b0e0c4f94d4c8))
+* **metadata:** change the digest of the checksum ([7516f04](https://github.com/FlorentinTh/EMG-Trigno-GUI/commit/7516f04be62b882b1ff755c39a0e35fe0bd27d94))
+* **metadata:** yet another change in the way checksums are generated ([c510ea0](https://github.com/FlorentinTh/EMG-Trigno-GUI/commit/c510ea0f2ddd015ee68d2f3c82437cb6a7c5a0bc))
+* **participants-selection:** fix a bug with selection save when participant have auto-select enabled ([075ac7b](https://github.com/FlorentinTh/EMG-Trigno-GUI/commit/075ac7b78962ec9087df805aef1f892fcc22536d))
+* **participants-selection:** fix issue related to unsatitized access to sessionStorage value ([7b7432b](https://github.com/FlorentinTh/EMG-Trigno-GUI/commit/7b7432be8a7cfecd3a896bf85d13a636534e15c6))
+* **participants-selection:** fix issue with change state operations timeout ([215c5ca](https://github.com/FlorentinTh/EMG-Trigno-GUI/commit/215c5ca07e9c7d0788a6b76d8979e70d3f959dd1))
+* **participants-selection:** fix issue with selection filter list ([4ecb5e9](https://github.com/FlorentinTh/EMG-Trigno-GUI/commit/4ecb5e94c002a34485c90039a8b94ae8b28b9e81))
+* **participants-selection:** fix some issues with selection buttons when invalid participants ([8559c47](https://github.com/FlorentinTh/EMG-Trigno-GUI/commit/8559c476013a545e42cd660cc0c55d020ba72e7f))
+* **report:** move report template from API to GUI ([8265371](https://github.com/FlorentinTh/EMG-Trigno-GUI/commit/8265371754b04c053b332cbdec8c8809b28ff89f))
+* **string-helper:** more permissive on the labels of participant folders ([f6f957d](https://github.com/FlorentinTh/EMG-Trigno-GUI/commit/f6f957d2c52af929473019efb2c886e30511c1eb))
+
 ## 1.0.0 (2023-02-13)
 
 
