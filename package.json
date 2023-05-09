@@ -41,11 +41,13 @@
     "resizable": true,
     "position": "center"
   },
-  "single-instance": false,
+  "icons": {
+    "256": "build/public/assets/app.png"
+  },
   "chromium-args": "--disable-raf-throttling",
   "build": {
     "appId": "ca.liaralab.myoratio",
-    "nwVersion": "0.75.1",
+    "nwVersion": "0.76.0",
     "nwFlavor": "normal",
     "packed": false,
     "targets": [],
@@ -121,7 +123,7 @@
     "html-webpack-plugin": "^5.5.1",
     "innosetup-compiler": "^6.2.0",
     "mini-css-extract-plugin": "^2.7.5",
-    "nw": "^0.75.1-sdk",
+    "nw": "^0.76.0-sdk",
     "path-browserify": "^1.0.1",
     "pre-commit": "^1.2.2",
     "prettier": "^2.8.8",
