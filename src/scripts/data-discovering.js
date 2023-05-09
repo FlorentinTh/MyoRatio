@@ -121,6 +121,21 @@ folderInput.addEventListener('change', event => {
   }
 });
 
+const rollWaitingMessage = (overlay, messages, index) => {
+  overlay.loaderMessage.innerText = messages[0];
+  overlay.loaderMessage.innerText += `\n ${messages[index]}`;
+
+  console.log(index);
+
+  if (index === 4) {
+    index = 2;
+  } else {
+    index++;
+  }
+
+  setTimeout(rollWaitingMessage, 10000, overlay, messages, index);
+};
+
 submitButton.addEventListener('click', async () => {
   if (!submitButton.disabled) {
     loaderOverlay.toggle({ message: 'Discovering data...' });
@@ -217,7 +232,20 @@ submitButton.addEventListener('click', async () => {
           }
         }
 
-        loaderOverlay.loaderMessage.innerText = `Initializing ${participants.length} participants...`;
+        const messages = [
+          `Initializing ${participants.length} participants...`,
+          `It may take some times!`,
+          `Hold on, we are working on it!`,
+          `Almost there!`,
+          `Just a few more steps`
+        ];
+
+        loaderOverlay.loaderMessage.innerText = messages[0];
+        const messageIndex = 1;
+
+        setTimeout(() => {
+          rollWaitingMessage(loaderOverlay, messages, messageIndex);
+        }, 3500);
 
         try {
           const request = await fetchParticipantIMUData(
