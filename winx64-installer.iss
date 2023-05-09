@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "EMG Trigno"
-#define MyAppVersion "1.0.0"
+#define MyAppVersion "1.2.0"
 #define MyAppPublisher "LIARA Lab"
 #define MyAppURL "liara.uqac.ca"
 #define MyAppExeName "EMG Trigno.exe"
