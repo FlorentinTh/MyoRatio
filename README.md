@@ -123,11 +123,11 @@ $ mv env.json.example env.json
 
 *Windows:*
 ```powershell
-> xcopy /e /k /h /i <your_base_path>\MyoRatioAPI\dist\MyoRatioAPI .\bin\MyoRatioAPI
+> xcopy /e /k /h /i <your_base_path>\MyoRatio-API\dist\MyoRatioAPI .\bin\MyoRatioAPI
 ```
 *macOS:*
 ```sh
-$ cp -r <your_base_path>/MyoRatioAPI/dist/MyoRatioAPI ./bin/MyoRatioAPI
+$ cp -r <your_base_path>/MyoRatio-API/dist/MyoRatioAPI ./bin/MyoRatioAPI
 ```
 
 3.4. Build the Release Application:
