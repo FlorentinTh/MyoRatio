@@ -1,9 +1,9 @@
 {
-    "name": "EMGTrigno-Dev",
+    "name": "MyoRatio-Dev",
     "main": "http://localhost:4000",
     "node-remote": "http://localhost/*",
     "window": {
-      "title": "EMG Trigno Dev",
+      "title": "MyoRatio Dev",
       "icon": "./assets/icons/app.png",
       "height": 720,
       "width": 1280,

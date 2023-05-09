@@ -24,10 +24,10 @@ let APIExecutablePath;
 
 if (PlatformHelper.isWindowsPlatform()) {
   basePath = nw.App.startPath;
-  APIExecutablePath = path.join(basePath, 'bin', 'EMGTrignoAPI', 'EMGTrignoAPI.exe');
+  APIExecutablePath = path.join(basePath, 'bin', 'MyoRatioAPI', 'MyoRatioAPI.exe');
 } else if (PlatformHelper.isMacOsPlatform()) {
   basePath = process.env.INIT_CWD ?? process.cwd();
-  APIExecutablePath = path.join(basePath, 'bin', 'EMGTrignoAPI', 'EMGTrignoAPI');
+  APIExecutablePath = path.join(basePath, 'bin', 'MyoRatioAPI', 'MyoRatioAPI');
 }
 
 if (!('filtered-data-alert' in localStorage)) {

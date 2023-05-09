@@ -1,9 +1,9 @@
-# EMG-Trigno-GUI
+# MyoRatio-GUI
 
-![Release Date](https://img.shields.io/github/release-date/florentinth/EMG-Trigno-GUI?style=flat-square) [![Release](https://img.shields.io/github/release/FlorentinTh/EMG-Trigno-GUI?style=flat-square)](https://github.com/FlorentinTh/EMG-Trigno-GUI/releases)
-![Platforms](https://img.shields.io/badge/platforms-win--32%20%7C%20win--64%20%7C%20osx--64%20-lightgrey?style=flat-square) ![License](https://img.shields.io/github/license/florentinth/EMG-Trigno-GUI?style=flat-square)
+![Release Date](https://img.shields.io/github/release-date/florentinth/MyoRatio-GUI?style=flat-square) [![Release](https://img.shields.io/github/release/FlorentinTh/MyoRatio-GUI?style=flat-square)](https://github.com/FlorentinTh/MyoRatio-GUI/releases)
+![Platforms](https://img.shields.io/badge/platforms-win--32%20%7C%20win--64%20%7C%20osx--64%20-lightgrey?style=flat-square) ![License](https://img.shields.io/github/license/florentinth/MyoRatio-GUI?style=flat-square)
 
-Application to process EMG Trigno data
+MyoRatio Application
 
 ## Prerequisites
 
@@ -13,22 +13,22 @@ Application to process EMG Trigno data
 
 ## Related Project
 
-- [EMG-Trigno-API](https://github.com/FlorentinTh/EMG-Trigno-API)
+- [MyoRatio-API](https://github.com/FlorentinTh/MyoRatio-API)
 
 ## Build the Release Application
 
 #### 1. Clone the Repositories
 
 ```sh
-$/> git clone https://github.com/FlorentinTh/EMG-Trigno-API.git
+$/> git clone https://github.com/FlorentinTh/MyoRatio-API.git
 
-$/> git clone https://github.com/FlorentinTh/EMG-Trigno-GUI.git
+$/> git clone https://github.com/FlorentinTh/MyoRatio-GUI.git
 ```
 
 #### 2. Build the API
 
 ```sh
-$/> cd <your_base_path>/EMG-Trigno-API
+$/> cd <your_base_path>/MyoRatio-API
 ```
 
 2.1. Setup project :
@@ -60,7 +60,7 @@ $ source ./venv/bin/activate
             --collect-all reportlab.graphics.barcode \
             --console \
             --clean \
-            --name EMGTrignoAPI \
+            --name MyoRatioAPI \
             --icon='assets/icons/win/app.ico' \
             server.py --noconfirm
 ```
@@ -72,17 +72,17 @@ $ source ./venv/bin/activate
             --collect-all reportlab.graphics.barcode \
             --console \
             --clean \
-            --name EMGTrignoAPI \
+            --name MyoRatioAPI \
             --icon='assets/icons/mac/app.icns' \
             server.py --noconfirm
 ```
 
-> Release folder will be generated under ```EMG-Trigno-API/dist```
+> Release folder will be generated under ```MyoRatio-API/dist```
 
 #### 3. Build the Release
 
 ```sh
-$/> cd <your_base_path>/EMG-Trigno-GUI
+$/> cd <your_base_path>/MyoRatio-GUI
 ```
 
 3.1. Install project dependencies :
@@ -123,11 +123,11 @@ $ mv env.json.example env.json
 
 *Windows:*
 ```powershell
-> xcopy /e /k /h /i <your_base_path>\EMGTrignoAPI\dist\EMGTrignoAPI .\bin\EMGTrignoAPI
+> xcopy /e /k /h /i <your_base_path>\MyoRatioAPI\dist\MyoRatioAPI .\bin\MyoRatioAPI
 ```
 *macOS:*
 ```sh
-$ cp -r <your_base_path>/EMGTrignoAPI/dist/EMGTrignoAPI ./bin/EMGTrignoAPI
+$ cp -r <your_base_path>/MyoRatioAPI/dist/MyoRatioAPI ./bin/MyoRatioAPI
 ```
 
 3.4. Build the Release Application:
@@ -136,14 +136,14 @@ $ cp -r <your_base_path>/EMGTrignoAPI/dist/EMGTrignoAPI ./bin/EMGTrignoAPI
 ```sh
 > (npm | yarn | pnpm) run build:win && (npm | yarn | pnpm) run publish:win
 ```
-> An ```exe``` setup is created under ```EMG-Trigno-GUI/release/winx64```
+> An ```exe``` setup is created under ```MyoRatio-GUI/release/winx64```
 
 *macOS:*
 ```sh
 $ (npm | yarn | pnpm) run build:mac && (npm | yarn | pnpm) run publish:mac
 ```
 
-> A ```dmg``` file is created under ```EMG-Trigno-GUI/release/macx64```
+> A ```dmg``` file is created under ```MyoRatio-GUI/release/macx64```
 
 ## For Developers
 
@@ -152,7 +152,7 @@ $ (npm | yarn | pnpm) run build:mac && (npm | yarn | pnpm) run publish:mac
 _Windows_
 ```sh
 # Clone the API project:
-> git clone https://github.com/FlorentinTh/EMG-Trigno-API.git
+> git clone https://github.com/FlorentinTh/MyoRatio-API.git
 
 # Setup project:
 > py -m pip install --upgrade pip
@@ -172,7 +172,7 @@ _Windows_
 _macOS_
 ```sh
 # Clone the API project:
-> git clone https://github.com/FlorentinTh/EMG-Trigno-API.git
+> git clone https://github.com/FlorentinTh/MyoRatio-API.git
 
 # Setup project:
 $ python3 -m pip install --user --upgrade pip
@@ -193,7 +193,7 @@ $ source ./venv/bin/activate
 
 ```sh
 # Clone the GUI project:
-$/> git clone https://github.com/FlorentinTh/EMG-Trigno-GUI.git
+$/> git clone https://github.com/FlorentinTh/MyoRatio-GUI.git
 
 # Rename the env.json file (edit its content if needed):
 ## Windows:
