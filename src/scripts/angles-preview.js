@@ -60,12 +60,14 @@ const getChartFiles = async participant => {
     files = await FileHelper.listAllFiles(inputPath);
   } catch (error) {
     const errorOverlay = new ErrorOverlay({
-      message: `Cannot find chart files`,
+      message: `Cannot find required files`,
       details: error.message,
-      interact: true
+      interact: true,
+      redirect: 'data-discovering'
     });
 
     errorOverlay.show();
+    return;
   }
 
   chartFiles = chartFiles.concat(
@@ -215,10 +217,12 @@ const saveData = async () => {
       const errorOverlay = new ErrorOverlay({
         message: `Information for participant ${participant} cannot be saved`,
         details: error.message,
-        interact: true
+        interact: true,
+        redirect: 'participants-selection'
       });
 
       errorOverlay.show();
+      return;
     }
   }
 };
@@ -240,7 +244,8 @@ if (participants?.length > 0) {
       const errorOverlay = new ErrorOverlay({
         message: `Participant ${participants[i]} cannot be processed`,
         details: error.message,
-        interact: true
+        interact: true,
+        redirect: 'data-discovering'
       });
 
       errorOverlay.show();
@@ -313,7 +318,8 @@ if (participants?.length > 0) {
   const errorOverlay = new ErrorOverlay({
     message: `Error occurs while trying to retrieve participants`,
     details: `Received participants: ${participants}`,
-    interact: true
+    interact: true,
+    redirect: 'data-discovering'
   });
 
   errorOverlay.show();

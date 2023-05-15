@@ -44,10 +44,12 @@ const getRatiosFilePath = async () => {
     const errorOverlay = new ErrorOverlay({
       message: `Cannot find results for participant ${participantResult}`,
       details: error.message,
-      interact: true
+      interact: true,
+      redirect: 'participants-selection'
     });
 
     errorOverlay.show();
+    return;
   }
 
   return path.join(inputPath, `ratios_${stage}.json`);
@@ -69,7 +71,8 @@ try {
   const errorOverlay = new ErrorOverlay({
     message: `Cannot read results of participant ${participantResult}`,
     details: error.message,
-    interact: true
+    interact: true,
+    redirect: 'participants-selection'
   });
 
   errorOverlay.show();

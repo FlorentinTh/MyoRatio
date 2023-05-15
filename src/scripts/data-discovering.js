@@ -125,8 +125,6 @@ const rollWaitingMessage = (overlay, messages, index) => {
   overlay.loaderMessage.innerText = messages[0];
   overlay.loaderMessage.innerText += `\n ${messages[index]}`;
 
-  console.log(index);
-
   if (index === 4) {
     index = 2;
   } else {
@@ -146,22 +144,22 @@ submitButton.addEventListener('click', async () => {
       const sanitizedPath = PathHelper.sanitizePath(dataPath);
       const metadata = new Metadata(sanitizedPath);
 
-      let isRootAnalysisFolder = true;
       let isBaseFolderContentCompliant;
 
       try {
         isBaseFolderContentCompliant = await metadata.checkBaseFolderContent();
       } catch (error) {
-        isRootAnalysisFolder = false;
         loaderOverlay.toggle();
 
         const errorOverlay = new ErrorOverlay({
           message: `Cannot verify content of input data folder`,
-          details: `please ensure you have a folder named "analysis" under the selected root folder`,
-          interact: true
+          details: `please ensure that the HPF data has been converted properly`,
+          interact: true,
+          redirect: 'converter'
         });
 
         errorOverlay.show();
+        return;
       }
 
       let isMetadataFolderInit;
@@ -179,21 +177,20 @@ submitButton.addEventListener('click', async () => {
           });
 
           errorOverlay.show();
+          return;
         }
       } else {
-        if (isRootAnalysisFolder) {
-          loaderOverlay.toggle();
+        loaderOverlay.toggle();
 
-          const errorOverlay = new ErrorOverlay({
-            message: `Input data folder does not meet file structure requirements`,
-            details: `please ensure that the "analysis" folder contains the following three folders: ${metadata.getBaseContent.join(
-              ', '
-            )} with your data organized by folders named after each participant`,
-            interact: true
-          });
+        const errorOverlay = new ErrorOverlay({
+          message: `Input data folder does not meet file structure requirements`,
+          details: `please ensure that the HPF data has been converted properly`,
+          interact: true,
+          redirect: 'converter'
+        });
 
-          errorOverlay.show();
-        }
+        errorOverlay.show();
+        return;
       }
 
       const analysisType = sessionStorage.getItem('analysis').toString();
@@ -213,9 +210,9 @@ submitButton.addEventListener('click', async () => {
         );
       }
 
-      loaderOverlay.loaderMessage.innerText = `Found ${participants.length} participants...`;
-
       if (!(participants === undefined) && participants.length > 0) {
+        loaderOverlay.loaderMessage.innerText = `Found ${participants.length} participants...`;
+
         for (const participant of participants) {
           try {
             await metadata.createMetadataParticipantFolder(analysisType, participant);
@@ -223,12 +220,13 @@ submitButton.addEventListener('click', async () => {
             loaderOverlay.toggle();
 
             const errorOverlay = new ErrorOverlay({
-              message: `Application cannot initialize metadata tree for participants`,
+              message: `The application cannot initialize metadata tree for participants`,
               details: error.message,
               interact: true
             });
 
             errorOverlay.show();
+            return;
           }
         }
 
@@ -273,7 +271,7 @@ submitButton.addEventListener('click', async () => {
           loaderOverlay.toggle();
 
           const errorOverlay = new ErrorOverlay({
-            message: `Application cannot fetch information of participants`,
+            message: `The application cannot fetch information of participants`,
             details: error.message,
             interact: true
           });
@@ -284,9 +282,10 @@ submitButton.addEventListener('click', async () => {
         loaderOverlay.toggle();
 
         const errorOverlay = new ErrorOverlay({
-          message: `Not Found`,
-          details: `No participants could be found. Try to convert the data first`,
-          interact: true
+          message: `No participants could be found`,
+          details: `please ensure that the HPF data has been converted properly`,
+          interact: true,
+          redirect: 'converter'
         });
 
         errorOverlay.show();

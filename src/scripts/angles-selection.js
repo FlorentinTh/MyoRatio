@@ -333,10 +333,12 @@ const getAngleFiles = async (filtered = false) => {
       const errorOverlay = new ErrorOverlay({
         message: `Cannot find files for participant ${selectedParticipant}`,
         details: error.message,
-        interact: true
+        interact: true,
+        redirect: 'participants-list'
       });
 
       errorOverlay.show();
+      return;
     }
 
     let files;
@@ -344,12 +346,14 @@ const getAngleFiles = async (filtered = false) => {
       files = await FileHelper.listAllFiles(PathHelper.sanitizePath(inputPath));
     } catch (error) {
       const errorOverlay = new ErrorOverlay({
-        message: `Cannot find chart data`,
+        message: `Cannot find required files`,
         details: error.message,
-        interact: true
+        interact: true,
+        redirect: 'participants-list'
       });
 
       errorOverlay.show();
+      return;
     }
 
     angleFiles.push(
@@ -391,10 +395,12 @@ const initData = async angleFiles => {
         selectedParticipants[currentParticipant]
       } for the iteration#${currentIteration + 1}`,
       details: error.message,
-      interact: true
+      interact: true,
+      redirect: 'participants-list'
     });
 
     errorOverlay.show();
+    return;
   }
 
   const selectedAngles = ChartSetup.data.datasets[1].data;
@@ -479,6 +485,7 @@ const processAutoAngles = async (participant, override) => {
     });
 
     errorOverlay.show();
+    return;
   }
 
   const points = response.payload.points;
@@ -559,10 +566,12 @@ const displayAutoAnglesButton = async () => {
     const errorOverlay = new ErrorOverlay({
       message: `Participant ${participant} cannot be processed`,
       details: error.message,
-      interact: true
+      interact: true,
+      redirect: 'participants-list'
     });
 
     errorOverlay.show();
+    return;
   }
 
   const isHidden = autoAnglesButton.classList.contains('top-btn-disabled');
@@ -611,10 +620,12 @@ const checkForMetadataExistingPoints = async () => {
     const errorOverlay = new ErrorOverlay({
       message: `Participant ${selectedParticipants[currentParticipant]} cannot be processed`,
       details: error.message,
-      interact: true
+      interact: true,
+      redirect: 'participants-list'
     });
 
     errorOverlay.show();
+    return;
   }
 
   const iterations = infos.stages[stage].iterations;
@@ -714,6 +725,7 @@ const getPointsObject = (auto = false) => {
       });
 
       errorOverlay.show();
+      return;
     }
   } else {
     if ('selected-points' in sessionStorage) {
@@ -727,6 +739,7 @@ const getPointsObject = (auto = false) => {
       });
 
       errorOverlay.show();
+      return;
     }
   }
 
@@ -991,6 +1004,7 @@ const mutexUnlock = async () => {
       });
 
       errorOverlay.show();
+      return;
     }
   } catch (error) {
     const errorOverlay = new ErrorOverlay({
@@ -1042,12 +1056,13 @@ const loadNextChart = async angleFiles => {
       }
     } catch (error) {
       const errorOverlay = new ErrorOverlay({
-        message: `Application cannot complete processing of selected angles`,
+        message: `The application cannot complete processing of selected angles`,
         details: error.message,
         interact: true
       });
 
       errorOverlay.show();
+      return;
     }
 
     await mutexUnlock();
@@ -1072,6 +1087,7 @@ const loadNextChart = async angleFiles => {
     });
 
     errorOverlay.show();
+    return;
   }
 
   plot.data.datasets[0].data = allData;
@@ -1136,15 +1152,17 @@ submitButton.addEventListener('click', async () => {
       });
 
       errorOverlay.show();
+      return;
     }
   } catch (error) {
     const errorOverlay = new ErrorOverlay({
-      message: `Application cannot process the current selection`,
+      message: `The application cannot process the current selection`,
       details: error.message,
       interact: true
     });
 
     errorOverlay.show();
+    return;
   }
 
   sessionStorage.removeItem('selected-points');
@@ -1182,7 +1200,7 @@ submitButton.addEventListener('click', async () => {
       loaderOverlay.toggle();
 
       const errorOverlay = new ErrorOverlay({
-        message: `Application cannot complete processing of selected angles`,
+        message: `The application cannot complete processing of selected angles`,
         details: error.message,
         interact: true
       });

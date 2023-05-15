@@ -123,10 +123,12 @@ const renderParticipantsList = async () => {
       const errorOverlay = new ErrorOverlay({
         message: `Participant ${participant} cannot be processed`,
         details: error.message,
-        interact: true
+        interact: true,
+        redirect: 'data-discovering'
       });
 
       errorOverlay.show();
+      return;
     }
 
     const index = participantsArray.findIndex(e => e.name === participant);
@@ -275,12 +277,13 @@ const xlsxExportButtonClickHandler = async () => {
     loaderOverlay.toggle();
 
     const errorOverlay = new ErrorOverlay({
-      message: `Application cannot initialize the export of the information of the participants`,
+      message: `The application cannot initialize the participants' export information`,
       details: error.message,
       interact: true
     });
 
     errorOverlay.show();
+    return;
   }
 
   try {
@@ -296,12 +299,13 @@ const xlsxExportButtonClickHandler = async () => {
       });
 
       errorOverlay.show();
+      return;
     }
   } catch (error) {
     loaderOverlay.toggle();
 
     const errorOverlay = new ErrorOverlay({
-      message: `Application cannot fetch information of participants`,
+      message: `The application cannot fetch participants' information`,
       details: error.message,
       interact: true
     });
@@ -432,13 +436,17 @@ const mutexLock = async () => {
       path.join(metadataRootPath, `${firstParticipant}.lock`),
       fs.constants.F_OK
     );
+
     loaderOverlay.toggle();
+
     const errorOverlay = new ErrorOverlay({
       message: `Participant ${firstParticipant} cannot be processed`,
       details: `Another user is currently processing the participant ${firstParticipant}. Please try again later or remove this participant from your selection`,
       interact: true
     });
+
     errorOverlay.show();
+    return;
   } catch (error) {
     try {
       await fs.promises.writeFile(
@@ -450,11 +458,13 @@ const mutexLock = async () => {
       }, 800);
     } catch (error) {
       loaderOverlay.toggle();
+
       const errorOverlay = new ErrorOverlay({
         message: `Participant ${firstParticipant} cannot be processed`,
         details: error.message,
         interact: true
       });
+
       errorOverlay.show();
     }
   }

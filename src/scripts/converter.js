@@ -125,6 +125,7 @@ submitButton.addEventListener('click', async () => {
       });
 
       errorOverlay.show();
+      return;
     }
 
     const HPFPath = path.join(sanitizedPath, 'hpf');
@@ -144,6 +145,7 @@ submitButton.addEventListener('click', async () => {
         });
 
         errorOverlay.show();
+        return;
       }
 
       if (files.length > 0) {

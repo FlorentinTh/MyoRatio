@@ -43,7 +43,14 @@ let port;
 try {
   port = await NetHelper.findNextAvailablePort(configuration.PORT);
 } catch (error) {
-  console.log(error);
+  loaderOverlay.toggle();
+
+  const errorOverlay = new ErrorOverlay({
+    message: 'Cannot find available port',
+    details: error.message
+  });
+
+  errorOverlay.show();
 }
 
 if (!(port === undefined)) {
@@ -55,10 +62,12 @@ if (!(port === undefined)) {
     childProcess = spawn(APIExecutablePath, [port]);
   } catch (error) {
     loaderOverlay.toggle();
+
     const errorOverlay = new ErrorOverlay({
-      message: 'Some required components cannot be launched',
+      message: 'Some required components cannot be started properly',
       details: error.message
     });
+
     errorOverlay.show();
   }
 
@@ -93,7 +102,7 @@ if (!(port === undefined)) {
       const details = error.message ?? 'API is not started';
       loaderOverlay.toggle();
       const errorOverlay = new ErrorOverlay({
-        message: 'Some required components cannot be launched',
+        message: 'Some required components cannot be started properly',
         details
       });
       errorOverlay.show();

@@ -26,6 +26,7 @@ export const getAllParticipants = async sanitizedPath => {
       });
 
       errorOverlay.show();
+      return;
     }
 
     return filteredParticipants;

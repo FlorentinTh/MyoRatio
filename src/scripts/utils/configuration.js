@@ -14,10 +14,11 @@ export class Configuration {
     if (!valid) {
       const errorOverlay = new ErrorOverlay({
         message: 'Configuration Error',
-        details: 'The configuration file cannot be validated'
+        details: 'The configuration of the application is not valid'
       });
 
       errorOverlay.show();
+      return;
     }
 
     return configurationFile;
