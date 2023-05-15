@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.1.0](https://github.com/FlorentinTh/MyoRatio-GUI/compare/v2.0.0...v2.1.0) (2023-05-15)
+
+
+### Features
+
+* **overlay:** add redirect parameter ([a8bfbef](https://github.com/FlorentinTh/MyoRatio-GUI/commit/a8bfbefaff8a65867577e440915d75a112c39c62))
+
+
+### Bug Fixes
+
+* **error-overlay:** fix every single error handling in the entire application ([1d050f3](https://github.com/FlorentinTh/MyoRatio-GUI/commit/1d050f34fed5b10d979e3701baf3a1d85af6136b))
+* **index:** increase initialization time ([2a2ecf5](https://github.com/FlorentinTh/MyoRatio-GUI/commit/2a2ecf5a7899ebcdfc81bdde926229765325769b))
+
 ## [2.0.0](https://github.com/FlorentinTh/MyoRatio-GUI/compare/v1.2.0...v2.0.0) (2023-05-09)
 
 ## [1.2.0](https://github.com/FlorentinTh/EMG-Trigno-GUI/compare/v1.0.0...v1.2.0) (2023-05-09)
