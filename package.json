@@ -88,7 +88,7 @@
       "companyName": "LIARA Lab.",
       "fileDescription": "MyoRatio",
       "copyright": "Copyright LIARA Lab.",
-      "icon": "./src/assets/icons/win/app-256.ico"
+      "icon": "./src/assets/icons/win/app.ico"
     },
     "mac": {
       "displayName": "MyoRatio",
