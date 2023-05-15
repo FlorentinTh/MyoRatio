@@ -81,7 +81,7 @@ if (!(port === undefined)) {
       },
       method: 'GET'
     },
-    10,
+    30,
     500
   )
     .then(response => {
