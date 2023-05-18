@@ -10,7 +10,7 @@ export class Menu {
 
   constructor() {
     const menuContainer = document.querySelector('.menu-container');
-    menuContainer.insertAdjacentHTML('afterbegin', menuTemplate());
+    menuContainer.insertAdjacentHTML('afterbegin', menuTemplate({ version: AppVersion }));
 
     this.#toggleNavButton = document.querySelector('.toggle-nav-btn');
     this.#additionalButtons = null;

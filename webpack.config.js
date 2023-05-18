@@ -2,11 +2,15 @@ const path = require('path');
 const exec = require('child_process').exec;
 const fs = require('fs');
 
+const webpack = require('webpack');
+
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
+
+const pkg = require('./package.json');
 
 const getViews = directory => {
   const viewFilesLocation = fs.readdirSync(path.resolve(__dirname, directory));
@@ -107,6 +111,9 @@ module.exports = (env, argv) => {
       ]
     },
     plugins: [
+      new webpack.DefinePlugin({
+        AppVersion: JSON.stringify(pkg.version)
+      }),
       new MiniCssExtractPlugin({
         filename:
           argv.mode === 'production'

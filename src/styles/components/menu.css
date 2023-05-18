@@ -3,7 +3,7 @@
 }
 
 .toggle-nav-btn {
-  transition-duration: .5s;
+  transition-duration: 0.5s;
   transition-timing-function: swing;
   width: 90px;
   height: 50px;
@@ -18,25 +18,25 @@
 
 .toggle-nav-btn:hover {
   cursor: pointer;
-  background-color: #16A085;
+  background-color: #16a085;
 }
 
 .toggle-nav-btn .icon {
-  transition-duration: .2s;
+  transition-duration: 0.2s;
   position: absolute;
   width: 30px;
   height: 1px;
-  background-color: #EDEDED;
+  background-color: #ededed;
   top: 25px;
   left: 30px;
 }
 
 .toggle-nav-btn .icon::before,
 .toggle-nav-btn .icon::after {
-  transition-duration: .5s;
-  background-color: #EDEDED;
+  transition-duration: 0.5s;
+  background-color: #ededed;
   position: absolute;
-  content: "";
+  content: '';
   width: 30px;
   left: 0;
   height: 1px;
@@ -78,41 +78,40 @@ nav {
   position: fixed;
   left: 0;
   top: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 nav ul {
   width: 250px;
   margin-top: 50px;
   min-height: 250px;
-  height: 85%;
+  flex: 1 0 80%;
+}
+
+nav .bottom {
+  text-align: center;
+  width: 250px;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 25px;
 }
 
 nav ul li a {
-  transition-duration: .25s;
+  transition-duration: 0.25s;
   display: block;
   padding: 15px 40px;
-  color: #EDEDED;
+  color: #ededed;
   font-size: 1.5em;
   text-align: right;
-  letter-spacing: .04em;
+  letter-spacing: 0.04em;
   text-decoration: none;
-}
-
-nav > .copyright span a {
-  color: #EDEDED;
-  font-weight: bold;
-  text-decoration: none;
-  padding-bottom: 2px;
 }
 
 nav > ul li a:hover,
 nav > ul li a.active {
-  color: #16A085;
-  border-right: 6px solid #16A085;
-}
-
-nav > .copyright span a:hover {
-  border-bottom: 2px solid #EDEDED;
+  color: #16a085;
+  border-right: 6px solid #16a085;
 }
 
 nav ul li a.disabled {
@@ -120,9 +119,27 @@ nav ul li a.disabled {
   color: #616161;
 }
 
-nav > .copyright {
-  color: #EDEDED;
-  display: flex;
-  justify-content: center;
-  width: 250px;
+.bottom > .copyright span,
+.bottom > .copyright span a {
+  color: #ededed;
+}
+
+.bottom > .copyright span a {
+  font-weight: bold;
+  text-decoration: none;
+  padding-bottom: 2px;
+}
+
+.bottom > .copyright span a:hover {
+  border-bottom: 2px solid #ededed;
+}
+
+.bottom > .version {
+  margin-top: 5px;
+}
+
+.bottom > .version span {
+  color: #ededed;
+  font-style: italic;
+  font-size: 0.8em;
 }

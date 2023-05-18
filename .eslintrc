@@ -12,7 +12,8 @@
   "globals": {
     "Atomics": "readonly",
     "SharedArrayBuffer": "readonly",
-    "nw": "readonly"
+    "nw": "readonly",
+    "AppVersion": "readonly"
   },
   "parserOptions": {
     "sourceType": "module",
