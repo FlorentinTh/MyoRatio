@@ -90,7 +90,7 @@ if (!(port === undefined)) {
       },
       method: 'GET'
     },
-    30,
+    (1 * 60 * 1000) / 500,
     500
   )
     .then(response => {
