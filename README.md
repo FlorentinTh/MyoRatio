@@ -109,6 +109,11 @@ $ (npm | yarn | pnpm) install
 
 **3.2. Generate an SSL certificate:**
 
+_Windows:_
+
+> This section is required only for the Windows build.
+> You can use WSL to benefit from the availability of the openssl command line tool
+
 ```sh
 # Create a new base folder to store your certificate files:
 $ mkdir ./.certs
@@ -125,7 +130,6 @@ $ openssl req -x509 -sha256 -days 365 -key ./.certs/key.pem -in ./.certs/csr.csr
 # Convert your certificate:
 $ openssl pkcs12 -export -inkey ./.certs/key.pem -in ./.certs/certificate.pem -out ./.certs/certificate.pfx
 ```
-> On Windows, you can use WSL to benefit from the availability of the openssl command line tool
 
 **3.3. Configure environment:**
 
