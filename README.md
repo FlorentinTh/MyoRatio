@@ -7,9 +7,11 @@ MyoRatio Application
 
 ## Prerequisites
 
-- [Node.js > 18](https://nodejs.org/)
-  - npm, [yarn](https://yarnpkg.com/getting-started/install) or [pnpm](https://pnpm.io/installation)
-- [Python > 3.9](https://www.python.org/downloads/)
+- [Download and install node.js](https://nodejs.org/) (minimum required version is 18 or later) to build the GUI and the final application. It comes with npm but you can also download and install [yarn](https://yarnpkg.com/getting-started/install) or [pnpm](https://pnpm.io/installation) according to your preferences.
+
+-  [Download and install Python](https://www.python.org/downloads/) (minimum required version is 3.9 or later) - to build the API.
+
+- [Download and install the latest Windows SDK](https://developer.microsoft.com/en-US/windows/downloads/windows-sdk/) to sign the final release installer before distribution.
 
 ## Related Project
 
@@ -31,7 +33,7 @@ $/> git clone https://github.com/FlorentinTh/MyoRatio-GUI.git
 $/> cd <your_base_path>/MyoRatio-API
 ```
 
-2.1. Setup project :
+**2.1. Setup project:**
 
 _Windows_
 ```sh
@@ -51,7 +53,7 @@ $ source ./venv/bin/activate
 
 > change ```configuration.py``` file content according to your needs
 
-2.2. Create the release folder :
+**2.2. Release the API:**
 
 *Windows:*
 ```sh
@@ -79,13 +81,13 @@ $ source ./venv/bin/activate
 
 > Release folder will be generated under ```MyoRatio-API/dist```
 
-#### 3. Build the Release
+#### 3. Build the application release
 
 ```sh
 $/> cd <your_base_path>/MyoRatio-GUI
 ```
 
-3.1. Install project dependencies :
+**3.1. Install project dependencies:**
 
 _Windows_
 
@@ -105,7 +107,27 @@ _macOS_
 $ (npm | yarn | pnpm) install
 ```
 
-3.2. Configure environment :
+**3.2. Generate an SSL certificate:**
+
+```sh
+# Create a new base folder to store your certificate files:
+$ mkdir ./.certs
+
+# Generate a private key:
+$ openssl genrsa -out ./.certs/key.pem 4096
+
+# Generate a new Certificate Signing Request (CSR):
+$ openssl req -new -sha256 -key ./.certs/key.pem -out ./.certs/csr.csr
+
+# Generate a  new certificate (valid 1 year):
+$ openssl req -x509 -sha256 -days 365 -key ./.certs/key.pem -in ./.certs/csr.csr -out ./.certs/certificate.pem
+
+# Convert your certificate:
+$ openssl pkcs12 -export -inkey ./.certs/key.pem -in ./.certs/certificate.pem -out ./.certs/certificate.pfx
+```
+> On Windows, you can use WSL to benefit from the availability of the openssl command line tool
+
+**3.3. Configure environment:**
 
 *Windows:*
 ```sh
@@ -117,9 +139,9 @@ $ (npm | yarn | pnpm) install
 $ mv env.json.example env.json
 ```
 
-> Edit the content of the file according to your needs
+> Edit the content of the **API_KEY** and **CERT_PWD** environment variables
 
-3.3. Include the API application:
+**3.4. Include the API:**
 
 *Windows:*
 ```powershell
@@ -130,7 +152,7 @@ $ mv env.json.example env.json
 $ cp -r <your_base_path>/MyoRatio-API/dist/MyoRatioAPI ./bin/MyoRatioAPI
 ```
 
-3.4. Build the Release Application:
+**3.5. Release the application:**
 
 *Windows:*
 ```sh
@@ -145,9 +167,9 @@ $ (npm | yarn | pnpm) run build:mac && (npm | yarn | pnpm) run publish:mac
 
 > A ```dmg``` file is created under ```MyoRatio-GUI/release/macx64```
 
-## For Developers
+## For Contributors
 
-- API:
+#### Setup the API project
 
 _Windows_
 ```sh
@@ -189,7 +211,7 @@ $ source ./venv/bin/activate
 (venv) > python3 server.py
 ```
 
-- GUI:
+#### Setup the GUI project:
 
 ```sh
 # Clone the GUI project:
@@ -229,7 +251,7 @@ $/> (npm | yarn | pnpm) run start
   $/> (npm | yarn | pnpm) run commit
   ```
 
-#### Release a New Version
+#### Release a New Version:
 
 To release a new version you can install the ```standard-version``` version package globally such as:
 
@@ -239,7 +261,7 @@ $/> yarn global add standard-version # or
 $/> pnpm add -g standard-version
 ```
 
-- API :
+**- API:**
 ```sh
 # deactivate the venv:
 (venv) $/> deactivate
@@ -251,7 +273,7 @@ $/> standard-version
 $/> git push --follow-tags origin main
 ```
 
-- GUI :
+***- GUI:***
 ```sh
 # run standard-version:
 $/> (npm | yarn | pnpm) run release

@@ -194,3 +194,4 @@ build/
 NOTES.md
 env.json
 release/
+.certs/

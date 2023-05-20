@@ -8,7 +8,7 @@
     "prebuild": "cross-env NODE_ENV=production webpack --mode production",
     "build:win": "npm run prebuild && build --tasks win-x64 --concurrent --mirror https://dl.nwjs.io/ . && npm run cp:bin:win",
     "cp:bin:win": "cross-var cpy ./bin ./dist/$npm_package_name_$npm_package_version_winx64",
-    "make:win": "innosetup-compiler winx64-installer.iss --verbose",
+    "make:win": "node win-compile.js",
     "checksum:win": "cross-var \"checksum -a sha256 ./release/winx64/$npm_package_name_$npm_package_version_winx64.exe > ./release/winx64/$npm_package_name_$npm_package_version_winx64.sha256sum\"",
     "publish:win": "npm run make:win && npm run checksum:win",
     "cp:bin:mac": "cross-var 'cpy ./bin \"./dist/$npm_package_name_$npm_package_version_macx64/MyoRatio.app/Contents/Resources/app.nw\"'",
