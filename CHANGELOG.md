@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.2.0](https://github.com/FlorentinTh/MyoRatio-GUI/compare/v2.1.0...v2.2.0) (2023-05-20)
+
+
+### Features
+
+* **application:** add code signin for final release installer before distribution ([f583d82](https://github.com/FlorentinTh/MyoRatio-GUI/commit/f583d82edc6103f30a2dc769d213ca2d53971f5f))
+* **menu:** add application version at the bottom of the menu panel ([2ff4f4c](https://github.com/FlorentinTh/MyoRatio-GUI/commit/2ff4f4c176b22149dff7a74097ff6868fdf9041d))
+
+
+### Bug Fixes
+
+* **index:** update retry policy for API to be started at application initialization ([c9b63de](https://github.com/FlorentinTh/MyoRatio-GUI/commit/c9b63de0ea36349018771f6ff29467f4fcbb2609))
+* **win-compile:** minor updates to win-compile code signin process ([a802b0e](https://github.com/FlorentinTh/MyoRatio-GUI/commit/a802b0e40b529d68daf7c6c6e2651865c9617278))
+
 ## [2.1.0](https://github.com/FlorentinTh/MyoRatio-GUI/compare/v2.0.0...v2.1.0) (2023-05-15)
 
 
