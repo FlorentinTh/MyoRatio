@@ -1,15 +1,27 @@
 const path = require('path');
 const env = require('./env.json');
 
+const SIGNTOOL_CONFIG = {
+  signToolName: 'signtool',
+  signToolPath:
+    'C:\\Program Files (x86)\\Microsoft SDKs\\ClickOnce\\SignTool\\signtool.exe',
+  signAlgo: 'SHA256',
+  timestampServerURL: 'http://timestamp.comodoca.com/authenticode'
+};
+
+const SIGNTOOL_COMMAND = `${SIGNTOOL_CONFIG.signToolPath} sign /f "${path.resolve(
+  env.CERT_PATH
+)}" /p ${env.CERT_PWD} /fd ${SIGNTOOL_CONFIG.signAlgo} /t ${
+  SIGNTOOL_CONFIG.timestampServerURL
+} /v $f`;
+
 require('innosetup-compiler')(
   './winx64-installer.iss',
   {
     gui: false,
     verbose: true,
-    signtoolname: 'signtool',
-    signtoolcommand: `"C:\\Program Files (x86)\\Microsoft SDKs\\ClickOnce\\SignTool\\signtool.exe" sign /f "${path.resolve(
-      env.CERT_PATH
-    )}" /p ${env.CERT_PWD} /fd SHA256 /t http://timestamp.comodoca.com/authenticode /v $f`
+    signtoolname: SIGNTOOL_CONFIG.signToolName,
+    signtoolcommand: SIGNTOOL_COMMAND
   },
   error => {
     console.log(error);
