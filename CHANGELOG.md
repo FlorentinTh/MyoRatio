@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.3.0](https://github.com/FlorentinTh/MyoRatio-GUI/compare/v2.2.0...v2.3.0) (2023-05-29)
+
+
+### Features
+
+* **participants-selection:** add numeric desc sort in list of participants ([5029c5d](https://github.com/FlorentinTh/MyoRatio-GUI/commit/5029c5d1d10f044b3a6c8d74b2335fabc1ad2d9e))
+
 ## [2.2.0](https://github.com/FlorentinTh/MyoRatio-GUI/compare/v2.1.0...v2.2.0) (2023-05-20)
 
 
