@@ -29,7 +29,9 @@ export const getAllParticipants = async sanitizedPath => {
       return;
     }
 
-    return filteredParticipants;
+    return filteredParticipants.sort((a, b) => {
+      return b.localeCompare(a, undefined, { sensitivity: 'base', numeric: true });
+    });
   } catch (error) {
     throw new Error(error);
   }
