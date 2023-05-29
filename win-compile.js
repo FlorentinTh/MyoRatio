@@ -1,6 +1,11 @@
 const path = require('path');
 const env = require('./env.json');
 
+/**
+ * signToolPath may also be located to:
+ * C:\Program Files (x86)\Windows Kits\10\bin\<version>\x64\signtool.exe
+ */
+
 const SIGNTOOL_CONFIG = {
   signToolName: 'signtool',
   signToolPath:
