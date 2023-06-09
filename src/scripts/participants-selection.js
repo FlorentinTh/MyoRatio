@@ -1,4 +1,5 @@
 import '../styles/participants-selection.css';
+// eslint-disable-next-line max-len
 import stageSelectorTemplate from '../views/partials/participants-selection/stage-selector.hbs';
 import participantCard from '../views/partials/participants-list/participant-card.hbs';
 import emptyCard from '../views/partials/participants-list/empty-card.hbs';
