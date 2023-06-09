@@ -1,0 +1,31 @@
+<div class="group" id="group-stage">
+  <div class="label">
+    <label for="switch-stage">Stage</label>
+  </div>
+  <div class="input-container">
+    <div class="switch" id="switch-stage">
+      <input
+        type="radio"
+        id="stage-opt1"
+        name="switch-stage"
+        value="concentric"
+      />
+      {{#if (eq analysis "sit-stand") }}
+        <label for="stage-opt1">Standing</label>
+      {{else}}
+        <label for="stage-opt1">Concentric</label>
+      {{/if}}
+      <input
+        type="radio"
+        id="stage-opt2"
+        name="switch-stage"
+        value="eccentric"
+      />
+      {{#if (eq analysis "sit-stand") }}
+        <label for="stage-opt2">Sitting</label>
+      {{else}}
+        <label for="stage-opt2">Eccentric</label>
+      {{/if}}
+    </div>
+  </div>
+</div>

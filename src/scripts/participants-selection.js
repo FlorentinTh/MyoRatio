@@ -1,4 +1,5 @@
 import '../styles/participants-selection.css';
+import stageSelectorTemplate from '../views/partials/participants-selection/stage-selector.hbs';
 import participantCard from '../views/partials/participants-list/participant-card.hbs';
 import emptyCard from '../views/partials/participants-list/empty-card.hbs';
 
@@ -45,8 +46,6 @@ const analysisType = PathHelper.sanitizePath(
   sessionStorage.getItem('analysis').toString()
 );
 
-const stageSwitchRadios = Switch.init('stage');
-
 const changeButton = document.getElementById('change-btn');
 // const exportPDFButton = document.querySelector('.export-pdf-btn');
 const exportXLSXButton = document.querySelector('.export-xlsx-btn');
@@ -56,6 +55,7 @@ const previewButton = document.getElementById('btn-preview');
 const selectButtonAll = document.getElementById('btn-all');
 const selectButtonNotCompleted = document.getElementById('btn-not-completed');
 const submitButton = document.querySelector('button[type="submit"]');
+const stageSelector = document.getElementById('stage-selector');
 const participantsList = document.querySelector('ul.list');
 
 dataPath.querySelector('p').innerText = ` ${
@@ -83,6 +83,14 @@ let isAllSelected = false;
 let isAllNotCompletedSelected = false;
 let totalInvalid = 0;
 let totalCompleted = 0;
+
+const displayStageSelector = analysis => {
+  stageSelector.insertAdjacentHTML('afterbegin', stageSelectorTemplate({ analysis }));
+};
+
+displayStageSelector(analysisType);
+
+const stageSwitchRadios = Switch.init('stage');
 
 const displayEmptyCard = () => {
   previewButton.setAttribute('disabled', '');

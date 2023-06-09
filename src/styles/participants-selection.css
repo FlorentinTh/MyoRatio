@@ -134,6 +134,10 @@
   cursor: pointer;
 }
 
+div#stage-selector {
+  display: contents;
+}
+
 .selection button:hover {
   background-color: #606060;
   background-image: linear-gradient(to right, #606060, #606060);
