@@ -59,6 +59,7 @@ const testAPIConnection = port => {
 };
 
 if (process.env.NODE_ENV === 'development') {
+  localStorage.setItem('port', configuration.PORT);
   testAPIConnection(configuration.PORT);
 } else {
   let basePath;
