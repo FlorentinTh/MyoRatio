@@ -71,6 +71,14 @@ const analysisFolderPath = PathHelper.sanitizePath(
 const participants = await getAllParticipants(analysisFolderPath);
 const metadata = new Metadata(dataFolderPathSession);
 
+const displayStageSelector = analysis => {
+  stageSelector.insertAdjacentHTML('afterbegin', stageSelectorTemplate({ analysis }));
+};
+
+displayStageSelector(analysisType);
+
+const stageSwitchRadios = Switch.init('stage');
+
 const participantsArray = [];
 let selectedParticipants = [];
 
@@ -84,14 +92,6 @@ let isAllSelected = false;
 let isAllNotCompletedSelected = false;
 let totalInvalid = 0;
 let totalCompleted = 0;
-
-const displayStageSelector = analysis => {
-  stageSelector.insertAdjacentHTML('afterbegin', stageSelectorTemplate({ analysis }));
-};
-
-displayStageSelector(analysisType);
-
-const stageSwitchRadios = Switch.init('stage');
 
 const displayEmptyCard = () => {
   previewButton.setAttribute('disabled', '');
