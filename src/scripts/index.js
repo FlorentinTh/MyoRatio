@@ -19,17 +19,6 @@ loaderOverlay.toggle({ message: 'Loading Application Components...' });
 const router = new Router();
 router.disableBackButton();
 
-let basePath;
-let APIExecutablePath;
-
-if (PlatformHelper.isWindowsPlatform()) {
-  basePath = nw.App.startPath;
-  APIExecutablePath = path.join(basePath, 'bin', 'MyoRatioAPI', 'MyoRatioAPI.exe');
-} else if (PlatformHelper.isMacOsPlatform()) {
-  basePath = process.env.INIT_CWD ?? process.cwd();
-  APIExecutablePath = path.join(basePath, 'bin', 'MyoRatioAPI', 'MyoRatioAPI');
-}
-
 if (!('filtered-data-alert' in localStorage)) {
   localStorage.setItem('filtered-data-alert', true);
 }
@@ -38,49 +27,7 @@ if (!('window-size' in localStorage)) {
   localStorage.setItem('window-size', 0.2);
 }
 
-let port;
-
-try {
-  port = await NetHelper.findNextAvailablePort(configuration.PORT);
-} catch (error) {
-  loaderOverlay.toggle();
-
-  const errorOverlay = new ErrorOverlay({
-    message: 'Cannot find available port',
-    details: error.message
-  });
-
-  errorOverlay.show();
-}
-
-if (!(port === undefined)) {
-  localStorage.setItem('port', port);
-
-  let childProcess;
-
-  try {
-    childProcess = spawn(APIExecutablePath, [port]);
-  } catch (error) {
-    loaderOverlay.toggle();
-
-    const errorOverlay = new ErrorOverlay({
-      message: 'Some required components cannot be started properly',
-      details: error.message
-    });
-
-    errorOverlay.show();
-  }
-
-  process.on('SIGINT', () => {
-    childProcess.kill();
-    process.exit();
-  });
-
-  process.on('SIGTERM', () => {
-    childProcess.kill();
-    process.exit();
-  });
-
+const testAPIConnection = port => {
   retryFetch(
     `http://${configuration.HOST}:${port}/api/ping/`,
     {
@@ -90,8 +37,8 @@ if (!(port === undefined)) {
       },
       method: 'GET'
     },
-    (1 * 60 * 1000) / 500,
-    500
+    15,
+    1000
   )
     .then(response => {
       setTimeout(() => {
@@ -100,11 +47,74 @@ if (!(port === undefined)) {
     })
     .catch(error => {
       const details = error.message ?? 'API is not started';
+
       loaderOverlay.toggle();
+
       const errorOverlay = new ErrorOverlay({
         message: 'Some required components cannot be started properly',
         details
       });
       errorOverlay.show();
     });
+};
+
+if (process.env.NODE_ENV === 'development') {
+  testAPIConnection(configuration.PORT);
+} else {
+  let basePath;
+  let APIExecutablePath;
+
+  if (PlatformHelper.isWindowsPlatform()) {
+    basePath = nw.App.startPath;
+    APIExecutablePath = path.join(basePath, 'bin', 'MyoRatioAPI', 'MyoRatioAPI.exe');
+  } else if (PlatformHelper.isMacOsPlatform()) {
+    basePath = process.env.INIT_CWD ?? process.cwd();
+    APIExecutablePath = path.join(basePath, 'bin', 'MyoRatioAPI', 'MyoRatioAPI');
+  }
+
+  let port;
+
+  try {
+    port = await NetHelper.findNextAvailablePort(configuration.PORT);
+  } catch (error) {
+    loaderOverlay.toggle();
+
+    const errorOverlay = new ErrorOverlay({
+      message: 'Cannot find available port',
+      details: error.message
+    });
+
+    errorOverlay.show();
+  }
+
+  if (!(port === undefined)) {
+    localStorage.setItem('port', port);
+
+    let childProcess;
+
+    try {
+      childProcess = spawn(APIExecutablePath, [port]);
+    } catch (error) {
+      loaderOverlay.toggle();
+
+      const errorOverlay = new ErrorOverlay({
+        message: 'Some required components cannot be started properly',
+        details: error.message
+      });
+
+      errorOverlay.show();
+    }
+
+    process.on('SIGINT', () => {
+      childProcess.kill();
+      process.exit();
+    });
+
+    process.on('SIGTERM', () => {
+      childProcess.kill();
+      process.exit();
+    });
+
+    testAPIConnection(port);
+  }
 }
