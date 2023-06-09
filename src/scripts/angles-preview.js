@@ -40,7 +40,7 @@ const allComplexitiesSelected = [];
 const participantsFolderPath = PathHelper.sanitizePath(
   path.join(dataFolderPathSession, 'Analysis', analysisType)
 );
-const participants = await getAllParticipants(participantsFolderPath);
+const participants = await getAllParticipants(participantsFolderPath, true);
 const metadata = new Metadata(dataFolderPathSession);
 
 const displayPreviewCard = (participant, infos, chart) => {

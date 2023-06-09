@@ -4,7 +4,7 @@ import { TypeHelper } from '../helpers/type-helper';
 const path = nw.require('path');
 const fs = nw.require('fs');
 
-export const getAllParticipants = async sanitizedPath => {
+export const getAllParticipants = async (sanitizedPath, isPreview = false) => {
   TypeHelper.checkStringNotNull(sanitizedPath, { label: 'sanitizedPath' });
 
   let participantsFolder;
@@ -27,6 +27,12 @@ export const getAllParticipants = async sanitizedPath => {
 
       errorOverlay.show();
       return;
+    }
+
+    if (isPreview) {
+      return filteredParticipants.sort((a, b) => {
+        return a.localeCompare(b, undefined, { sensitivity: 'base', numeric: true });
+      });
     }
 
     return filteredParticipants.sort((a, b) => {
