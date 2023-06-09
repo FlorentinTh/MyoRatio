@@ -80,7 +80,9 @@
       "env.json.example",
       "env.json",
       "bin/**/*",
-      "*.iss"
+      "*.iss",
+      "**/release/**",
+      "win-compile.js"
     ],
     "ffmpegIntegration": false,
     "win": {
