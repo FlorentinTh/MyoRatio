@@ -10,6 +10,7 @@ import { Switch } from './utils/switch';
 import { SessionStore } from './utils/session-store';
 import { Configuration } from './utils/configuration.js';
 import { getAllParticipants } from './components/participants';
+import { PlatformHelper } from './helpers/platform-helper';
 
 const os = nw.require('os');
 const path = nw.require('path');
@@ -146,6 +147,8 @@ submitButton.addEventListener('click', async () => {
 
       let isBaseFolderContentCompliant;
 
+      const redirectConverter = !PlatformHelper.isMacOsPlatform() ? 'converter' : '';
+
       try {
         isBaseFolderContentCompliant = await metadata.checkBaseFolderContent();
       } catch (error) {
@@ -155,7 +158,7 @@ submitButton.addEventListener('click', async () => {
           message: `Cannot verify content of input data folder`,
           details: `please ensure that the HPF data has been converted properly`,
           interact: true,
-          redirect: 'converter'
+          redirect: redirectConverter
         });
 
         errorOverlay.show();
@@ -186,7 +189,7 @@ submitButton.addEventListener('click', async () => {
           message: `Input data folder does not meet file structure requirements`,
           details: `please ensure that the HPF data has been converted properly`,
           interact: true,
-          redirect: 'converter'
+          redirect: redirectConverter
         });
 
         errorOverlay.show();
@@ -285,7 +288,7 @@ submitButton.addEventListener('click', async () => {
           message: `No participants could be found`,
           details: `please ensure that the HPF data has been converted properly`,
           interact: true,
-          redirect: 'converter'
+          redirect: redirectConverter
         });
 
         errorOverlay.show();
