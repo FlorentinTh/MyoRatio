@@ -273,11 +273,17 @@ const checkSelectedParticipantsAllNotCompleted = () => {
 const xlsxExportButtonClickHandler = async () => {
   loaderOverlay.toggle({ message: 'Creating XLSX report...' });
 
+  let stageFolderName = StringHelper.capitalize(stage);
+
+  if (analysisType === 'sit-stand') {
+    stageFolderName = stage === 'concentric' ? 'Standing' : 'Sitting';
+  }
+
   const resultFolderPath = path.join(
     PathHelper.sanitizePath(dataFolderPathSession),
     'Results',
     StringHelper.capitalize(analysisType),
-    StringHelper.capitalize(stage)
+    stageFolderName
   );
 
   try {
