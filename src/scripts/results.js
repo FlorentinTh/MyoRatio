@@ -55,10 +55,6 @@ const getRatiosFilePath = async () => {
   return path.join(inputPath, `ratios_${stage}.json`);
 };
 
-if (!(analysisType === 'extension')) {
-  highlightButton.classList.add('disabled');
-}
-
 const ratiosFilePath = await getRatiosFilePath();
 
 let ratiosFileJSON;
@@ -99,6 +95,15 @@ const displayResultsTable = () => {
 };
 
 displayResultsTable();
+
+const matrixElement = document.getElementById('matrix');
+matrixElement.removeAttribute('class');
+
+if (stage === 'concentric') {
+  matrixElement.classList.add('lower');
+} else {
+  matrixElement.classList.add('upper');
+}
 
 const table = document.querySelector('table');
 const rowTooltips = document.querySelectorAll('.tooltip-row');
@@ -151,9 +156,12 @@ const getRelevantRatioCoords = analysis => {
   let antagonist;
   let agonist;
 
-  if (analysis === 'extension') {
+  if (stage === 'concentric') {
     antagonist = 'R RECTUS FEMORIS';
     agonist = 'R BICEPS FEMORIS';
+  } else {
+    antagonist = 'R BICEPS FEMORIS';
+    agonist = 'R RECTUS FEMORIS';
   }
 
   const rows = document.querySelectorAll('div.tooltip-row');
