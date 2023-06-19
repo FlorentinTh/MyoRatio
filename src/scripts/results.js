@@ -100,9 +100,17 @@ const matrixElement = document.getElementById('matrix');
 matrixElement.removeAttribute('class');
 
 if (stage === 'concentric') {
-  matrixElement.classList.add('lower');
+  if (analysisType === 'flexion') {
+    matrixElement.classList.add('upper');
+  } else {
+    matrixElement.classList.add('lower');
+  }
 } else {
-  matrixElement.classList.add('upper');
+  if (analysisType === 'flexion') {
+    matrixElement.classList.add('lower');
+  } else {
+    matrixElement.classList.add('upper');
+  }
 }
 
 const table = document.querySelector('table');
@@ -157,11 +165,21 @@ const getRelevantRatioCoords = analysis => {
   let agonist;
 
   if (stage === 'concentric') {
-    antagonist = 'R RECTUS FEMORIS';
-    agonist = 'R BICEPS FEMORIS';
+    if (analysis === 'flexion') {
+      antagonist = 'R RECTUS FEMORIS';
+      agonist = 'R BICEPS FEMORIS';
+    } else {
+      antagonist = 'R BICEPS FEMORIS';
+      agonist = 'R RECTUS FEMORIS';
+    }
   } else {
-    antagonist = 'R BICEPS FEMORIS';
-    agonist = 'R RECTUS FEMORIS';
+    if (analysis === 'flexion') {
+      antagonist = 'R BICEPS FEMORIS';
+      agonist = 'R RECTUS FEMORIS';
+    } else {
+      antagonist = 'R RECTUS FEMORIS';
+      agonist = 'R BICEPS FEMORIS';
+    }
   }
 
   const rows = document.querySelectorAll('div.tooltip-row');
@@ -172,7 +190,7 @@ const getRelevantRatioCoords = analysis => {
     const muscleName = rows[i].innerText.trim();
 
     if (!(muscleName === undefined)) {
-      if (muscleName.toLowerCase().includes(agonist.toLowerCase())) {
+      if (muscleName.toLowerCase().includes(antagonist.toLowerCase())) {
         rowID = i;
       }
     }
@@ -186,7 +204,7 @@ const getRelevantRatioCoords = analysis => {
     const muscleName = columns[i].querySelector('div.tooltip-col').innerText.trim();
 
     if (!(muscleName === undefined)) {
-      if (muscleName.toLowerCase().includes(antagonist.toLowerCase())) {
+      if (muscleName.toLowerCase().includes(agonist.toLowerCase())) {
         columnID = i;
       }
     }
