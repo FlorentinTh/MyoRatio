@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.4.0](https://github.com/FlorentinTh/MyoRatio-GUI/compare/v2.3.0...v2.4.0) (2023-06-19)
+
+
+### Features
+
+* **index:** add condition on application environment to auto start API or not ([17120c9](https://github.com/FlorentinTh/MyoRatio-GUI/commit/17120c974966f6ed36e637c1175662f91a0adb35))
+* **participants-selection:** move stage selector to a component & condition content given analysis ([429f3a6](https://github.com/FlorentinTh/MyoRatio-GUI/commit/429f3a602e35d2ec8d6b725f429fe01801230cdc))
+* **results:** change matrix from only lower to both lower and upper given stage ([b8ed791](https://github.com/FlorentinTh/MyoRatio-GUI/commit/b8ed79153ea1cc4fcb09186a3d03050456d363fc))
+
+
+### Bug Fixes
+
+* **angles-preview:** fix sort of the list of participants ([69fc078](https://github.com/FlorentinTh/MyoRatio-GUI/commit/69fc078b53da98391f57cbfd6ee2d4447105d02c))
+* **data-discovering:** prevent macOs users of being redirected to the converter page ([4e97966](https://github.com/FlorentinTh/MyoRatio-GUI/commit/4e97966b3dcc56a3c57a350138edde0002edee05))
+* **index:** add missing port save to local-storage when environment is development ([c5c7b9c](https://github.com/FlorentinTh/MyoRatio-GUI/commit/c5c7b9c88036a451761a4a7922fb16574939fa4a))
+* **participants-selection:** fix issue with stage selector initialization ([010f435](https://github.com/FlorentinTh/MyoRatio-GUI/commit/010f435dfc86987d93673696fcb40b8b57fa1bab))
+* **results:** change matrix axis labels ([39fac88](https://github.com/FlorentinTh/MyoRatio-GUI/commit/39fac88f3dcf1470a04bad6a9a2f6fbdf8dd63c7))
+* **results:** revised version of the generation of the results given the analysis and stage ([145b176](https://github.com/FlorentinTh/MyoRatio-GUI/commit/145b1763b062110d8b7c9b3cddca6565fc35a6c6))
+
 ## [2.3.0](https://github.com/FlorentinTh/MyoRatio-GUI/compare/v2.2.0...v2.3.0) (2023-05-29)
 
 
