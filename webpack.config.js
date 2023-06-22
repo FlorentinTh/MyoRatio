@@ -128,6 +128,10 @@ module.exports = (env, argv) => {
             to: path.join('public', 'assets')
           },
           {
+            from: path.join(__dirname, 'src', 'assets', 'img'),
+            to: path.join('public', 'assets', 'img')
+          },
+          {
             from: path.join(__dirname, 'src', 'assets', 'report'),
             to: path.join('public', 'assets', 'report')
           }

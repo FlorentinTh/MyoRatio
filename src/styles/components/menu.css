@@ -86,7 +86,7 @@ nav ul {
   width: 250px;
   margin-top: 50px;
   min-height: 250px;
-  flex: 1 0 80%;
+  flex: 1 0 18rem;
 }
 
 nav .bottom {
@@ -95,6 +95,15 @@ nav .bottom {
   display: flex;
   flex-direction: column;
   margin-bottom: 25px;
+}
+
+nav .bottom .logos {
+  margin-bottom: 15px;
+}
+
+nav .bottom .logos img {
+  height: 3em;
+  margin-bottom: 15px;
 }
 
 nav ul li a {
@@ -120,17 +129,20 @@ nav ul li a.disabled {
 }
 
 .bottom > .copyright span,
-.bottom > .copyright span a {
+.bottom > .copyright span a,
+.bottom > .version span a {
   color: #ededed;
 }
 
-.bottom > .copyright span a {
+.bottom > .copyright span a,
+.bottom > .version span a {
   font-weight: bold;
   text-decoration: none;
   padding-bottom: 2px;
 }
 
-.bottom > .copyright span a:hover {
+.bottom > .copyright span a:hover,
+.bottom > .version span a:hover {
   border-bottom: 2px solid #ededed;
 }
 
