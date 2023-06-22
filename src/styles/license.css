@@ -1,0 +1,9 @@
+@import url('./main.css');
+
+.license {
+  max-height: 35rem;
+  overflow: auto;
+  padding: 12px;
+  border: 1px solid #232323;
+  border-radius: 6px 0 0 6px;
+}
