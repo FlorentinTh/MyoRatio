@@ -1,8 +1,20 @@
-@import url("./main.css");
+@import url('./main.css');
 
 a {
   text-decoration: none;
   color: #232323;
+}
+
+.logo {
+  margin-top: 50px;
+}
+
+.logo:not(:first-of-type) img {
+  height: 95px;
+}
+
+.persons {
+  margin-top: 25px;
 }
 
 .person {
@@ -34,15 +46,15 @@ a {
 }
 
 .person div.contact a {
-  color: #EDEDED;
+  color: #ededed;
   padding: 10px 100px;
-  border: 1px solid #16A085;
+  border: 1px solid #16a085;
   background-color: #16a084e4;
   border-radius: 30px;
-  background-image: linear-gradient(to left, #16A085, #16A085);
+  background-image: linear-gradient(to left, #16a085, #16a085);
   background-size: 0 100%;
   background-repeat: no-repeat;
-  transition: ease-out .4s;
+  transition: ease-out 0.4s;
 }
 
 .person div.contact a:hover {
