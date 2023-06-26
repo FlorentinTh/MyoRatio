@@ -12,6 +12,12 @@ export class LinkHelper {
         nw.Shell.openExternal(link.href);
         return false;
       });
+
+      link.addEventListener('auxclick', event => {
+        event.preventDefault();
+        nw.Shell.openExternal(link.href);
+        return false;
+      });
     }
   }
 }
