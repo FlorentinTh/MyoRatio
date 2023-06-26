@@ -192,6 +192,6 @@ bin/MyoRatioAPI
 build/
 .dccache
 NOTES.md
-env.json
+env.*.json
 release/
 .certs/

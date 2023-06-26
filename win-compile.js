@@ -1,5 +1,5 @@
 const path = require('path');
-const env = require('./env.json');
+const env = require('./env.build.json');
 
 /**
  * signToolPath may also be located to:

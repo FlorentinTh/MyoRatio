@@ -1,6 +1,6 @@
 import * as yup from 'yup';
 import { ErrorOverlay } from '../components/overlay';
-import configurationFile from '../../../env.json';
+import configurationFile from '../../../env.app.json';
 
 export class Configuration {
   static async load() {
