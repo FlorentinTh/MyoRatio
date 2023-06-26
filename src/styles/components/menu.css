@@ -89,23 +89,6 @@ nav ul {
   flex: 1 0 18rem;
 }
 
-nav .bottom {
-  text-align: center;
-  width: 250px;
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 25px;
-}
-
-nav .bottom .logos {
-  margin-bottom: 15px;
-}
-
-nav .bottom .logos img {
-  height: 3em;
-  margin-bottom: 15px;
-}
-
 nav ul li a {
   transition-duration: 0.25s;
   display: block;
@@ -128,30 +111,51 @@ nav ul li a.disabled {
   color: #616161;
 }
 
-.bottom > .copyright span,
-.bottom > .copyright span a,
-.bottom > .version span a {
+nav .bottom {
+  text-align: center;
+  width: 250px;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 25px;
+}
+
+nav .bottom .logos {
+  margin-bottom: 15px;
+}
+
+nav .bottom .copyright span,
+nav .bottom .copyright span a,
+nav .bottom .version span a {
   color: #ededed;
 }
 
-.bottom > .copyright span a,
-.bottom > .version span a {
+nav .bottom .copyright span a,
+nav .bottom .version span a {
   font-weight: bold;
   text-decoration: none;
   padding-bottom: 2px;
 }
 
-.bottom > .copyright span a:hover,
-.bottom > .version span a:hover {
+nav .bottom .logos a:hover {
+  opacity: 0.5;
+}
+
+nav .bottom .copyright span a:hover,
+nav .bottom .version span a:hover {
   border-bottom: 2px solid #ededed;
 }
 
-.bottom > .version {
+nav .bottom .version {
   margin-top: 5px;
 }
 
-.bottom > .version span {
+nav .bottom .version span {
   color: #ededed;
   font-style: italic;
   font-size: 0.8em;
+}
+
+nav .bottom .logos a img {
+  height: 3em;
+  margin-bottom: 15px;
 }

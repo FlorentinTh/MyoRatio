@@ -3,6 +3,8 @@ import menuTemplate from '../../views/partials/components/menu.hbs';
 
 import { TypeHelper } from '../helpers/type-helper.js';
 import { PlatformHelper } from '../helpers/platform-helper.js';
+import { ImageHelper } from '../helpers/image-helper';
+import { LinkHelper } from '../helpers/link-helper.js';
 
 export class Menu {
   #toggleNavButton;
@@ -14,6 +16,9 @@ export class Menu {
 
     this.#toggleNavButton = document.querySelector('.toggle-nav-btn');
     this.#additionalButtons = null;
+
+    LinkHelper.openExternalLinks();
+    ImageHelper.replaceImagesPath();
   }
 
   init(buttons) {

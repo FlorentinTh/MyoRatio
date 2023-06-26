@@ -9,43 +9,51 @@ a {
   margin-top: 50px;
 }
 
+.logo a:hover {
+  opacity: 0.6;
+}
+
+.logo:first-of-type a:hover {
+  opacity: 0.7;
+}
+
 .logo:not(:first-of-type) img {
   height: 95px;
 }
 
-.persons {
+.group .persons {
   margin-top: 25px;
 }
 
-.person {
+.group .persons .person {
   border: 1px dashed #232323;
   padding: 15px 0;
   color: #232323;
 }
 
-.person:not(:last-of-type) {
+.group .persons .person:not(:last-of-type) {
   margin-bottom: 25px;
 }
 
-.person h3 {
+.group .persons .person h3 {
   text-transform: uppercase;
   font-size: 1.05em;
 }
 
-.person div.name {
+.group .persons .person div.name {
   margin-bottom: 15px;
 }
 
-.person address {
+.group .persons .person address {
   margin-bottom: 25px;
 }
 
-.person div.contact {
+.group .persons .person div.contact {
   margin: 0 auto;
   margin-bottom: 6px;
 }
 
-.person div.contact a {
+.group .persons .person div.contact a {
   color: #ededed;
   padding: 10px 100px;
   border: 1px solid #16a085;
@@ -57,6 +65,6 @@ a {
   transition: ease-out 0.4s;
 }
 
-.person div.contact a:hover {
+.group .persons .person div.contact a:hover {
   background-size: 100% 100%;
 }
