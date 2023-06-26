@@ -135,12 +135,12 @@ $ openssl pkcs12 -export -inkey ./.certs/key.pem -in ./.certs/certificate.pem -o
 
 *Windows:*
 ```sh
-> ren env.json.example env.json
+> ren env.app.json.example env.app.json
 ```
 
 *macOS:*
 ```sh
-$ mv env.json.example env.json
+$ mv env.app.json.example env.app.json
 ```
 
 > Edit the content of the **API_KEY** and **CERT_PWD** environment variables
@@ -223,10 +223,12 @@ $/> git clone https://github.com/FlorentinTh/MyoRatio-GUI.git
 
 # Rename the env.json file (edit its content if needed):
 ## Windows:
-  > ren env.json.example env.json
+  > ren env.app.json.example env.app.json
+  > ren env.build.json.example env.build.json
 
 ## macOS:
-  $ mv env.json.example env.json
+  $ mv env.app.json.example env.app.json
+  $ mv env.build.json.example env.build.json
 
 # Install project dependencies:
 ## Windows:
