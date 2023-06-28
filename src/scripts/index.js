@@ -52,7 +52,10 @@ const testAPIConnection = port => {
 
       const errorOverlay = new ErrorOverlay({
         message: 'Some required components cannot be started properly',
-        details
+        details,
+        interact: true,
+        redirect: 'index',
+        interactBtnLabel: 'Retry'
       });
       errorOverlay.show();
     });
