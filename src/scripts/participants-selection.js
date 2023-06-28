@@ -14,7 +14,7 @@ import { Menu } from './components/menu.js';
 import { Router } from './routes/router.js';
 import { Loader } from './components/loader.js';
 import { ErrorOverlay } from './components/overlay';
-import { getAllParticipants } from './components/participants';
+import { getAllParticipants } from './utils/participants';
 import { Metadata } from './utils/metadata.js';
 import { PathHelper } from './helpers/path-helper.js';
 import { StringHelper } from './helpers/string-helper';

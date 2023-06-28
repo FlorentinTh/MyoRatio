@@ -5,7 +5,7 @@ import Swal from 'sweetalert2';
 
 import { Menu } from './components/menu.js';
 import { Router } from './routes/router.js';
-import { getAllParticipants } from './components/participants';
+import { getAllParticipants } from './utils/participants';
 import { Metadata } from './utils/metadata.js';
 import { Loader } from './components/loader.js';
 import { ErrorOverlay } from './components/overlay';

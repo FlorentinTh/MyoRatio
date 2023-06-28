@@ -9,7 +9,7 @@ import { PathHelper } from './helpers/path-helper.js';
 import { Switch } from './utils/switch';
 import { SessionStore } from './utils/session-store';
 import { Configuration } from './utils/configuration.js';
-import { getAllParticipants } from './components/participants';
+import { getAllParticipants } from './utils/participants';
 import { PlatformHelper } from './helpers/platform-helper';
 
 const os = nw.require('os');
