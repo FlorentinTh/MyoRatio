@@ -12,15 +12,19 @@ export class ImageHelper {
 
     for (const image of images) {
       if (PlatformHelper.isWindowsPlatform()) {
-        basePath = nw.App.startPath;
+        basePath = path.join(nw.App.startPath, 'build', 'public');
       } else if (PlatformHelper.isMacOsPlatform()) {
-        basePath = process.env.INIT_CWD ?? process.cwd();
+        if (process.env.NODE_ENV === 'development') {
+          basePath = 'public';
+        } else {
+          basePath = '.';
+        }
       }
 
       const imagePathArray = image.src.split('/');
       const filePath = imagePathArray[imagePathArray.length - 1];
 
-      image.src = path.join(basePath, 'build', 'public', 'assets', 'img', filePath);
+      image.src = path.join(basePath, 'assets', 'img', filePath);
     }
   }
 }
