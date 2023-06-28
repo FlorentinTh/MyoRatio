@@ -2,7 +2,7 @@
   "name": "MyoRatio",
   "version": "2.4.0",
   "description": "MyoRatio Application",
-  "main": "./build/public/index.html",
+  "main": "build/public/index.html",
   "scripts": {
     "start": "cross-env NODE_ENV=development webpack serve --mode development",
     "prebuild": "cross-env NODE_ENV=production webpack --mode production",
@@ -53,13 +53,13 @@
     "packed": false,
     "targets": [],
     "strippedProperties": [
-      "build",
-      "devDependencies",
       "scripts",
       "pre-commit",
       "config",
-      "author",
-      "dependencies"
+      "build",
+      "devDependencies",
+      "dependencies",
+      "optionalDependencies"
     ],
     "overriddenProperties": {
       "window": {
@@ -72,18 +72,17 @@
     },
     "outputPattern": "${NAME}_${VERSION}_${PLATFORM}${ARCH}",
     "excludes": [
-      "dist/**/*",
+      "**/bin/**",
+      "**/dist/**",
       "**/node_modules/**",
+      "**/release/**",
       "**/src/**",
       "package-lock.json",
       "*.md",
-      "webpack.config.js",
-      "env.json.example",
-      "env.json",
-      "bin/**/*",
-      "*.iss",
-      "**/release/**",
-      "win-compile.js"
+      "*.js",
+      "env.*.example",
+      "env.*.json",
+      "*.iss"
     ],
     "ffmpegIntegration": false,
     "win": {
