@@ -9,7 +9,7 @@ import Swal from 'sweetalert2';
 
 import { Menu } from './components/menu.js';
 import { Router } from './routes/router.js';
-import { LoaderOverlay } from './components/loader-overlay.js';
+import { Loader } from './components/loader.js';
 import { Metadata } from './utils/metadata.js';
 import { ChartSetup } from './utils/chart-setup';
 import { ChartHelper } from './helpers/chart-helper.js';
@@ -27,7 +27,7 @@ const fs = nw.require('fs');
 const router = new Router();
 router.disableBackButton();
 
-const loaderOverlay = new LoaderOverlay();
+const loader = new Loader();
 const configuration = await Configuration.load();
 
 const menu = new Menu();
@@ -1168,7 +1168,7 @@ submitButton.addEventListener('click', async () => {
   sessionStorage.removeItem('selected-points');
 
   if (submitButton.classList.contains('completed')) {
-    loaderOverlay.toggle({ message: 'Saving data...' });
+    loader.toggle({ message: 'Saving data...' });
     await writeMetadata({ completed: true });
     await mutexUnlock();
 
@@ -1180,7 +1180,7 @@ submitButton.addEventListener('click', async () => {
       const response = await request.json();
 
       if (!(response.code === 201)) {
-        loaderOverlay.toggle();
+        loader.toggle();
 
         const errorOverlay = new ErrorOverlay({
           message: response.payload.message,
@@ -1197,7 +1197,7 @@ submitButton.addEventListener('click', async () => {
         }, 800);
       }
     } catch (error) {
-      loaderOverlay.toggle();
+      loader.toggle();
 
       const errorOverlay = new ErrorOverlay({
         message: `The application cannot complete processing of selected angles`,

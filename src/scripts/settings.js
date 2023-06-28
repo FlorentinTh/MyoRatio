@@ -2,12 +2,12 @@ import '../styles/settings.css';
 
 import { Menu } from './components/menu.js';
 import { Router } from './routes/router.js';
-import { LoaderOverlay } from './components/loader-overlay.js';
+import { Loader } from './components/loader.js';
 
 const router = new Router();
 router.disableBackButton();
 
-const loaderOverlay = new LoaderOverlay();
+const loader = new Loader();
 
 const menu = new Menu();
 menu.init();
@@ -73,7 +73,7 @@ windowSizeInput.addEventListener('keyup', event => {
 
 submitButton.addEventListener('click', () => {
   if (!submitButton.disabled) {
-    loaderOverlay.toggle({ message: 'Saving data...' });
+    loader.toggle({ message: 'Saving data...' });
 
     setTimeout(() => {
       router.switchPage('data-discovering');

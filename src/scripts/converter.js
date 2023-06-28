@@ -3,7 +3,7 @@ import '../styles/components/folder-input.css';
 import { Menu } from './components/menu.js';
 import { Router } from './routes/router.js';
 import { SessionStore } from './utils/session-store';
-import { LoaderOverlay } from './components/loader-overlay.js';
+import { Loader } from './components/loader.js';
 import { PathHelper } from './helpers/path-helper';
 import { Metadata } from './utils/metadata';
 import { SuccessOverlay, ErrorOverlay } from './components/overlay';
@@ -18,7 +18,7 @@ const crypto = nw.require('crypto');
 const router = new Router();
 router.disableBackButton();
 
-const loaderOverlay = new LoaderOverlay();
+const loader = new Loader();
 
 SessionStore.clear({ keep: ['data-path', 'analysis'] });
 
@@ -104,7 +104,7 @@ folderInput.addEventListener('change', event => {
 
 submitButton.addEventListener('click', async () => {
   if (!submitButton.disabled) {
-    loaderOverlay.toggle({ message: 'Converting files...' });
+    loader.toggle({ message: 'Converting files...' });
 
     const sanitizedPath = PathHelper.sanitizePath(dataPath);
     const metadata = new Metadata(sanitizedPath);
@@ -116,7 +116,7 @@ submitButton.addEventListener('click', async () => {
       isBaseFolderContentCompliant = await metadata.checkBaseFolderContent(true);
     } catch (error) {
       isRootHPFFolder = false;
-      loaderOverlay.toggle();
+      loader.toggle();
 
       const errorOverlay = new ErrorOverlay({
         message: `Cannot verify content of input data folder`,
@@ -136,7 +136,7 @@ submitButton.addEventListener('click', async () => {
       try {
         files = await FileHelper.listAllFilesRecursive(HPFPath);
       } catch (error) {
-        loaderOverlay.toggle();
+        loader.toggle();
 
         const errorOverlay = new ErrorOverlay({
           message: `Cannot find files`,
@@ -214,7 +214,7 @@ submitButton.addEventListener('click', async () => {
               if (error.code === 'ENOENT') {
                 continue;
               } else {
-                loaderOverlay.toggle();
+                loader.toggle();
 
                 const errorOverlay = new ErrorOverlay({
                   message: `Cannot convert HPF File: ${path.basename(distinctFile.file)}`,
@@ -232,12 +232,12 @@ submitButton.addEventListener('click', async () => {
 
           for (const notConvertedFile of notConvertedFiles) {
             totalFileCompleted++;
-            loaderOverlay.loaderMessage.innerText = `Converting ${totalFileCompleted} / ${notConvertedFiles.length} files...`;
+            loader.loaderMessage.innerText = `Converting ${totalFileCompleted} / ${notConvertedFiles.length} files...`;
 
             try {
               await CSVHelper.convertFromHPF(`"${notConvertedFile.file}"`);
             } catch (error) {
-              loaderOverlay.toggle();
+              loader.toggle();
 
               conversionError = true;
 
@@ -296,7 +296,7 @@ submitButton.addEventListener('click', async () => {
                 await fs.promises.unlink(notConvertedFile.file);
               }
             } catch (error) {
-              loaderOverlay.toggle();
+              loader.toggle();
 
               conversionError = true;
 
@@ -314,7 +314,7 @@ submitButton.addEventListener('click', async () => {
           }
 
           if (!conversionError) {
-            loaderOverlay.toggle();
+            loader.toggle();
 
             const totalDetails =
               notConvertedFiles.length > 1
@@ -330,7 +330,7 @@ submitButton.addEventListener('click', async () => {
             successOverlay.show();
           }
         } else {
-          loaderOverlay.toggle();
+          loader.toggle();
 
           const successOverlay = new SuccessOverlay({
             message: `All set!`,
@@ -361,7 +361,7 @@ submitButton.addEventListener('click', async () => {
           });
         }
       } else {
-        loaderOverlay.toggle();
+        loader.toggle();
 
         const errorOverlay = new ErrorOverlay({
           message: `File not found`,
@@ -373,7 +373,7 @@ submitButton.addEventListener('click', async () => {
       }
     } else {
       if (isRootHPFFolder) {
-        loaderOverlay.toggle();
+        loader.toggle();
 
         const errorOverlay = new ErrorOverlay({
           message: `Input data folder does not meet file structure requirements`,

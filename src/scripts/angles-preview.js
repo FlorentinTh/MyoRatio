@@ -7,7 +7,7 @@ import { Menu } from './components/menu.js';
 import { Router } from './routes/router.js';
 import { getAllParticipants } from './components/participants';
 import { Metadata } from './utils/metadata.js';
-import { LoaderOverlay } from './components/loader-overlay.js';
+import { Loader } from './components/loader.js';
 import { ErrorOverlay } from './components/overlay';
 import { PathHelper } from './helpers/path-helper';
 import { StringHelper } from './helpers/string-helper';
@@ -19,7 +19,7 @@ const path = nw.require('path');
 const router = new Router();
 router.disableBackButton();
 
-const loaderOverlay = new LoaderOverlay();
+const loader = new Loader();
 
 const menu = new Menu();
 menu.init();
@@ -369,7 +369,7 @@ submitButton.addEventListener('click', async () => {
       })
         .then(async result => {
           if (!result.isConfirmed) {
-            loaderOverlay.toggle({ message: 'Saving data...' });
+            loader.toggle({ message: 'Saving data...' });
 
             await saveData();
 
@@ -384,7 +384,7 @@ submitButton.addEventListener('click', async () => {
           throw new Error(error);
         });
     } else {
-      loaderOverlay.toggle({ message: 'Saving data...' });
+      loader.toggle({ message: 'Saving data...' });
 
       await saveData();
 

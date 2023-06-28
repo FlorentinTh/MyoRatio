@@ -2,7 +2,7 @@ import '../styles/components/folder-input.css';
 
 import { Menu } from './components/menu.js';
 import { Router } from './routes/router.js';
-import { LoaderOverlay } from './components/loader-overlay.js';
+import { Loader } from './components/loader.js';
 import { ErrorOverlay } from './components/overlay.js';
 import { Metadata } from './utils/metadata.js';
 import { PathHelper } from './helpers/path-helper.js';
@@ -20,7 +20,7 @@ router.disableBackButton();
 
 SessionStore.clear({ keep: ['data-path', 'analysis'] });
 
-const loaderOverlay = new LoaderOverlay();
+const loader = new Loader();
 const configuration = await Configuration.load();
 
 const menu = new Menu();
@@ -137,7 +137,7 @@ const rollWaitingMessage = (overlay, messages, index) => {
 
 submitButton.addEventListener('click', async () => {
   if (!submitButton.disabled) {
-    loaderOverlay.toggle({ message: 'Discovering data...' });
+    loader.toggle({ message: 'Discovering data...' });
 
     if ('data-path' in sessionStorage) {
       const dataPath = sessionStorage.getItem('data-path').toString();
@@ -152,7 +152,7 @@ submitButton.addEventListener('click', async () => {
       try {
         isBaseFolderContentCompliant = await metadata.checkBaseFolderContent();
       } catch (error) {
-        loaderOverlay.toggle();
+        loader.toggle();
 
         const errorOverlay = new ErrorOverlay({
           message: `Cannot verify content of input data folder`,
@@ -171,7 +171,7 @@ submitButton.addEventListener('click', async () => {
         try {
           isMetadataFolderInit = await metadata.createMetadataFolderTree();
         } catch (error) {
-          loaderOverlay.toggle();
+          loader.toggle();
 
           const errorOverlay = new ErrorOverlay({
             message: `Application cannot initialize the metadata tree`,
@@ -183,7 +183,7 @@ submitButton.addEventListener('click', async () => {
           return;
         }
       } else {
-        loaderOverlay.toggle();
+        loader.toggle();
 
         const errorOverlay = new ErrorOverlay({
           message: `Input data folder does not meet file structure requirements`,
@@ -214,13 +214,13 @@ submitButton.addEventListener('click', async () => {
       }
 
       if (!(participants === undefined) && participants.length > 0) {
-        loaderOverlay.loaderMessage.innerText = `Found ${participants.length} participants...`;
+        loader.loaderMessage.innerText = `Found ${participants.length} participants...`;
 
         for (const participant of participants) {
           try {
             await metadata.createMetadataParticipantFolder(analysisType, participant);
           } catch (error) {
-            loaderOverlay.toggle();
+            loader.toggle();
 
             const errorOverlay = new ErrorOverlay({
               message: `The application cannot initialize metadata tree for participants`,
@@ -241,11 +241,11 @@ submitButton.addEventListener('click', async () => {
           `Just a few more steps`
         ];
 
-        loaderOverlay.loaderMessage.innerText = messages[0];
+        loader.loaderMessage.innerText = messages[0];
         const messageIndex = 1;
 
         setTimeout(() => {
-          rollWaitingMessage(loaderOverlay, messages, messageIndex);
+          rollWaitingMessage(loader, messages, messageIndex);
         }, 3500);
 
         try {
@@ -260,7 +260,7 @@ submitButton.addEventListener('click', async () => {
           if (response.code === 201) {
             router.switchPage('participants-selection');
           } else {
-            loaderOverlay.toggle();
+            loader.toggle();
 
             const errorOverlay = new ErrorOverlay({
               message: response.payload.message,
@@ -271,7 +271,7 @@ submitButton.addEventListener('click', async () => {
             errorOverlay.show();
           }
         } catch (error) {
-          loaderOverlay.toggle();
+          loader.toggle();
 
           const errorOverlay = new ErrorOverlay({
             message: `The application cannot fetch information of participants`,
@@ -282,7 +282,7 @@ submitButton.addEventListener('click', async () => {
           errorOverlay.show();
         }
       } else {
-        loaderOverlay.toggle();
+        loader.toggle();
 
         const errorOverlay = new ErrorOverlay({
           message: `No participants could be found`,

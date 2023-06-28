@@ -12,7 +12,7 @@ import Swal from 'sweetalert2';
 
 import { Menu } from './components/menu.js';
 import { Router } from './routes/router.js';
-import { LoaderOverlay } from './components/loader-overlay.js';
+import { Loader } from './components/loader.js';
 import { ErrorOverlay } from './components/overlay';
 import { getAllParticipants } from './components/participants';
 import { Metadata } from './utils/metadata.js';
@@ -31,7 +31,7 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.tz.setDefault('America/Toronto');
 
-const loaderOverlay = new LoaderOverlay();
+const loader = new Loader();
 const configuration = await Configuration.load();
 
 const router = new Router();
@@ -271,7 +271,7 @@ const checkSelectedParticipantsAllNotCompleted = () => {
 };
 
 const xlsxExportButtonClickHandler = async () => {
-  loaderOverlay.toggle({ message: 'Creating XLSX report...' });
+  loader.toggle({ message: 'Creating XLSX report...' });
 
   let stageFolderName = StringHelper.capitalize(stage);
 
@@ -289,7 +289,7 @@ const xlsxExportButtonClickHandler = async () => {
   try {
     FileHelper.createFileOrDirectoryIfNotExists(resultFolderPath);
   } catch (error) {
-    loaderOverlay.toggle();
+    loader.toggle();
 
     const errorOverlay = new ErrorOverlay({
       message: `The application cannot initialize the participants' export information`,
@@ -304,7 +304,7 @@ const xlsxExportButtonClickHandler = async () => {
   try {
     const request = await fetchXLSXReport();
     const response = await request.json();
-    loaderOverlay.toggle();
+    loader.toggle();
 
     if (!(response.code === 201)) {
       const errorOverlay = new ErrorOverlay({
@@ -317,7 +317,7 @@ const xlsxExportButtonClickHandler = async () => {
       return;
     }
   } catch (error) {
-    loaderOverlay.toggle();
+    loader.toggle();
 
     const errorOverlay = new ErrorOverlay({
       message: `The application cannot fetch participants' information`,
@@ -452,7 +452,7 @@ const mutexLock = async () => {
       fs.constants.F_OK
     );
 
-    loaderOverlay.toggle();
+    loader.toggle();
 
     const errorOverlay = new ErrorOverlay({
       message: `Participant ${firstParticipant} cannot be processed`,
@@ -472,7 +472,7 @@ const mutexLock = async () => {
         router.switchPage('angles-selection');
       }, 800);
     } catch (error) {
-      loaderOverlay.toggle();
+      loader.toggle();
 
       const errorOverlay = new ErrorOverlay({
         message: `Participant ${firstParticipant} cannot be processed`,
@@ -652,7 +652,7 @@ if (!(participants?.length > 0)) {
         })
           .then(async result => {
             if (!result.isConfirmed) {
-              loaderOverlay.toggle({ message: 'Preparing data...' });
+              loader.toggle({ message: 'Preparing data...' });
               await mutexLock();
             } else {
               router.switchPage('angles-preview');
@@ -662,7 +662,7 @@ if (!(participants?.length > 0)) {
             throw new Error(error);
           });
       } else {
-        loaderOverlay.toggle({ message: 'Preparing data...' });
+        loader.toggle({ message: 'Preparing data...' });
         await mutexLock();
       }
     }

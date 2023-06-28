@@ -2,7 +2,7 @@ import '../../styles/components/loader.css';
 import loaderTemplate from '../../views/partials/components/loader.hbs';
 import { TypeHelper } from '../helpers/type-helper.js';
 
-export class LoaderOverlay {
+export class Loader {
   #loaderElement;
   #loaderMessage;
 

@@ -1,6 +1,6 @@
 import '../styles/main.css';
 
-import { LoaderOverlay } from './components/loader-overlay.js';
+import { Loader } from './components/loader.js';
 import { Router } from './routes/router.js';
 import { PlatformHelper } from './helpers/platform-helper.js';
 import { Configuration } from './utils/configuration.js';
@@ -13,8 +13,8 @@ const { spawn } = nw.require('child_process');
 
 const configuration = await Configuration.load();
 
-const loaderOverlay = new LoaderOverlay();
-loaderOverlay.toggle({ message: 'Loading Application Components...' });
+const loader = new Loader();
+loader.toggle({ message: 'Loading Application Components...' });
 
 const router = new Router();
 router.disableBackButton();
@@ -48,7 +48,7 @@ const testAPIConnection = port => {
     .catch(error => {
       const details = error.message ?? 'API is not started';
 
-      loaderOverlay.toggle();
+      loader.toggle();
 
       const errorOverlay = new ErrorOverlay({
         message: 'Some required components cannot be started properly',
@@ -78,7 +78,7 @@ if (process.env.NODE_ENV === 'development') {
   try {
     port = await NetHelper.findNextAvailablePort(configuration.PORT);
   } catch (error) {
-    loaderOverlay.toggle();
+    loader.toggle();
 
     const errorOverlay = new ErrorOverlay({
       message: 'Cannot find available port',
@@ -96,7 +96,7 @@ if (process.env.NODE_ENV === 'development') {
     try {
       childProcess = spawn(APIExecutablePath, [port]);
     } catch (error) {
-      loaderOverlay.toggle();
+      loader.toggle();
 
       const errorOverlay = new ErrorOverlay({
         message: 'Some required components cannot be started properly',
