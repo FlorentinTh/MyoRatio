@@ -31,6 +31,8 @@
 .auto-angles-btn.open {
   opacity: 0;
   transform: translateX(250px);
+  pointer-events: none;
+  cursor: default;
 }
 
 .auto-angles-btn i {

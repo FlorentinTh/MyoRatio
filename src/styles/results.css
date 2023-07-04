@@ -31,6 +31,8 @@
 .highlight-btn.open {
   opacity: 0;
   transform: translateX(250px);
+  pointer-events: none;
+  cursor: default;
 }
 
 .highlight-btn i {
