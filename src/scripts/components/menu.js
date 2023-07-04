@@ -46,6 +46,7 @@ export class Menu {
     document.querySelector('body').classList.toggle('nav-open');
     document.querySelector('nav').classList.toggle('open');
     document.querySelector('.content').classList.toggle('open');
+    document.querySelector('.disable-content-overlay').classList.toggle('open');
 
     if (!TypeHelper.isChildOfHTMLElement(this.#additionalButtons)) {
       if (this.#additionalButtons?.length > 0) {

@@ -2,10 +2,10 @@
 @import url('./main.css');
 
 .highlight-btn {
+  opacity: 1;
   top: 110px;
   left: 42px;
   transition-duration: 0.5s;
-  transition-timing-function: swing;
   width: 90px;
   height: 50px;
   background-color: #16a085;
@@ -29,6 +29,7 @@
 }
 
 .highlight-btn.open {
+  opacity: 0;
   transform: translateX(250px);
 }
 
