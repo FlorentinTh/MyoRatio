@@ -667,8 +667,6 @@ if (!(participants?.length > 0)) {
       }
     }
   });
-
-  exportXLSXButton.addEventListener('click', xlsxExportButtonClickHandler);
 }
 
 changeButton.addEventListener('click', () => {
