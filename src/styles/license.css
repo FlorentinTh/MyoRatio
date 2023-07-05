@@ -1,10 +1,27 @@
 @import url('./main.css');
 
-h3 {
+main.content section.wrapper h2 {
+  margin-bottom: 25px;
+}
+
+main.content section.wrapper a {
+  color: #16a085;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+main.content section.wrapper a:hover {
+  border-bottom: 2px solid #16a085;
+  padding-bottom: 1px;
+}
+
+.app-license {
   font-weight: lighter;
   font-size: 0.8em;
   margin-bottom: 15px;
   text-transform: uppercase;
+  width: 600px;
+  text-align: center;
 }
 
 .license {
@@ -13,4 +30,33 @@ h3 {
   padding: 20px 10px 20px 20px;
   border: 1px solid #232323;
   border-radius: 6px 0 0 6px;
+  margin-bottom: 50px;
+  width: 615px;
+}
+
+h3 {
+  font-size: 1em;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+}
+
+h3:not(:first-of-type) {
+  margin-top: 25px;
+}
+
+.components {
+  border: 1px solid #232323;
+  border-radius: 6px;
+  width: 615px;
+  padding: 20px;
+  text-align: left;
+}
+
+.components ul {
+  padding-left: 25px;
+  font-size: 0.8em;
+}
+
+.components ul li:not(:first-of-type) {
+  padding-top: 3px;
 }
