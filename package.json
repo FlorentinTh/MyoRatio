@@ -20,15 +20,20 @@
     "clean": "rimraf build && rimraf dist",
     "lint": "eslint ./src --ext .js,.json && stylelint ./src/**/*.css",
     "commit": "git-cz",
-    "release": "standard-version && npm run update-win-build",
-    "git:publish": "git push --follow-tags",
-    "update-win-build": "node win-update.js"
+    "release": "standard-version -a",
+    "git:publish": "git push --follow-tags"
   },
-  "author": "FlorentinTh",
-  "license": "MIT",
+  "author": "Florentin Thullier <fthullie@uqac.ca>",
+  "license" : "SEE LICENSE IN <LICENSE>",
   "pre-commit": [
     "lint"
   ],
+  "standard-version": {
+    "scripts": {
+      "postbump": "node win-update.js",
+      "precommit": "git add winx64-installer.iss"
+    }
+  },
   "config": {
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
