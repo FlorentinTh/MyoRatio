@@ -316,7 +316,7 @@ const xlsxExportButtonClickHandler = async () => {
       errorOverlay.show();
       return;
     } else {
-      loader.toggle({ message: 'Computing report summaries...' });
+      loader.toggle({ message: 'Producing report summaries...' });
 
       try {
         const request = await fetchXLSXSummary();
