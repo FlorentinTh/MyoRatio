@@ -315,12 +315,42 @@ const xlsxExportButtonClickHandler = async () => {
 
       errorOverlay.show();
       return;
+    } else {
+      loader.toggle({ message: 'Computing report summaries...' });
+
+      try {
+        const request = await fetchXLSXSummary();
+        const response = await request.json();
+
+        loader.toggle();
+
+        if (!(response.code === 201)) {
+          const errorOverlay = new ErrorOverlay({
+            message: response.payload.message,
+            details: response.payload.details,
+            interact: true
+          });
+
+          errorOverlay.show();
+          return;
+        }
+      } catch (error) {
+        loader.toggle();
+
+        const errorOverlay = new ErrorOverlay({
+          message: `The application cannot produce report summaries`,
+          details: error.message,
+          interact: true
+        });
+
+        errorOverlay.show();
+      }
     }
   } catch (error) {
     loader.toggle();
 
     const errorOverlay = new ErrorOverlay({
-      message: `The application cannot fetch participants' information`,
+      message: `The application cannot produce XLSX reports`,
       details: error.message,
       interact: true
     });
@@ -420,6 +450,23 @@ const fetchXLSXReport = async () => {
   const port = localStorage.getItem('port') ?? configuration.PORT;
 
   return await fetch(`http://${configuration.HOST}:${port}/api/report/xlsx`, {
+    headers: {
+      'X-API-Key': configuration.API_KEY,
+      'Content-Type': 'application/json'
+    },
+    method: 'POST',
+    body: JSON.stringify({
+      data_path: PathHelper.sanitizePath(dataFolderPathSession),
+      analysis: analysisType,
+      stage
+    })
+  });
+};
+
+const fetchXLSXSummary = async () => {
+  const port = localStorage.getItem('port') ?? configuration.PORT;
+
+  return await fetch(`http://${configuration.HOST}:${port}/api/summary`, {
     headers: {
       'X-API-Key': configuration.API_KEY,
       'Content-Type': 'application/json'
