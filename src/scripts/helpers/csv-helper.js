@@ -13,7 +13,7 @@ export class CSVHelper {
     const converterExecutablePath = path.join(
       nw.App.startPath,
       'bin',
-      'DelsysFileUtil.exe'
+      'MyoRatioConverter.exe'
     );
 
     return new Promise((resolve, reject) => {
