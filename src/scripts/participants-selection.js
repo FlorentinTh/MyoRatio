@@ -270,36 +270,8 @@ const checkSelectedParticipantsAllNotCompleted = () => {
   return totalNotCompleted;
 };
 
-const xlsxExportButtonClickHandler = async () => {
-  loader.toggle({ message: 'Creating XLSX report...' });
-
-  let stageFolderName = StringHelper.capitalize(stage);
-
-  if (analysisType === 'sit-stand') {
-    stageFolderName = stage === 'concentric' ? 'Standing' : 'Sitting';
-  }
-
-  const resultFolderPath = path.join(
-    PathHelper.sanitizePath(dataFolderPathSession),
-    'Results',
-    StringHelper.capitalize(analysisType),
-    stageFolderName
-  );
-
-  try {
-    FileHelper.createFileOrDirectoryIfNotExists(resultFolderPath);
-  } catch (error) {
-    loader.toggle();
-
-    const errorOverlay = new ErrorOverlay({
-      message: `The application cannot initialize the participants' export information`,
-      details: error.message,
-      interact: true
-    });
-
-    errorOverlay.show();
-    return;
-  }
+const exportResultsRequests = async () => {
+  loader.toggle({ message: 'Writing reports...' });
 
   try {
     const request = await fetchXLSXReport();
@@ -316,7 +288,7 @@ const xlsxExportButtonClickHandler = async () => {
       errorOverlay.show();
       return;
     } else {
-      loader.toggle({ message: 'Producing report summaries...' });
+      loader.toggle({ message: 'Compiling results...' });
 
       try {
         const request = await fetchXLSXSummary();
@@ -338,7 +310,7 @@ const xlsxExportButtonClickHandler = async () => {
         loader.toggle();
 
         const errorOverlay = new ErrorOverlay({
-          message: `The application cannot produce report summaries`,
+          message: `The application cannot produce the results summary`,
           details: error.message,
           interact: true
         });
@@ -356,6 +328,80 @@ const xlsxExportButtonClickHandler = async () => {
     });
 
     errorOverlay.show();
+  }
+};
+
+const xlsxExportButtonClickHandler = async () => {
+  let stageFolderName = StringHelper.capitalize(stage);
+
+  if (analysisType === 'sit-stand') {
+    stageFolderName = stage === 'concentric' ? 'Standing' : 'Sitting';
+  }
+
+  const resultFolderPath = path.join(
+    PathHelper.sanitizePath(dataFolderPathSession),
+    'Results',
+    StringHelper.capitalize(analysisType),
+    stageFolderName
+  );
+
+  try {
+    await FileHelper.createFileOrDirectoryIfNotExists(resultFolderPath);
+  } catch (error) {
+    loader.toggle();
+
+    const errorOverlay = new ErrorOverlay({
+      message: `The application cannot initialize the participants' export information`,
+      details: error.message,
+      interact: true
+    });
+
+    errorOverlay.show();
+    return;
+  }
+
+  let files;
+
+  try {
+    files = await FileHelper.listAllFiles(resultFolderPath);
+  } catch (error) {
+    const errorOverlay = new ErrorOverlay({
+      message: `Cannot find required files`,
+      details: error.message,
+      interact: true,
+      redirect: 'data-discovering'
+    });
+
+    errorOverlay.show();
+    return;
+  }
+
+  if (files.length > 0) {
+    Swal.fire({
+      title: `Files already exist`,
+      text: `Reports for the ${stageFolderName.toLowerCase()} stage of the ${analysisType} analysis have already been created. By proceeding, all files will be overwritten`,
+      icon: 'warning',
+      background: '#ededed',
+      customClass: {
+        confirmButton: 'button-popup confirm',
+        cancelButton: 'button-popup cancel'
+      },
+      buttonsStyling: false,
+      padding: '0 0 35px 0',
+      allowOutsideClick: false,
+      showCancelButton: true,
+      confirmButtonText: 'Yes, overwrite!'
+    })
+      .then(async result => {
+        if (result.isConfirmed) {
+          await exportResultsRequests();
+        }
+      })
+      .catch(error => {
+        throw new Error(error);
+      });
+  } else {
+    await exportResultsRequests();
   }
 };
 
@@ -682,7 +728,7 @@ if (!(participants?.length > 0)) {
 
         Swal.fire({
           title: `Missing ${complexityText}`,
-          text: `The complexity of ${complexityNotSet.length} selected ${participantText} is not set. Automatic angle selection will be disabled by default.`,
+          text: `The complexity of ${complexityNotSet.length} selected ${participantText} is not set. Automatic angle selection will be disabled by default`,
           icon: 'info',
           background: '#ededed',
           customClass: {
