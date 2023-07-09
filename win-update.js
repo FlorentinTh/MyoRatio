@@ -21,7 +21,7 @@ const lineReader = readline.createInterface({
 
 lineReader.on('line', line => {
   if (line.includes('#define MyAppVersion')) {
-    const updatedLine = line.replace(/"(.*?)"/g, `"${APP_VERSION}"`);
+    const updatedLine = line.replace(/"(.*?)"/g, `${APP_VERSION}`);
     writeStream.write(updatedLine + '\n');
   } else {
     writeStream.write(line + '\n');
