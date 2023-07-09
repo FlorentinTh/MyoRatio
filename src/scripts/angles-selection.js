@@ -879,7 +879,7 @@ for (const dataSwitchRadio of dataSwitchRadios) {
       if (isFilteredDataAlert === null || isFilteredDataAlert) {
         Swal.fire({
           title: 'Filtered Data',
-          text: `Points will not be manually selectable on the filtered data chart. However, the automatic detection feature remains available.`,
+          text: `Points will not be manually selectable on the filtered data chart. However, the automatic detection feature remains available`,
           icon: 'info',
           background: '#ededed',
           customClass: {
@@ -933,7 +933,7 @@ const mutexLock = async () => {
 
     Swal.fire({
       title: `Conflict detected`,
-      text: `Another user is currently working on the participant ${participant}. You cannot process this participant at the same time, as this could compromise the data.`,
+      text: `Another user is currently working on the participant ${participant}. You cannot process this participant at the same time, as this could compromise the data`,
       icon: 'warning',
       background: '#ededed',
       customClass: {
