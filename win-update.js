@@ -12,6 +12,7 @@ const outputPath = path.normalize(`./${fileName}.lock`);
 const readStream = fs.createReadStream(inputPath);
 const writeStream = fs.createWriteStream(outputPath);
 
+// deepcode ignore MissingClose
 const lineReader = readline.createInterface({
   input: readStream,
   output: writeStream,
