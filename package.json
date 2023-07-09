@@ -1,6 +1,6 @@
 {
   "name": "MyoRatio",
-  "version": "2.4.0",
+  "version": "2.5.0",
   "description": "MyoRatio Application",
   "main": "build/public/index.html",
   "scripts": {
@@ -24,7 +24,7 @@
     "git:publish": "git push --follow-tags"
   },
   "author": "Florentin Thullier <fthullie@uqac.ca>",
-  "license" : "SEE LICENSE IN <LICENSE>",
+  "license": "SEE LICENSE IN <LICENSE>",
   "pre-commit": [
     "lint"
   ],

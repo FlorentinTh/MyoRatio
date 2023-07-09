@@ -2,6 +2,33 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.5.0](https://github.com/FlorentinTh/MyoRatio-GUI/compare/v2.4.0...v2.5.0) (2023-07-09)
+
+
+### Features
+
+* **copyright:** add logo and people to copyright ([b166277](https://github.com/FlorentinTh/MyoRatio-GUI/commit/b166277b25f65c6a739c09d86da280a60ce28d28))
+* **image & link helpers:** add helpers to handle external links and images path for production app ([e0329e8](https://github.com/FlorentinTh/MyoRatio-GUI/commit/e0329e8b44c2920fe32a5f5906dd43e67fe1204f))
+* **index:** add a retry button if initial components fail to start ([d76b13b](https://github.com/FlorentinTh/MyoRatio-GUI/commit/d76b13b2aa3bccc969ea6f929681474093f94278))
+* **license:** add new license page ([79c9bb4](https://github.com/FlorentinTh/MyoRatio-GUI/commit/79c9bb49c0cbe144653ab149d1a69bdde424a59c))
+* **license:** add third party notices ([421402b](https://github.com/FlorentinTh/MyoRatio-GUI/commit/421402b1dd6cb5128d0ca3697aee9286e32c5240))
+* **menu:** add disable content overlay when menu is open ([9ea27a0](https://github.com/FlorentinTh/MyoRatio-GUI/commit/9ea27a0950f05db36d763264e3fe50f06bea97c5))
+* **menu:** add logos to menu ([1e335b8](https://github.com/FlorentinTh/MyoRatio-GUI/commit/1e335b835fd62fafda4fc6f9e166e0a8ec436168))
+* **overlay:** add ability to customize the label of the interact button ([f905336](https://github.com/FlorentinTh/MyoRatio-GUI/commit/f905336e3d7163bcd59ac4d2b370459a42d2e68e))
+* **participants-selection:** add a warning popup if reports have already been created ([c36e884](https://github.com/FlorentinTh/MyoRatio-GUI/commit/c36e8840994b32c68cbd45b7bf107ffaecc74dff))
+* **participants-selection:** add fetch XLSX summary request ([50c6dac](https://github.com/FlorentinTh/MyoRatio-GUI/commit/50c6dac4e042d823f7552a968ad9ad1ca8dc9a94))
+* **win-update:** automate change of iss file when app version is updated ([459e392](https://github.com/FlorentinTh/MyoRatio-GUI/commit/459e392ca45fcca44251cc27708ed41fb5850ae8))
+
+
+### Bug Fixes
+
+* **buttons:** prevent additional buttons to be clicked when menu is open ([bf4f90e](https://github.com/FlorentinTh/MyoRatio-GUI/commit/bf4f90e3ff6d0ec222da97b083ddeddac4d74016))
+* **config:** move build related env variables to separate file to avoid vulnerability ([828abcc](https://github.com/FlorentinTh/MyoRatio-GUI/commit/828abcc35fc128fa4cb376fdc9fdfaad9a40f828))
+* **image-helper:** fix images path issues with macOS application ([d8f475e](https://github.com/FlorentinTh/MyoRatio-GUI/commit/d8f475e3e8a6a4956d38a0ee5dc7540518259144))
+* **link-helper:** add missing auxclick event handler for external links ([eb6b274](https://github.com/FlorentinTh/MyoRatio-GUI/commit/eb6b274d3388bd6254b148f9e8a7e6d6e91f3430))
+* **participant-selection:** fix issue with export button click event ([2659a65](https://github.com/FlorentinTh/MyoRatio-GUI/commit/2659a653bb2db890e890dd6e24e7ffcee48171d0))
+* **views:** add missing rel="noopener" for external links ([416ebdb](https://github.com/FlorentinTh/MyoRatio-GUI/commit/416ebdb7719ae73c214a48ae76bf2a75f56efa94))
+
 ## [2.4.0](https://github.com/FlorentinTh/MyoRatio-GUI/compare/v2.3.0...v2.4.0) (2023-06-19)
 
 
