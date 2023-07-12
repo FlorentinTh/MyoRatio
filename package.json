@@ -5,7 +5,9 @@
   "main": "build/public/index.html",
   "scripts": {
     "start": "cross-env NODE_ENV=development webpack serve --mode development",
-    "prebuild": "cross-env NODE_ENV=production webpack --mode production",
+    "copy": "node api-copy.js",
+    "secret": "node api-secret.js",
+    "prebuild": "npm run copy && npm run secret && cross-env NODE_ENV=production webpack --mode production",
     "build:win": "npm run prebuild && build --tasks win-x64 --concurrent --mirror https://dl.nwjs.io/ . && npm run cp:bin:win",
     "cp:bin:win": "cross-var cpy ./bin ./dist/$npm_package_name_$npm_package_version_winx64",
     "make:win": "node win-compile.js",
@@ -21,7 +23,7 @@
     "lint": "eslint ./src --ext .js,.json && stylelint ./src/**/*.css",
     "commit": "git-cz",
     "release": "standard-version -a",
-    "git:publish": "git push --follow-tags"
+    "publish": "git push --follow-tags"
   },
   "author": "Florentin Thullier <fthullie@uqac.ca>",
   "license": "SEE LICENSE IN <LICENSE>",
