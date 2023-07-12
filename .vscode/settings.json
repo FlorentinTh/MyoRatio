@@ -1,44 +1,63 @@
 {
-    "files.autoSave": "off",
+  "files.autoSave": "off",
+  "eslint.validate": ["javascript"],
+  "files.encoding": "utf8",
+  "search.exclude": {
+    "**/bin": true,
+    "**/build": true,
+    "**/dist": true,
+    "**/node_modules": true
+  },
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": true
+  },
+  "[css]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": false,
     "editor.codeActionsOnSave": {
-      "source.fixAll.eslint": true,
       "source.fixAll.stylelint": true
-    },
-    "eslint.validate": [
-      "javascript"
-    ],
-    "files.encoding": "utf8",
-    "search.exclude": {
-      "**/node_modules": true,
-    },
-    "[html]": {
-      "editor.defaultFormatter": "esbenp.prettier-vscode",
-      "editor.formatOnSave": true,
-      "editor.formatOnPaste": true
-    },
-    "[css]": {
-      "editor.defaultFormatter": "esbenp.prettier-vscode",
-      "editor.formatOnSave": true,
-      "editor.formatOnPaste": true
-    },
-    "[javascript]": {
-      "editor.defaultFormatter": "esbenp.prettier-vscode",
-      "editor.formatOnSave": true,
-      "editor.formatOnPaste": true,
-      "editor.wordBasedSuggestions": false
-    },
-    "[markdown]": {
-      "editor.formatOnSave": true,
-      "editor.renderWhitespace": "all",
-      "editor.acceptSuggestionOnEnter": "off"
-    },
-    "[handlebars]": {
-      "editor.defaultFormatter": "esbenp.prettier-vscode"
-    },
-    "[json]": {
-      "editor.defaultFormatter": "esbenp.prettier-vscode"
-    },
-    "[jsonc]": {
-      "editor.defaultFormatter": "esbenp.prettier-vscode"
     }
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": false,
+    "editor.wordBasedSuggestions": false,
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true
+    },
+    "files.trimTrailingWhitespace": true
+  },
+  "[markdown]": {
+    "editor.formatOnSave": true,
+    "editor.renderWhitespace": "all",
+    "editor.acceptSuggestionOnEnter": "off"
+  },
+  "[handlebars]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "files.trimTrailingWhitespace": true,
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": false
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "files.trimTrailingWhitespace": true,
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true
+    },
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": false
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "files.trimTrailingWhitespace": true,
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true
+    },
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": false
+  }
 }
