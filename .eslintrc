@@ -1,9 +1,5 @@
 {
-  "extends": [
-    "standard",
-    "plugin:prettier/recommended",
-    "plugin:json/recommended"
-  ],
+  "extends": ["standard", "plugin:prettier/recommended", "plugin:json/recommended"],
   "env": {
     "es6": true,
     "node": true,
@@ -31,6 +27,7 @@
       }
     ],
     "new-cap": "warn",
+    "no-useless-return": "off",
     "max-len": [
       "warn",
       {
