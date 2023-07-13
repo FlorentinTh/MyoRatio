@@ -32,3 +32,5 @@ envAppData.API_KEY = key;
 envAppData = JSON.stringify(envAppData, null, 2);
 
 fs.writeFileSync(envAppFilePath, envAppData, 'utf8');
+
+console.log('--> Secret successfully retrieved from API');

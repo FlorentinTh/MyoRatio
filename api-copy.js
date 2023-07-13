@@ -37,3 +37,5 @@ if (fs.existsSync(targetFolder)) {
 } else {
   recursiveCopy(APISourceFolder, targetFolder);
 }
+
+console.log('--> API successfully copied to bin folder');
