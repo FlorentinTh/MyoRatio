@@ -257,9 +257,7 @@ submitButton.addEventListener('click', async () => {
 
           const response = await request.json();
 
-          if (response.code === 201) {
-            router.switchPage('participants-selection');
-          } else {
+          if (!(response.code === 201)) {
             loader.toggle();
 
             const errorOverlay = new ErrorOverlay({
@@ -269,10 +267,10 @@ submitButton.addEventListener('click', async () => {
             });
 
             errorOverlay.show();
+          } else {
+            router.switchPage('participants-selection');
           }
         } catch (error) {
-          loader.toggle();
-
           const errorOverlay = new ErrorOverlay({
             message: `The application cannot fetch information of participants`,
             details: error.message,
