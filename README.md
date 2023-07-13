@@ -38,7 +38,7 @@ $/> git clone https://github.com/FlorentinTh/MyoRatio-GUI.git
 ##### 2.1. Setup project: {#sec-2-1}
 
 ```sh
-$/> cd MyoRatio/MyoRatio-API
+$/> cd MyoRatio-API
 
 $/> poetry config virtualenvs.in-project true --local
 
@@ -69,7 +69,7 @@ $ poetry poe build-mac
 ##### 3.1. Setup project: {#sec-3-1}
 
 ```sh
-$/> cd ../MyoRatio/MyoRatio-GUI
+$/> cd ../MyoRatio-GUI
 
 # Windows:
 > ren env.app.json.example env.app.json
@@ -82,34 +82,32 @@ $ mv env.build.json.example env.build.json
 
 ##### 3.2. Install project dependencies:  {#sec-3-2}
 
-_Windows_
-
 ```sh
 # npm:
-> npm install --omit=optional
+$/> npm install
 
 # yarn:
-> yarn install --ignore-optional
+$/> yarn install
 
 #pnpm:
-> pnpm install --no-optional
+$/> pnpm install
 ```
 
-_macOS_
+> **Important!** On macOS you also need to install the ```create-dmg``` package:
+
 ```sh
-$ npm install
+$ npm install -D create-dmg@6.0.0
 
-# or
-$ yarn install
+# or:
+$ yarn add -D create-dmg@6.0.0
 
-# or
-$ pnpm install
+# or:
+$ pnpm add -D create-dmg@6.0.0
 ```
 
 ##### 3.3. Generate an SSL certificate (Windows only):  {sec-3-3}
 
-> This section is required only for the Windows build.
-> You can use WSL to benefit from the availability of the openssl command line tool
+*This section is required only for the Windows build. You can use WSL to benefit from the availability of the openssl command line tool*
 
 ```sh
 # Create a new base folder to store your certificate files:
