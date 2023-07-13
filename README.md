@@ -9,9 +9,11 @@ MyoRatio Application
 
 - [Download and install node.js](https://nodejs.org/) (minimum required version is 18 or later) to build the GUI and the final application. It comes with npm but you can also download and install [yarn](https://yarnpkg.com/getting-started/install) or [pnpm](https://pnpm.io/installation) according to your preferences.
 
--  [Download and install Python](https://www.python.org/downloads/) (minimum required version is 3.9 or later) - to build the API.
+- [Download and install Python](https://www.python.org/downloads/) (minimum required version is 3.9 or later) - to build the API.
 
-- [Download and install the latest Windows SDK](https://developer.microsoft.com/en-US/windows/downloads/windows-sdk/) to sign the final release installer before distribution.
+- [Download and install Poetry](https://python-poetry.org/docs/) a dependency management and packaging tools for Python.
+
+- [Download and install the latest Windows SDK](https://developer.microsoft.com/en-US/windows/downloads/windows-sdk/) to sign the final release installer before distribution. **(Windows only)**
 
 ## Related Project
 
@@ -19,9 +21,13 @@ MyoRatio Application
 
 ## Build the Release Application
 
-#### 1. Clone the Repositories
+#### 1. Clone the Repositories {#sec-1}
 
 ```sh
+$/> mkdir MyoRatio
+
+$/> cd MyoRatio
+
 $/> git clone https://github.com/FlorentinTh/MyoRatio-API.git
 
 $/> git clone https://github.com/FlorentinTh/MyoRatio-GUI.git
@@ -29,71 +35,58 @@ $/> git clone https://github.com/FlorentinTh/MyoRatio-GUI.git
 
 #### 2. Build the API
 
+##### 2.1. Setup project: {#sec-2-1}
+
 ```sh
-$/> cd <your_base_path>/MyoRatio-API
+$/> cd MyoRatio/MyoRatio-API
+
+$/> poetry config virtualenvs.in-project true --local
+
+$/> poetry install
+
+$/> poetry self add 'poethepoet[poetry_plugin]'
+
+# Windows:
+> ren .env.example .env
+
+# macOS:
+$ mv .env.example .env
 ```
 
-**2.1. Setup project:**
-
-_Windows_
+##### 2.2. Release the API: {#sec-2-2}
 ```sh
-> py -m pip install --upgrade pip
-> py -m venv .\venv
-> .\venv\Scripts\activate
-(venv) > pip install -r requirements.txt
-```
+# Windows:
+> poetry poe build-win
 
-_macOS_
-```sh
-$ python3 -m pip install --user --upgrade pip
-$ python3 -m venv ./venv
-$ source ./venv/bin/activate
-(venv) $ pip install -r requirements.txt
-```
-
-> change ```configuration.py``` file content according to your needs
-
-**2.2. Release the API:**
-
-*Windows:*
-```sh
-(venv) > pyinstaller --paths 'src' \
-            --collect-all charset_normalizer \
-            --collect-all reportlab.graphics.barcode \
-            --console \
-            --clean \
-            --name MyoRatioAPI \
-            --icon='assets/icons/win/app.ico' \
-            server.py --noconfirm
-```
-
-*macOS:*
-```sh
-(venv) $ pyinstaller --paths 'src' \
-            --collect-all charset_normalizer \
-            --collect-all reportlab.graphics.barcode \
-            --console \
-            --clean \
-            --name MyoRatioAPI \
-            --icon='assets/icons/mac/app.icns' \
-            server.py --noconfirm
+# macOS:
+$ poetry poe build-mac
 ```
 
 > Release folder will be generated under ```MyoRatio-API/dist```
 
 #### 3. Build the application release
 
+##### 3.1. Setup project: {#sec-3-1}
+
 ```sh
-$/> cd <your_base_path>/MyoRatio-GUI
+$/> cd ../MyoRatio/MyoRatio-GUI
+
+# Windows:
+> ren env.app.json.example env.app.json
+> ren env.build.json.example env.build.json
+
+# macOS:
+$ mv env.app.json.example env.app.json
+$ mv env.build.json.example env.build.json
 ```
 
-**3.1. Install project dependencies:**
+##### 3.2. Install project dependencies:  {#sec-3-2}
 
 _Windows_
 
 ```sh
 # npm:
-> npm install --no-optional
+> npm install --omit=optional
 
 # yarn:
 > yarn install --ignore-optional
@@ -104,12 +97,16 @@ _Windows_
 
 _macOS_
 ```sh
-$ (npm | yarn | pnpm) install
+$ npm install
+
+# or
+$ yarn install
+
+# or
+$ pnpm install
 ```
 
-**3.2. Generate an SSL certificate:**
-
-_Windows:_
+##### 3.3. Generate an SSL certificate (Windows only):  {sec-3-3}
 
 > This section is required only for the Windows build.
 > You can use WSL to benefit from the availability of the openssl command line tool
@@ -131,161 +128,110 @@ $ openssl req -x509 -sha256 -days 365 -key ./.certs/key.pem -in ./.certs/csr.csr
 $ openssl pkcs12 -export -inkey ./.certs/key.pem -in ./.certs/certificate.pem -out ./.certs/certificate.pfx
 ```
 
-**3.3. Configure environment:**
+> **IMPORTANT!** Please update the ```env.build.json``` file according to the answer provided while creating the SSL certificate
 
-*Windows:*
+##### 3.4. Release the application: {sec-3-4}
+
 ```sh
-> ren env.app.json.example env.app.json
+## Windows:
+> npm run build:win && npm run publish:win
+
+# or
+> yarn run build:win && yarn run publish:win
+
+# or
+> pnpm run build:win && pnpm run publish:win
+
+
+## macOS:
+> npm run build:mac && npm run publish:mac
+
+# or
+> yarn run build:mac && yarn run publish:mac
+
+# or
+> pnpm run build:mac && pnpm run publish:mac
 ```
 
-*macOS:*
-```sh
-$ mv env.app.json.example env.app.json
-```
-
-> Edit the content of the **API_KEY** and **CERT_PWD** environment variables
-
-**3.4. Include the API:**
-
-*Windows:*
-```powershell
-> xcopy /e /k /h /i <your_base_path>\MyoRatio-API\dist\MyoRatioAPI .\bin\MyoRatioAPI
-```
-*macOS:*
-```sh
-$ cp -r <your_base_path>/MyoRatio-API/dist/MyoRatioAPI ./bin/MyoRatioAPI
-```
-
-**3.5. Release the application:**
-
-*Windows:*
-```sh
-> (npm | yarn | pnpm) run build:win && (npm | yarn | pnpm) run publish:win
-```
-> An ```exe``` setup is created under ```MyoRatio-GUI/release/winx64```
-
-*macOS:*
-```sh
-$ (npm | yarn | pnpm) run build:mac && (npm | yarn | pnpm) run publish:mac
-```
-
-> A ```dmg``` file is created under ```MyoRatio-GUI/release/macx64```
+> The resulting file is located under the folder of your current architecture inside```./MyoRatio-GUI/release```
 
 ## For Contributors
 
-#### Setup the API project
+> **Ensure you followed [section 1](#sec-1), [section 2.1](#sec-2-1), [section 3.1](#sec-3-1) & [section 3.2](#sec-3-2).**
 
-_Windows_
-```sh
-# Clone the API project:
-> git clone https://github.com/FlorentinTh/MyoRatio-API.git
 
-# Setup project:
-> py -m pip install --upgrade pip
-> py -m pip install --user virtualenv
-> py -m venv .\venv
-> .\venv\Scripts\activate
-
-# Install dependencies
-(venv) > pip install -r requirements.txt
-
-# Edit the configuration.py file if needed
-
-# Run the project:
-(venv) > py server.py
-```
-
-_macOS_
-```sh
-# Clone the API project:
-> git clone https://github.com/FlorentinTh/MyoRatio-API.git
-
-# Setup project:
-$ python3 -m pip install --user --upgrade pip
-$ python3 -m pip install --user virtualenv
-$ python3 -m venv ./venv
-$ source ./venv/bin/activate
-
-# Install dependencies
-(venv) $ pip install -r requirements.txt
-
-# Edit the configuration.py file if needed
-
-# Run the project:
-(venv) > python3 server.py
-```
-
-#### Setup the GUI project:
+#### Serve the API:
 
 ```sh
-# Clone the GUI project:
-$/> git clone https://github.com/FlorentinTh/MyoRatio-GUI.git
-
-# Rename the env.json file (edit its content if needed):
-## Windows:
-  > ren env.app.json.example env.app.json
-  > ren env.build.json.example env.build.json
-
-## macOS:
-  $ mv env.app.json.example env.app.json
-  $ mv env.build.json.example env.build.json
-
-# Install project dependencies:
-## Windows:
-> npm install --no-optional # or
-> yarn install --ignore-optional # or
-> pnpm install --no-optional
-
-## macOS:
-> (npm | yarn | pnpm) install
-
-# Run the project:
-$/> (npm | yarn | pnpm) run start
+$/> poetry run serve [port]
 ```
+
+> Parameter ```[port]``` is optionnal. By default it will be  **3300** only if available.
+
+
+#### Start the GUI:
+
+```sh
+$/> npm run start
+
+# or
+$/> yarn run start
+
+# or
+$/> pnpm run start
+
+```
+
+#### Submitting changes to the code:
 
 > **Your commits should follow the [conventional commits specification](https://www.conventionalcommits.org/en/v1.0.0/) !**
 
 - For the API, you can use the following command to proceed your commits:
 
-  ```sh
-  (venv) $/> cz commit
-  ```
+```sh
+$/> poetry poe commit
+```
 
 - For the GUI, you can use the following command to proceed your commits:
 
-  ```sh
-  $/> (npm | yarn | pnpm) run commit
-  ```
+```sh
+$/> npm run commit
+
+# or
+$/> yarn run commit
+
+# or
+$/> pnpm run commit
+```
 
 #### Release a New Version:
 
 To release a new version you can install the ```standard-version``` version package globally such as:
 
 ```sh
-$/> npm install -g standard-version # or
-$/> yarn global add standard-version # or
+$/> npm install -g standard-version
+
+# or
+$/> yarn global add standard-version
+
+# or
 $/> pnpm add -g standard-version
 ```
 
-**- API:**
+##### Releasing a new API version:
 ```sh
-# deactivate the venv:
-(venv) $/> deactivate
-
-# run standard-version:
-$/> standard-version
-
-# publish the new release:
-$/> git push --follow-tags origin main
+$/> poetry poe release && poetry poe publish
 ```
 
-***- GUI:***
+##### Releasing a new GUI version:
 ```sh
-# run standard-version:
-$/> (npm | yarn | pnpm) run release
+$/> npm run release && npm run publish
 
-#publish the new release:
-$/> (npm | yarn | pnpm) run git:publish
+# or
+$/> yarn run release && yarn run publish
+
+# or
+$/> pnpm run release && pnpm run publish
 ```
 
 ## Authors
@@ -294,4 +240,4 @@ $/> (npm | yarn | pnpm) run git:publish
 
 ## License
 
-This project is licensed under the Apache-2.0 License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the APGL-3.0 License - see the [LICENSE](LICENSE) file for details.
