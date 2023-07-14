@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.6.2](https://github.com/FlorentinTh/MyoRatio-GUI/compare/v2.6.1...v2.6.2) (2023-07-14)
+
+
+### Chore
+
+* **standard-version:** add missing .versionrc file to better handle changelog generation ([97cb7a9](https://github.com/FlorentinTh/MyoRatio-GUI/commit/97cb7a9e040b9742a3f0658721cca3321d0ebaf7))
+
 ### [2.6.1](https://github.com/FlorentinTh/MyoRatio-GUI/compare/v2.6.0...v2.6.1) (2023-07-14)
 
 ## [2.6.0](https://github.com/FlorentinTh/MyoRatio-GUI/compare/v2.5.0...v2.6.0) (2023-07-14)
