@@ -1,4 +1,4 @@
-@media only screen and (max-width <= 980px) {
+@media only screen and (width <= 980px) {
   main section.wrapper {
     padding-top: 140px;
   }
@@ -8,7 +8,7 @@
   }
 }
 
-@media only screen and (max-width <= 730px) {
+@media only screen and (width <= 730px) {
   .input-container {
     padding: 50px 5px;
   }
