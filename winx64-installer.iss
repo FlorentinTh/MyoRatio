@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "MyoRatio"
-#define MyAppVersion "2.5.0"
+#define MyAppVersion "2.6.0"
 #define MyAppPublisher "LIARA Lab"
 #define MyAppURL "liara.uqac.ca"
 #define MyAppExeName "MyoRatio.exe"

@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.6.0](https://github.com/FlorentinTh/MyoRatio-GUI/compare/v2.5.0...v2.6.0) (2023-07-14)
+
+
+### Features
+
+* **license:** add new third party component notice ([b8bd58a](https://github.com/FlorentinTh/MyoRatio-GUI/commit/b8bd58a42597f8b4a43a13703da08a4fdfbd67e0))
+
+
+### Bug Fixes
+
+* **data-discovering:** fix some issues with requests error handling ([9268c17](https://github.com/FlorentinTh/MyoRatio-GUI/commit/9268c17e6aad6a67928f10bdb3769de0ed04420c))
+
 ## [2.5.0](https://github.com/FlorentinTh/MyoRatio-GUI/compare/v2.4.0...v2.5.0) (2023-07-09)
 
 
