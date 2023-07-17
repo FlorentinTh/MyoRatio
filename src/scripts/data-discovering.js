@@ -158,7 +158,8 @@ submitButton.addEventListener('click', async () => {
           message: `Cannot verify content of input data folder`,
           details: `please ensure that the HPF data has been converted properly`,
           interact: true,
-          redirect: redirectConverter
+          redirect: redirectConverter,
+          interactBtnLabel: 'Go to converter'
         });
 
         errorOverlay.show();
