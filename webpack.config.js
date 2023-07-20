@@ -215,7 +215,9 @@ module.exports = (env, argv) => {
         index: true,
         publicPath: outputFolder,
         serverSideRender: true,
-        writeToDisk: true
+        writeToDisk: filePath => {
+          return /^(?!.*(hot)).*/.test(filePath);
+        }
       },
       setupMiddlewares: (middlewares, devServer) => {
         if (!devServer) {
