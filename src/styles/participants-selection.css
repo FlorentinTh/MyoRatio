@@ -1,6 +1,6 @@
 @import url('./main.css');
-@import url('./components/popup.css');
 @import url('./components/list.css');
+@import url('./components/popup.css');
 
 .export-xlsx-btn {
   top: 110px;
