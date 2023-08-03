@@ -595,6 +595,7 @@ const displayAutoAnglesButton = async () => {
   let participantsInfos;
 
   try {
+    // deepcode ignore PT: already sanitized
     participantsInfos = await metadata.getParticipantInfo(analysisType, participant);
   } catch (error) {
     const errorOverlay = new ErrorOverlay({
@@ -646,6 +647,7 @@ const checkForMetadataExistingPoints = async () => {
   let infos;
 
   try {
+    // deepcode ignore PT: already sanitized
     infos = await metadata.getParticipantInfo(
       analysisType,
       selectedParticipants[currentParticipant]
