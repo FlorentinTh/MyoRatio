@@ -122,6 +122,7 @@ const selectAnalysis = new SlimSelect({
   }
 });
 
+selectAnalysis.setData([{ text: 'Choose an analysis', placeholder: true }]);
 selectAnalysis.disable();
 
 const toggleDropAreaActive = () => {
@@ -381,13 +382,11 @@ submitButton.addEventListener('click', async () => {
           isMetadataFolderInit = await metadata.createMetadataFolderTree(selectData);
         } catch (error) {
           loader.toggle();
-
           const errorOverlay = new ErrorOverlay({
             message: `Application cannot initialize the metadata tree`,
             details: error.message,
             interact: true
           });
-
           errorOverlay.show();
           return;
         }

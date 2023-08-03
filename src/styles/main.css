@@ -250,7 +250,6 @@ main.content section.wrapper .label {
   border-radius: 30px;
   background-size: 0 100%;
   background-repeat: no-repeat;
-  transition: ease-out 0.4s;
 }
 
 .button-container > button[type='submit'] {
@@ -271,6 +270,7 @@ main.content section.wrapper .label {
 .button-container > button[type='reset']:hover {
   background-size: 100% 100%;
   cursor: pointer;
+  transition: ease-out 0.4s;
 }
 
 .button-container > button[type='submit']:hover {
