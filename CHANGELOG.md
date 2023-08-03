@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.0.0](https://github.com/FlorentinTh/MyoRatio-GUI/compare/v2.6.2...v3.0.0) (2023-08-03)
+
+
+### Features
+
+* **application:** add support for dynamic application configuration ([4b58ab0](https://github.com/FlorentinTh/MyoRatio-GUI/commit/4b58ab03c8b4d09e33a19b41a7ecd1a1487ac244))
+
+
+### Build System
+
+* **webpack-config:** update disk usage performance on dev builds with HMR ([692816a](https://github.com/FlorentinTh/MyoRatio-GUI/commit/692816a2f9ec4b56b0de27848a35c5b272a8a0fa))
+
+
+### Refactors
+
+* **data-discovering:** change redirect button label when convertion is not completed ([86421f7](https://github.com/FlorentinTh/MyoRatio-GUI/commit/86421f75080c02991935f6a045687f94114a8b4c))
+* **lint:** resolve all linting related issues ([1375c5d](https://github.com/FlorentinTh/MyoRatio-GUI/commit/1375c5df9afc5e6861195f7e620672a74a6b1e7b))
+
 ### [2.6.2](https://github.com/FlorentinTh/MyoRatio-GUI/compare/v2.6.1...v2.6.2) (2023-07-14)
 
 

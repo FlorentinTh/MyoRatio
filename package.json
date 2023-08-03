@@ -1,6 +1,6 @@
 {
   "name": "MyoRatio",
-  "version": "2.6.2",
+  "version": "3.0.0",
   "description": "MyoRatio Application",
   "main": "build/public/index.html",
   "scripts": {
