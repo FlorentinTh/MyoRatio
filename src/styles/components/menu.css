@@ -85,7 +85,7 @@ nav {
 nav ul {
   width: 250px;
   margin-top: 50px;
-  min-height: 250px;
+  min-height: 350px;
   flex: 1 0 18rem;
 }
 

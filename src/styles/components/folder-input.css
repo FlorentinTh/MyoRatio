@@ -1,6 +1,7 @@
-@import url("../main.css");
+@import url('../main.css');
 
-.folder-drop-area {
+.folder-drop-area,
+.file-drop-area {
   display: flex;
   padding: 50px 100px;
   border: 1px dashed #232323dd;
@@ -11,7 +12,7 @@
 .choose-btn {
   flex-shrink: 0;
   background-color: #232323dd;
-  color: #EDEDED;
+  color: #ededed;
   border-radius: 30px;
   padding: 8px 15px;
   font-size: 1em;
@@ -20,21 +21,24 @@
   width: 100%;
 }
 
-.folder-msg {
+.folder-msg,
+.file-msg {
   font-size: 1em;
   font-weight: 300;
   line-height: 1.4;
   height: 100%;
 }
 
-.folder-msg > #text {
+.folder-msg > #text,
+.file-msg > #text {
   width: 100%;
   display: flex;
   justify-content: center;
   margin: 15px 0 5px;
 }
 
-.folder-msg > .folder-path {
+.folder-msg > .folder-path,
+.file-msg > .folder-path {
   width: 100%;
   justify-content: center;
   white-space: nowrap;
@@ -43,25 +47,31 @@
 }
 
 .folder-drop-area:hover,
-.folder-drop-area.is-active {
+.folder-drop-area.is-active,
+.file-drop-area:hover,
+.file-drop-area.is-active {
   border-style: solid;
   border-color: #232323dd;
-  opacity: .8;
+  opacity: 0.8;
 }
 
 .choose-btn.is-active,
-.folder-drop-area:hover .choose-btn {
+.folder-drop-area:hover .choose-btn,
+.file-drop-area:hover .choose-btn {
   background-color: #232323dd;
-  opacity: .8;
+  opacity: 0.8;
 }
 
 .folder-msg.is-active,
-.folder-drop-area:hover .folder-msg {
+.file-msg.is-active,
+.folder-drop-area:hover .folder-msg,
+.file-drop-area:hover .folder-msg {
   color: #232323dd;
-  opacity: .8;
+  opacity: 0.8;
 }
 
-.folder-input {
+.folder-input,
+.file-input {
   position: absolute;
   left: 0;
   top: 0;

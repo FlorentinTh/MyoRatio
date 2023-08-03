@@ -133,4 +133,47 @@ export class FileHelper {
 
     return files;
   }
+
+  static async isFileExits(inputPath) {
+    TypeHelper.checkStringNotNull(inputPath, { label: 'inputPath' });
+
+    try {
+      await fs.promises.access(inputPath, fs.constants.F_OK);
+    } catch (error) {
+      if (error.code === 'ENOENT') {
+        return false;
+      } else {
+        throw new Error(error);
+      }
+    }
+
+    return true;
+  }
+
+  static async removeFilesRecursive(inputPath, opts = { keep: [] }) {
+    const defaultOpts = { keep: [] };
+    opts = { ...defaultOpts, ...opts };
+
+    TypeHelper.checkStringNotNull(inputPath, { label: 'inputPath' });
+    TypeHelper.checkArray(opts.keep, { label: 'keep' });
+
+    try {
+      const content = await fs.promises.readdir(inputPath);
+
+      for (const file of content) {
+        if (!opts.keep.includes(file)) {
+          const filePath = path.resolve(inputPath, file);
+          const stat = await fs.promises.stat(filePath);
+
+          if (stat.isDirectory()) {
+            await fs.promises.rm(filePath, { recursive: true });
+          } else {
+            await fs.promises.unlink(filePath);
+          }
+        }
+      }
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
 }

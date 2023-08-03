@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>MyoRatio</title>
+    <meta charset="utf-8" />
+    <link rel="icon" href="./assets/app.png" />
+  </head>
+  <body>
+    <div class="app">
+      <div class="menu-container"></div>
+      <div class="export-btn export-conf-btn export-btn-disabled">
+        <i class="fa-solid fa-file-arrow-down"></i>
+      </div>
+      <input class="folder-input folder-input-hidden" type="file" />
+      <main class="content">
+        <div class="disable-content-overlay"></div>
+        <section class="wrapper">
+          <h1>MyoRatio</h1>
+          <h2>Data Configuration</h2>
+          <div class="group group-right-space" id="group-setup">
+            <div class="label">
+              <label for="switch-setup">Configuration</label>
+            </div>
+            <div class="input-container">
+              <div class="switch" id="switch-setup">
+                <input type="radio" id="data-opt1" name="switch-setup" value="muscles" />
+                <label for="data-opt1">Muscles</label>
+                <input type="radio" id="data-opt2" name="switch-setup" value="analysis" />
+                <label for="data-opt2">Analysis</label>
+              </div>
+              <span id="warning-msg" class="warning-hidden">
+                <i class="fa-solid fa-circle-exclamation"></i>
+                <span class="msg">You still need to create at least</span>
+              </span>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>

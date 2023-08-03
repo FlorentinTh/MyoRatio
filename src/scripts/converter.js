@@ -5,10 +5,12 @@ import { Router } from './routes/router.js';
 import { SessionStore } from './utils/session-store';
 import { Loader } from './components/loader.js';
 import { PathHelper } from './helpers/path-helper';
-import { Metadata } from './utils/metadata';
+import { Metadata } from './app/metadata';
 import { SuccessOverlay, ErrorOverlay } from './components/overlay';
 import { CSVHelper } from './helpers/csv-helper';
 import { FileHelper } from './helpers/file-helper';
+import { StringHelper } from './helpers/string-helper';
+import { MutexHelper } from './helpers/mutex-helper';
 
 const os = nw.require('os');
 const path = nw.require('path');
@@ -20,7 +22,31 @@ router.disableBackButton();
 
 const loader = new Loader();
 
-SessionStore.clear({ keep: ['data-path', 'analysis'] });
+SessionStore.clear({
+  keep: ['data-path', 'analysis', 'require-setup', 'locked-participant']
+});
+
+if ('locked-participant' in sessionStorage) {
+  const participant = PathHelper.sanitizePath(
+    sessionStorage.getItem('locked-participant').toString().toLowerCase().trim()
+  );
+
+  const participantLabel = StringHelper.revertParticipantNameFromSession(participant);
+
+  try {
+    await MutexHelper.unlock(participant);
+  } catch (error) {
+    const errorOverlay = new ErrorOverlay({
+      message: `Internal Error`,
+      details: `cannot unlock participant: ${participantLabel}. Message: ${error.message}`,
+      interact: true,
+      interactBtnLabel: 'retry',
+      redirect: 'converter'
+    });
+
+    errorOverlay.show();
+  }
+}
 
 const menu = new Menu();
 menu.init();
@@ -76,7 +102,9 @@ const toggleFolderPath = (path = null) => {
 };
 
 if ('data-path' in sessionStorage) {
-  dataPath = sessionStorage.getItem('data-path').toString();
+  dataPath = PathHelper.sanitizePath(
+    sessionStorage.getItem('data-path').toString().trim()
+  );
   toggleFolderPath(PathHelper.sanitizePath(dataPath));
   submitButton.removeAttribute('disabled');
 }
@@ -87,6 +115,7 @@ folderInput.addEventListener('change', event => {
 
     toggleFolderPath(folder.path);
     dataPath = folder.path;
+    sessionStorage.setItem('data-path', dataPath);
 
     if (submitButton.disabled) {
       submitButton.removeAttribute('disabled');
@@ -106,8 +135,7 @@ submitButton.addEventListener('click', async () => {
   if (!submitButton.disabled) {
     loader.toggle({ message: 'Converting files...' });
 
-    const sanitizedPath = PathHelper.sanitizePath(dataPath);
-    const metadata = new Metadata(sanitizedPath);
+    const metadata = new Metadata(dataPath);
 
     let isRootHPFFolder = true;
     let isBaseFolderContentCompliant;
@@ -128,7 +156,7 @@ submitButton.addEventListener('click', async () => {
       return;
     }
 
-    const HPFPath = path.join(sanitizedPath, 'hpf');
+    const HPFPath = path.join(dataPath, 'hpf');
 
     if (isBaseFolderContentCompliant) {
       let files;
@@ -140,7 +168,7 @@ submitButton.addEventListener('click', async () => {
 
         const errorOverlay = new ErrorOverlay({
           message: `Cannot find files`,
-          details: error,
+          details: error.message,
           interact: true
         });
 
@@ -158,7 +186,7 @@ submitButton.addEventListener('click', async () => {
           const analysisFolder = fileBasePathArray[fileBasePathArray.length - 2];
 
           const analysisFilePath = path.join(
-            sanitizedPath,
+            dataPath,
             'Analysis',
             analysisFolder,
             participantFolder,
@@ -272,7 +300,7 @@ submitButton.addEventListener('click', async () => {
                   `.${checksum}.sha256sum`
                 );
 
-                FileHelper.createFileOrDirectoryIfNotExists(checksumFilePath, {
+                await FileHelper.createFileOrDirectoryIfNotExists(checksumFilePath, {
                   isDirectory: false,
                   hidden: true
                 });
@@ -324,7 +352,8 @@ submitButton.addEventListener('click', async () => {
             const successOverlay = new SuccessOverlay({
               message: `Complete!`,
               details: `${totalDetails} successfully converted`,
-              interact: true
+              interact: true,
+              redirect: 'data-discovering'
             });
 
             successOverlay.show();
@@ -335,30 +364,11 @@ submitButton.addEventListener('click', async () => {
           const successOverlay = new SuccessOverlay({
             message: `All set!`,
             details: `There are no remaining files to convert`,
-            interact: true
+            interact: true,
+            redirect: 'data-discovering'
           });
 
           successOverlay.show();
-        }
-
-        const analysisFolders = ['Extension', 'Flexion', 'Sit-Stand'];
-
-        if (!(analysisFoldersFromFiles.length === analysisFolders.length)) {
-          analysisFolders.filter(async value => {
-            if (!analysisFoldersFromFiles.includes(value)) {
-              const missingAnalysisFolderPath = path.join(
-                sanitizedPath,
-                'Analysis',
-                value
-              );
-
-              await FileHelper.createFileOrDirectoryIfNotExists(
-                missingAnalysisFolderPath
-              );
-            }
-
-            return value;
-          });
         }
       } else {
         loader.toggle();
@@ -375,12 +385,14 @@ submitButton.addEventListener('click', async () => {
       if (isRootHPFFolder) {
         loader.toggle();
 
+        sessionStorage.setItem('setup', 'analysis');
+
         const errorOverlay = new ErrorOverlay({
-          message: `Input data folder does not meet file structure requirements`,
-          details: `please ensure that the "HPF" folder contains the following three folders: ${metadata.getBaseContent.join(
-            ', '
-          )} with your data organized by folders named after each participant`,
-          interact: true
+          message: `Raw Data Folder Structure Error`,
+          details: `please ensure that you have created all the corresponding analyses for your raw data within the application`,
+          interact: true,
+          interactBtnLabel: 'Configure',
+          redirect: 'data-configuration'
         });
 
         errorOverlay.show();

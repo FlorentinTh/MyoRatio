@@ -2,7 +2,7 @@ import * as yup from 'yup';
 import { ErrorOverlay } from '../components/overlay';
 import configurationFile from '../../../env.app.json';
 
-export class Configuration {
+export class Environment {
   static async load() {
     const schema = yup.object().shape({
       HOST: yup.string().required(),
@@ -13,8 +13,9 @@ export class Configuration {
     const valid = await schema.isValid(configurationFile);
     if (!valid) {
       const errorOverlay = new ErrorOverlay({
-        message: 'Configuration Error',
-        details: 'The configuration of the application is not valid'
+        message: 'Configuration error',
+        details: 'the configuration of the application is not valid',
+        interact: true
       });
 
       errorOverlay.show();

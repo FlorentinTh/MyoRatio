@@ -1,0 +1,99 @@
+@import url('./main.css');
+@import url('./components/popup.css');
+
+.content-container {
+  align-items: center;
+  justify-content: center;
+  min-width: 380px;
+  position: relative;
+  text-align: center;
+  width: 100%;
+}
+
+.form-info {
+  font-size: 0.8em;
+  text-transform: uppercase;
+  font-style: italic;
+  font-weight: bold;
+  margin-top: 8px;
+}
+
+input[type='text'].input-text-required {
+  padding: 0 55px;
+}
+
+input[type='text'] {
+  padding: 0 15px;
+}
+
+.input-text::placeholder {
+  font-style: italic;
+}
+
+.input-text:focus::placeholder {
+  color: transparent;
+}
+
+.input-container > .required {
+  background-color: #232323dd;
+  color: #ededed;
+  text-transform: uppercase;
+  font-size: 1.2em;
+  font-weight: bold;
+  height: 39px;
+  padding: 0 20px;
+  line-height: 45px;
+  position: absolute;
+  border-top-left-radius: 30px;
+  border-bottom-left-radius: 30px;
+  margin-left: 50px;
+}
+
+.ss-placeholder {
+  font-style: italic;
+}
+
+.tooltip-info {
+  z-index: 100;
+  background: #232323ee;
+  color: #ededed;
+  font-weight: bold;
+  padding: 6px 10px;
+  font-size: 0.8em;
+  border-radius: 6px;
+  left: 13px !important;
+  max-width: 280px;
+  box-shadow:
+    rgb(22 160 133 / 40%) 5px 5px,
+    rgb(22 160 133 / 30%) 10px 10px,
+    rgb(22 160 133 / 20%) 15px 15px,
+    rgb(22 160 133 / 10%) 20px 20px,
+    rgb(22 160 133 / 5%) 25px 25px;
+  display: none;
+}
+
+.tooltip-info[data-show] {
+  display: block;
+}
+
+.arrow,
+.arrow::before {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: inherit;
+}
+
+.arrow {
+  visibility: hidden;
+}
+
+.arrow::before {
+  visibility: visible;
+  content: '';
+  transform: rotate(45deg);
+}
+
+.tooltip-info[data-popper-placement^='right'] > .arrow {
+  left: -9px;
+}

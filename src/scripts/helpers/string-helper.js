@@ -27,6 +27,15 @@ export class StringHelper {
 
   static capitalize(str) {
     TypeHelper.checkStringNotNull(str, { label: 'str' });
-    return str.charAt(0).toUpperCase() + str.slice(1);
+    const array = str.split(/[-_ ]/);
+    const separators = str.match(/[-_ ]/g) || [];
+
+    const capitalizedArray = array.map(
+      item => item.charAt(0).toUpperCase() + item.slice(1)
+    );
+
+    return capitalizedArray.reduce((acc, part, index) => {
+      return acc + part + (separators[index] || '');
+    }, '');
   }
 }

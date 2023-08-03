@@ -1,0 +1,94 @@
+@import url('./main.css');
+@import url('./components/list.css');
+@import url('./components/popup.css');
+
+.export-conf-btn {
+  top: 110px;
+}
+
+.export-btn {
+  opacity: 1;
+  left: 42px;
+  width: 90px;
+  height: 50px;
+  background-color: #16a085;
+  position: fixed;
+  z-index: 9;
+  border-radius: 60px;
+  box-shadow: 6px 6px 15px -3px rgb(0 0 0 / 60%);
+  transition-duration: 0.5s;
+}
+
+.export-btn:hover {
+  cursor: pointer;
+  background-color: #232323dd;
+}
+
+.export-btn-disabled {
+  background-color: #bdbdbd;
+  box-shadow: 6px 6px 15px -3px rgb(0 0 0 / 30%);
+}
+
+.export-btn-disabled:hover {
+  cursor: default;
+  background-color: #bdbdbd;
+}
+
+.export-btn.open {
+  opacity: 0;
+  transform: translateX(250px);
+  pointer-events: none;
+  cursor: default;
+}
+
+.export-btn i {
+  position: absolute;
+  top: 12px;
+  left: 35px;
+  font-size: 1.65em;
+  color: #ededed;
+}
+
+.folder-input-hidden {
+  position: absolute;
+  visibility: hidden;
+  display: none;
+}
+
+.list-container {
+  max-height: 500px;
+}
+
+.input-container {
+  flex-direction: column;
+  padding: 35px;
+  height: 100%;
+}
+
+.switch {
+  overflow: initial;
+}
+
+ul.list > li.item:not(:has(.invalid)):has(.content:hover) {
+  cursor: default;
+  border-color: transparent;
+}
+
+ul.list > li.item:not(:has(.invalid)):has(.content > .infos:hover) {
+  cursor: text;
+}
+
+ul.list > li.item > .actions button:last-of-type {
+  margin-top: 15px;
+}
+
+ul.list > li.item > .actions button#delete {
+  border: 1px solid #606060;
+  background-color: #232323dd;
+  background-image: linear-gradient(to left, #606060, #606060);
+}
+
+ul.list > li.item > .actions button#delete:hover {
+  background-color: #606060;
+  background-image: linear-gradient(to right, #606060, #606060);
+}

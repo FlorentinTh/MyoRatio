@@ -10,16 +10,17 @@ import Swal from 'sweetalert2';
 import { Menu } from './components/menu.js';
 import { Router } from './routes/router.js';
 import { Loader } from './components/loader.js';
-import { Metadata } from './utils/metadata.js';
+import { Metadata } from './app/metadata.js';
 import { ChartSetup } from './utils/chart-setup';
 import { ChartHelper } from './helpers/chart-helper.js';
 import { PathHelper } from './helpers/path-helper.js';
 import { FileHelper } from './helpers/file-helper';
 import { ErrorOverlay } from './components/overlay';
-import { Configuration } from './utils/configuration.js';
+import { Environment } from './app/environment.js';
 import { StringHelper } from './helpers/string-helper';
 import { Switch } from './utils/switch';
 import { SessionStore } from './utils/session-store';
+import { Configuration } from './app/configuration';
 
 const path = nw.require('path');
 const fs = nw.require('fs');
@@ -28,7 +29,7 @@ const router = new Router();
 router.disableBackButton();
 
 const loader = new Loader();
-const configuration = await Configuration.load();
+const environment = await Environment.load();
 
 const menu = new Menu();
 const additionalButton = document.querySelectorAll('.app > div[class*=-btn]');
@@ -43,9 +44,17 @@ const selectedParticipants = sessionStorage
   .toString()
   .split(',');
 
-const analysisType = sessionStorage.getItem('analysis').toString();
-const dataPath = sessionStorage.getItem('data-path').toString();
-const stage = sessionStorage.getItem('stage').toString();
+const analysisType = PathHelper.sanitizePath(
+  sessionStorage.getItem('analysis').toString().trim().toLowerCase()
+);
+
+const inputDataPath = PathHelper.sanitizePath(
+  sessionStorage.getItem('data-path').toString().trim()
+);
+
+const stage = PathHelper.sanitizePath(
+  sessionStorage.getItem('stage').toString().trim().toLowerCase()
+);
 
 const autoAnglesButton = document.querySelector('div.auto-angles-btn');
 const infoParticipant = document.getElementById('participant');
@@ -63,7 +72,27 @@ let currentParticipant = 0;
 let currentIteration = 0;
 let autoAngles = [];
 
-const inputDataPath = PathHelper.sanitizePath(dataPath);
+const configuration = new Configuration();
+
+let requestConfiguration;
+
+try {
+  await configuration.load();
+  requestConfiguration = await configuration.getRequestConfigurationByAnalysis(
+    analysisType
+  );
+} catch (error) {
+  const errorOverlay = new ErrorOverlay({
+    message: `Data configuration error`,
+    details: error.message,
+    interact: true
+  });
+
+  errorOverlay.show();
+}
+
+sessionStorage.setItem('locked-participant', selectedParticipants[currentParticipant]);
+
 const metadata = new Metadata(inputDataPath);
 
 if (!(analysisType === null)) {
@@ -91,7 +120,9 @@ const toggleAlert = message => {
 };
 
 if ('data' in sessionStorage) {
-  const data = sessionStorage.getItem('data');
+  const data = PathHelper.sanitizePath(
+    sessionStorage.getItem('data').toString().toLowerCase().trim()
+  );
 
   if (data === 'filtered') {
     toggleAlert(`Angles cannot be selected manually on filtered data`);
@@ -101,9 +132,10 @@ if ('data' in sessionStorage) {
 }
 
 const checkSelectedPoints = () => {
-  const sessionPoints = sessionStorage.getItem('selected-points');
+  let sessionPoints = sessionStorage.getItem('selected-points');
 
   if (!(sessionPoints === null)) {
+    sessionPoints = PathHelper.sanitizePath(sessionPoints.toString().trim());
     const sessionPointsArray = sessionPoints.split(';');
 
     if (sessionPointsArray.length === 2) {
@@ -130,6 +162,7 @@ const addSessionPoint = (x, y) => {
   if (sessionPoints === null) {
     sessionStorage.setItem('selected-points', `${x},${y}`);
   } else {
+    sessionPoints = PathHelper.sanitizePath(sessionPoints.toString().trim());
     sessionPoints += `;${x},${y}`;
     sessionStorage.setItem('selected-points', sessionPoints);
   }
@@ -138,9 +171,10 @@ const addSessionPoint = (x, y) => {
 };
 
 const removeSessionPoint = (x, y, nearest = false) => {
-  const sessionPoints = sessionStorage.getItem('selected-points');
+  let sessionPoints = sessionStorage.getItem('selected-points');
 
   if (!(sessionPoints === null)) {
+    sessionPoints = PathHelper.sanitizePath(sessionPoints.toString().trim());
     const pointsArray = sessionPoints.split(';');
     let nearestPoint = [];
 
@@ -459,16 +493,16 @@ const processAutoAngles = async (participant, override) => {
   let response;
 
   try {
-    const port = localStorage.getItem('port') ?? configuration.PORT;
+    const port = localStorage.getItem('port') ?? environment.PORT;
 
-    const request = await fetch(`http://${configuration.HOST}:${port}/api/points/`, {
+    const request = await fetch(`http://${environment.HOST}:${port}/api/points/`, {
       headers: {
-        'X-API-Key': configuration.API_KEY,
+        'X-API-Key': environment.API_KEY,
         'Content-Type': 'application/json'
       },
       method: 'POST',
       body: JSON.stringify({
-        data_path: PathHelper.sanitizePath(dataPath),
+        data_path: inputDataPath,
         analysis: analysisType,
         stage,
         participant: StringHelper.revertParticipantNameFromSession(participant),
@@ -613,7 +647,7 @@ const checkForMetadataExistingPoints = async () => {
 
   try {
     infos = await metadata.getParticipantInfo(
-      PathHelper.sanitizePath(analysisType),
+      analysisType,
       selectedParticipants[currentParticipant]
     );
   } catch (error) {
@@ -791,7 +825,9 @@ const writeMetadata = async (data, override = false) => {
 };
 
 const getFormattedPointsFromSession = () => {
-  const points = sessionStorage.getItem('selected-points').toString();
+  const points = PathHelper.sanitizePath(
+    sessionStorage.getItem('selected-points').toString().trim()
+  );
   const pointsArray = points.split(';');
 
   if (Number(pointsArray[0].split(',')[0]) > Number(pointsArray[1].split(',')[0])) {
@@ -808,17 +844,17 @@ const getFormattedPointsFromSession = () => {
 };
 
 const postAnglesData = async (participant, iteration, point1x, point2x) => {
-  const port = localStorage.getItem('port') ?? configuration.PORT;
+  const port = localStorage.getItem('port') ?? environment.PORT;
 
-  return await fetch(`http://${configuration.HOST}:${port}/api/data/emg/`, {
+  return await fetch(`http://${environment.HOST}:${port}/api/data/emg/`, {
     headers: {
-      'X-API-Key': configuration.API_KEY,
+      'X-API-Key': environment.API_KEY,
       'Content-Type': 'application/json'
     },
     method: 'POST',
     body: JSON.stringify({
       window_size: Number(localStorage.getItem('window-size')),
-      data_path: PathHelper.sanitizePath(dataPath),
+      data_path: inputDataPath,
       analysis: analysisType,
       stage,
       participant,
@@ -830,17 +866,18 @@ const postAnglesData = async (participant, iteration, point1x, point2x) => {
 };
 
 const fetchResults = async participants => {
-  return await fetch(`http://${configuration.HOST}:${configuration.PORT}/api/results/`, {
+  return await fetch(`http://${environment.HOST}:${environment.PORT}/api/results/`, {
     headers: {
-      'X-API-Key': configuration.API_KEY,
+      'X-API-Key': environment.API_KEY,
       'Content-Type': 'application/json'
     },
     method: 'POST',
     body: JSON.stringify({
-      data_path: PathHelper.sanitizePath(dataPath),
+      data_path: inputDataPath,
       analysis: analysisType,
       stage,
-      participants
+      participants,
+      config: requestConfiguration
     })
   });
 };
@@ -878,7 +915,7 @@ for (const dataSwitchRadio of dataSwitchRadios) {
 
       if (isFilteredDataAlert === null || isFilteredDataAlert) {
         Swal.fire({
-          title: 'Filtered Data',
+          title: 'Filtered data infos',
           text: `Points will not be manually selectable on the filtered data chart. However, the automatic detection feature remains available`,
           icon: 'info',
           background: '#ededed',
@@ -993,7 +1030,7 @@ const mutexUnlock = async () => {
     );
 
     try {
-      fs.promises.unlink(
+      await fs.promises.unlink(
         PathHelper.sanitizePath(path.join(metadataRootPath, `${participant}.lock`))
       );
     } catch (error) {
@@ -1069,6 +1106,11 @@ const loadNextChart = async angleFiles => {
 
     currentIteration = 0;
     currentParticipant++;
+
+    sessionStorage.setItem(
+      'locked-participant',
+      selectedParticipants[currentParticipant]
+    );
 
     await mutexLock();
   }
@@ -1158,7 +1200,8 @@ submitButton.addEventListener('click', async () => {
     const errorOverlay = new ErrorOverlay({
       message: `The application cannot process the current selection`,
       details: error.message,
-      interact: true
+      interact: true,
+      redirect: 'angles-selection'
     });
 
     errorOverlay.show();
@@ -1190,7 +1233,7 @@ submitButton.addEventListener('click', async () => {
 
         errorOverlay.show();
       } else {
-        SessionStore.clear({ keep: ['data-path', 'analysis', 'stage'] });
+        SessionStore.clear({ keep: ['data-path', 'analysis', 'stage', 'require-setup'] });
 
         setTimeout(() => {
           router.switchPage('participants-selection');
@@ -1229,6 +1272,6 @@ submitButton.addEventListener('click', async () => {
 
 resetButton.addEventListener('click', async () => {
   await mutexUnlock();
-  SessionStore.clear({ keep: ['data-path', 'analysis', 'stage'] });
+  SessionStore.clear({ keep: ['data-path', 'analysis', 'stage', 'require-setup'] });
   router.switchPage('participants-selection');
 });

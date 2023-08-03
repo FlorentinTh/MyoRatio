@@ -4,10 +4,6 @@ import stageSelectorTemplate from '../views/partials/participants-selection/stag
 import participantCard from '../views/partials/participants-list/participant-card.hbs';
 import emptyCard from '../views/partials/participants-list/empty-card.hbs';
 
-import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc';
-import timezone from 'dayjs/plugin/timezone';
-
 import Swal from 'sweetalert2';
 
 import { Menu } from './components/menu.js';
@@ -15,24 +11,22 @@ import { Router } from './routes/router.js';
 import { Loader } from './components/loader.js';
 import { ErrorOverlay } from './components/overlay';
 import { getAllParticipants } from './utils/participants';
-import { Metadata } from './utils/metadata.js';
+import { Metadata } from './app/metadata.js';
+import { Stages } from './data/stages.js';
 import { PathHelper } from './helpers/path-helper.js';
 import { StringHelper } from './helpers/string-helper';
 import { Switch } from './utils/switch';
 import { DOMElement } from './utils/dom-element';
 import { SessionStore } from './utils/session-store';
-import { Configuration } from './utils/configuration.js';
+import { Environment } from './app/environment.js';
 import { FileHelper } from './helpers/file-helper';
+import { Configuration } from './app/configuration.js';
 
-const path = nw.require('path');
 const fs = nw.require('fs');
-
-dayjs.extend(utc);
-dayjs.extend(timezone);
-dayjs.tz.setDefault('America/Toronto');
+const path = nw.require('path');
 
 const loader = new Loader();
-const configuration = await Configuration.load();
+const environment = await Environment.load();
 
 const router = new Router();
 router.disableBackButton();
@@ -42,9 +36,12 @@ const menu = new Menu();
 const additionalMenuButtons = document.querySelectorAll('[class^="export-"]');
 menu.init(additionalMenuButtons);
 
-const dataFolderPathSession = sessionStorage.getItem('data-path').toString();
+const dataFolderPathSession = PathHelper.sanitizePath(
+  sessionStorage.getItem('data-path').toString().trim()
+);
+
 const analysisType = PathHelper.sanitizePath(
-  sessionStorage.getItem('analysis').toString()
+  sessionStorage.getItem('analysis').toString().toLowerCase().trim()
 );
 
 const changeButton = document.getElementById('change-btn');
@@ -59,20 +56,45 @@ const submitButton = document.querySelector('button[type="submit"]');
 const stageSelector = document.getElementById('stage-selector');
 const participantsList = document.querySelector('ul.list');
 
+const configuration = new Configuration();
+let appData;
+let requestConfiguration;
+
+try {
+  appData = await configuration.load();
+  requestConfiguration = await configuration.getRequestConfigurationByAnalysis(
+    analysisType
+  );
+} catch (error) {
+  const errorOverlay = new ErrorOverlay({
+    message: `Data configuration error`,
+    details: error.message,
+    interact: true
+  });
+
+  errorOverlay.show();
+}
+
+const analysisObject = appData.analysis.find(
+  item => item.label.toLowerCase() === analysisType
+);
+
 dataPath.querySelector('p').innerText = ` ${
-  sessionStorage.getItem('data-path').toString() || 'ERROR'
+  PathHelper.sanitizePath(sessionStorage.getItem('data-path').toString().trim()) ||
+  'ERROR'
 }`;
 
-analysisTitle.innerText += ` ${analysisType}`;
+analysisTitle.innerText += ` ${analysisObject.label}`;
 
-const analysisFolderPath = PathHelper.sanitizePath(
-  path.join(dataFolderPathSession, 'Analysis', analysisType)
-);
+const analysisFolderPath = path.join(dataFolderPathSession, 'Analysis', analysisType);
 const participants = await getAllParticipants(analysisFolderPath);
 const metadata = new Metadata(dataFolderPathSession);
 
 const displayStageSelector = analysis => {
-  stageSelector.insertAdjacentHTML('afterbegin', stageSelectorTemplate({ analysis }));
+  stageSelector.insertAdjacentHTML(
+    'afterbegin',
+    stageSelectorTemplate({ analysis: analysisObject })
+  );
 };
 
 displayStageSelector(analysisType);
@@ -82,10 +104,11 @@ const stageSwitchRadios = Switch.init('stage');
 const participantsArray = [];
 let selectedParticipants = [];
 
-let stage =
-  sessionStorage.getItem('stage') === undefined
-    ? 'concentric'
-    : sessionStorage.getItem('stage');
+const sessionStage = PathHelper.sanitizePath(
+  sessionStorage.getItem('stage').toString().toLowerCase().trim()
+);
+
+let stage = sessionStage === undefined ? Stages.CONCENTRIC : sessionStage;
 
 let participantItems;
 let isAllSelected = false;
@@ -157,7 +180,10 @@ const renderParticipantsList = async () => {
       });
     }
 
-    const stage = sessionStorage.getItem('stage').toString();
+    const stage = PathHelper.sanitizePath(
+      sessionStorage.getItem('stage').toString().toLowerCase().trim()
+    );
+
     displayParticipantCard(participantName, infos, infos.stages[stage]);
   }
 };
@@ -282,7 +308,8 @@ const exportResultsRequests = async () => {
       const errorOverlay = new ErrorOverlay({
         message: response.payload.message,
         details: response.payload.details,
-        interact: true
+        interact: true,
+        redirect: 'participants-selection'
       });
 
       errorOverlay.show();
@@ -300,7 +327,8 @@ const exportResultsRequests = async () => {
           const errorOverlay = new ErrorOverlay({
             message: response.payload.message,
             details: response.payload.details,
-            interact: true
+            interact: true,
+            redirect: 'participants-selection'
           });
 
           errorOverlay.show();
@@ -334,12 +362,12 @@ const exportResultsRequests = async () => {
 const xlsxExportButtonClickHandler = async () => {
   let stageFolderName = StringHelper.capitalize(stage);
 
-  if (analysisType === 'sit-stand') {
-    stageFolderName = stage === 'concentric' ? 'Standing' : 'Sitting';
+  if (!(analysisObject.stages[stage].label === '')) {
+    stageFolderName = analysisObject.stages[stage].label;
   }
 
   const resultFolderPath = path.join(
-    PathHelper.sanitizePath(dataFolderPathSession),
+    dataFolderPathSession,
     'Results',
     StringHelper.capitalize(analysisType),
     stageFolderName
@@ -493,35 +521,37 @@ const initCard = items => {
 };
 
 const fetchXLSXReport = async () => {
-  const port = localStorage.getItem('port') ?? configuration.PORT;
+  const port = localStorage.getItem('port') ?? environment.PORT;
 
-  return await fetch(`http://${configuration.HOST}:${port}/api/report/xlsx`, {
+  return await fetch(`http://${environment.HOST}:${port}/api/report/xlsx`, {
     headers: {
-      'X-API-Key': configuration.API_KEY,
+      'X-API-Key': environment.API_KEY,
       'Content-Type': 'application/json'
     },
     method: 'POST',
     body: JSON.stringify({
-      data_path: PathHelper.sanitizePath(dataFolderPathSession),
+      data_path: dataFolderPathSession,
       analysis: analysisType,
-      stage
+      stage,
+      config: requestConfiguration
     })
   });
 };
 
 const fetchXLSXSummary = async () => {
-  const port = localStorage.getItem('port') ?? configuration.PORT;
+  const port = localStorage.getItem('port') ?? environment.PORT;
 
-  return await fetch(`http://${configuration.HOST}:${port}/api/summary`, {
+  return await fetch(`http://${environment.HOST}:${port}/api/summary`, {
     headers: {
-      'X-API-Key': configuration.API_KEY,
+      'X-API-Key': environment.API_KEY,
       'Content-Type': 'application/json'
     },
     method: 'POST',
     body: JSON.stringify({
-      data_path: PathHelper.sanitizePath(dataFolderPathSession),
+      data_path: dataFolderPathSession,
       analysis: analysisType,
-      stage
+      stage,
+      config: requestConfiguration
     })
   });
 };
@@ -605,18 +635,16 @@ if (!(participants?.length > 0)) {
       DOMElement.clear(participantsList);
       participantsList.parentElement.classList.add('change');
 
-      setTimeout(async () => {
-        selectedParticipants = [];
-        isAllSelected = false;
-        isAllNotCompletedSelected = false;
-        totalCompleted = 0;
-        totalInvalid = 0;
-        toggleSelectedParticipantStorage();
-        await renderParticipantsList();
-        toggleSubmitButton();
-        initCard(participantItems);
-        participantsList.parentElement.classList.remove('change');
-      }, 200);
+      selectedParticipants = [];
+      isAllSelected = false;
+      isAllNotCompletedSelected = false;
+      totalCompleted = 0;
+      totalInvalid = 0;
+      toggleSelectedParticipantStorage();
+      await renderParticipantsList();
+      toggleSubmitButton();
+      initCard(participantItems);
+      participantsList.parentElement.classList.remove('change');
     });
   }
 
@@ -763,6 +791,6 @@ if (!(participants?.length > 0)) {
 }
 
 changeButton.addEventListener('click', () => {
-  SessionStore.clear({ keep: ['data-path', 'analysis'] });
+  SessionStore.clear({ keep: ['data-path', 'analysis', 'require-setup'] });
   router.switchPage('data-discovering');
 });

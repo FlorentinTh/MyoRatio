@@ -82,6 +82,7 @@
 
 .tooltip-col,
 .tooltip-row {
+  z-index: 100;
   background: #3e3e3e;
   color: #ededed;
   font-weight: bold;
@@ -89,6 +90,12 @@
   font-size: 1rem;
   border-radius: 6px;
   display: none;
+  box-shadow:
+    rgb(22 160 133 / 40%) 5px 5px,
+    rgb(22 160 133 / 30%) 10px 10px,
+    rgb(22 160 133 / 20%) 15px 15px,
+    rgb(22 160 133 / 10%) 20px 20px,
+    rgb(22 160 133 / 5%) 25px 25px;
 }
 
 .tooltip-col {

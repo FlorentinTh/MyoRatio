@@ -53,13 +53,6 @@
   overflow: initial;
 }
 
-#warning-msg {
-  margin-top: 25px;
-  color: #ff8a65;
-  font-weight: bold;
-  transition: all 0.5s ease-in-out;
-}
-
 .legend {
   width: 100%;
   margin: 0 auto;

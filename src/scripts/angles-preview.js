@@ -5,14 +5,14 @@ import Swal from 'sweetalert2';
 
 import { Menu } from './components/menu.js';
 import { Router } from './routes/router.js';
-import { getAllParticipants } from './utils/participants';
-import { Metadata } from './utils/metadata.js';
 import { Loader } from './components/loader.js';
-import { ErrorOverlay } from './components/overlay';
-import { PathHelper } from './helpers/path-helper';
-import { StringHelper } from './helpers/string-helper';
+import { getAllParticipants } from './utils/participants.js';
+import { Metadata } from './app/metadata.js';
+import { ErrorOverlay } from './components/overlay.js';
+import { PathHelper } from './helpers/path-helper.js';
+import { StringHelper } from './helpers/string-helper.js';
 import { DOMElement } from './utils/dom-element.js';
-import { FileHelper } from './helpers/file-helper';
+import { FileHelper } from './helpers/file-helper.js';
 
 const path = nw.require('path');
 
@@ -24,9 +24,11 @@ const loader = new Loader();
 const menu = new Menu();
 menu.init();
 
-const dataFolderPathSession = sessionStorage.getItem('data-path').toString();
+const dataFolderPathSession = PathHelper.sanitizePath(
+  sessionStorage.getItem('data-path').toString().trim()
+);
 const analysisType = PathHelper.sanitizePath(
-  sessionStorage.getItem('analysis').toString()
+  sessionStorage.getItem('analysis').toString().toLowerCase().trim()
 );
 
 const analysisTitle = document.querySelector('.analysis h3');
@@ -236,10 +238,7 @@ if (participants?.length > 0) {
     let infos;
 
     try {
-      infos = await metadata.getParticipantInfo(
-        PathHelper.sanitizePath(analysisType),
-        participantName
-      );
+      infos = await metadata.getParticipantInfo(analysisType, participantName);
     } catch (error) {
       const errorOverlay = new ErrorOverlay({
         message: `Participant ${participants[i]} cannot be processed`,
@@ -352,7 +351,7 @@ submitButton.addEventListener('click', async () => {
 
       Swal.fire({
         title: `Missing ${complexityText}`,
-        text: `${notSelected.length} ${complexityText} ${verbText} not set`,
+        text: `${notSelected.length} ${complexityText} ${verbText} are not set`,
         icon: 'info',
         background: '#ededed',
         customClass: {
@@ -375,7 +374,7 @@ submitButton.addEventListener('click', async () => {
 
             setTimeout(() => {
               router.switchPage('participants-selection');
-            }, 1000);
+            }, 800);
           } else {
             Swal.close();
           }
@@ -390,7 +389,7 @@ submitButton.addEventListener('click', async () => {
 
       setTimeout(() => {
         router.switchPage('participants-selection');
-      }, 1000);
+      }, 800);
     }
   }
 });

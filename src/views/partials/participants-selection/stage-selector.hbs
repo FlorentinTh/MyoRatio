@@ -1,30 +1,22 @@
-<div class="group" id="group-stage">
-  <div class="label">
-    <label for="switch-stage">Stage</label>
+<div class='group' id='group-stage'>
+  <div class='label'>
+    <label for='switch-stage'>Stage</label>
   </div>
-  <div class="input-container">
-    <div class="switch" id="switch-stage">
-      <input
-        type="radio"
-        id="stage-opt1"
-        name="switch-stage"
-        value="concentric"
-      />
-      {{#if (eq analysis "sit-stand") }}
-        <label for="stage-opt1">Standing</label>
+  <div class='input-container'>
+    <div class='switch' id='switch-stage'>
+      <input type='radio' id='stage-opt1' name='switch-stage' value='concentric' />
+      {{#if (eq analysis.stages.concentric.label '')}}
+        <label for='stage-opt1'>Concentric</label>
+
       {{else}}
-        <label for="stage-opt1">Concentric</label>
+        <label for='stage-opt1'>{{~analysis.stages.concentric.label~}}</label>
       {{/if}}
-      <input
-        type="radio"
-        id="stage-opt2"
-        name="switch-stage"
-        value="eccentric"
-      />
-      {{#if (eq analysis "sit-stand") }}
-        <label for="stage-opt2">Sitting</label>
+      <input type='radio' id='stage-opt2' name='switch-stage' value='eccentric' />
+      {{#if (eq analysis.stages.eccentric.label '')}}
+        <label for='stage-opt2'>Eccentric</label>
+
       {{else}}
-        <label for="stage-opt2">Eccentric</label>
+        <label for='stage-opt2'>{{~analysis.stages.eccentric.label~}}</label>
       {{/if}}
     </div>
   </div>

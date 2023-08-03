@@ -16,7 +16,6 @@ main.content section.wrapper a:hover {
 }
 
 .app-license {
-  font-weight: lighter;
   font-size: 0.8em;
   margin-bottom: 15px;
   text-transform: uppercase;

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <title>MyoRatio</title>
@@ -27,32 +27,12 @@
           </div>
           <div class="group">
             <div class="label">
-              <label for="switch-analysis">Type of Analysis</label>
+              <label>Type of Analysis</label>
             </div>
             <div class="input-container">
-              <div class="switch" id="switch-analysis">
-                <input
-                  type="radio"
-                  id="analysis-opt1"
-                  name="switch-analysis"
-                  value="extension"
-                />
-                <label for="analysis-opt1">Extension</label>
-                <input
-                  type="radio"
-                  id="analysis-opt2"
-                  name="switch-analysis"
-                  value="flexion"
-                />
-                <label for="analysis-opt2">Flexion</label>
-                <input
-                  type="radio"
-                  id="analysis-opt3"
-                  name="switch-analysis"
-                  value="sit-stand"
-                />
-                <label for="analysis-opt3">Sit-Stand</label>
-              </div>
+              <select id="select-analysis">
+                <option data-placeholder="true">Choose an analysis</option>
+              </select>
             </div>
           </div>
           <div class="group">

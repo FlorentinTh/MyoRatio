@@ -1,4 +1,3 @@
-import { ErrorOverlay } from '../components/overlay';
 import { TypeHelper } from '../helpers/type-helper';
 
 const path = nw.require('path');
@@ -19,14 +18,7 @@ export const getAllParticipants = async (sanitizedPath, isPreview = false) => {
         return stat.isDirectory();
       });
     } catch (error) {
-      const errorOverlay = new ErrorOverlay({
-        message: `Error occurs while trying to retrieve participants`,
-        details: error.message,
-        interact: true
-      });
-
-      errorOverlay.show();
-      return;
+      throw new Error(error);
     }
 
     if (isPreview) {

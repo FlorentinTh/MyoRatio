@@ -5,6 +5,7 @@ import { TypeHelper } from '../helpers/type-helper.js';
 import { PlatformHelper } from '../helpers/platform-helper.js';
 import { ImageHelper } from '../helpers/image-helper';
 import { LinkHelper } from '../helpers/link-helper.js';
+import { PathHelper } from '../helpers/path-helper';
 
 export class Menu {
   #toggleNavButton;
@@ -40,6 +41,15 @@ export class Menu {
 
     this.#additionalButtons = buttons;
     this.#setHPFConverterItem();
+
+    if ('require-setup' in sessionStorage) {
+      const requireSetup =
+        PathHelper.sanitizePath(
+          sessionStorage.getItem('require-setup').toString().toLowerCase().trim()
+        ) === 'true';
+
+      this.toggleItemDisabled('data-discovering', { disabled: requireSetup });
+    }
   }
 
   #toggle() {
@@ -82,6 +92,34 @@ export class Menu {
         }
       } else {
         item.classList.add('active');
+      }
+    }
+  }
+
+  toggleItemDisabled(itemID, opts = { disabled: false }) {
+    TypeHelper.checkStringNotNull(itemID, { label: 'itemID' });
+    TypeHelper.checkObject(opts, { label: 'opts' });
+
+    const defaultOpts = { disabled: false };
+    opts = { ...defaultOpts, ...opts };
+
+    const items = document.querySelectorAll('nav.menu ul li a');
+
+    for (const item of items) {
+      if (item.id === itemID) {
+        if (opts.disabled) {
+          if (!item.classList.contains('disabled')) {
+            item.classList.add('disabled');
+          } else {
+            if (item.classList.contains('disabled')) {
+              item.classList.remove('disabled');
+            }
+          }
+        } else {
+          if (item.classList.contains('disabled')) {
+            item.classList.remove('disabled');
+          }
+        }
       }
     }
   }

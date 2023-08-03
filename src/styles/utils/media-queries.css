@@ -17,7 +17,8 @@
     margin: 0;
   }
 
-  .folder-drop-area {
+  .folder-drop-area,
+  .file-drop-area {
     padding: 50px;
   }
 }

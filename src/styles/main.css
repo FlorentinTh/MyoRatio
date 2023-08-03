@@ -1,5 +1,8 @@
 @import url('./utils/reset.css');
 @import url('./utils/media-queries.css');
+@import url('@fortawesome/fontawesome-free/css/all.css');
+@import url('slim-select/styles');
+@import url('./utils/slimselect-overrides.css');
 
 body.hide-overflow {
   overflow: hidden;
@@ -15,7 +18,7 @@ main.content {
 
 .wrapper {
   min-height: 100vh;
-  padding: 50px 40px 25px;
+  padding: 50px 40px 80px;
 }
 
 .disable-content-overlay.open {
@@ -38,6 +41,7 @@ main.content.open {
 main.content section.wrapper {
   overflow: hidden;
   max-width: 720px;
+  min-width: 720px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -95,8 +99,30 @@ main.content section.wrapper .label {
   letter-spacing: -0.03rem;
 }
 
+.label p > i,
+.label label > i {
+  padding-left: 5px;
+  font-size: 1.1em;
+}
+
+.label p > i:hover,
+.label label > i:hover {
+  cursor: pointer;
+}
+
 .label p.is-active {
   color: rgb(0 0 0 / 43.7%);
+}
+
+#warning-msg {
+  margin-top: 25px;
+  color: #ff8a65;
+  font-weight: bold;
+  transition: all 0.5s ease-in-out;
+}
+
+#warning-msg.warning-hidden {
+  display: none;
 }
 
 .group {
@@ -133,6 +159,10 @@ main.content section.wrapper .label {
   border: 1px dashed #232323dd;
 }
 
+.input-container:has(select) {
+  padding: 50px 100px;
+}
+
 .input-text {
   width: 100%;
   margin: 0 50px;
@@ -141,7 +171,7 @@ main.content section.wrapper .label {
   border: 1px solid #232323dd;
   border-radius: 30px;
   background-color: transparent;
-  transition: ease-in-out 0.15s;
+  transition: all 0.05s;
   color: #232323dd;
   font-size: 1em;
 }
@@ -280,6 +310,20 @@ main.content section.wrapper .label {
   background: linear-gradient(to right, #eee 8%, #ddd 18%, #eee 33%);
   background-size: 1200px 104px;
   position: relative;
+}
+
+ul.list > li.item > .content .icon i.icon-small {
+  padding: 7px 23px;
+}
+
+select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #232323;
+  background-color: #ededed;
+  color: #2323238e;
+  border-radius: 4px;
+  font-size: 1em;
 }
 
 @keyframes fade-in {

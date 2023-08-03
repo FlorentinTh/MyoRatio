@@ -1,3 +1,4 @@
+import { PathHelper } from '../helpers/path-helper';
 import { TypeHelper } from '../helpers/type-helper';
 
 export class Switch {
@@ -9,7 +10,8 @@ export class Switch {
 
     TypeHelper.checkBoolean(opts.disabled, { label: 'disabled' });
 
-    const storedSwitchValue = sessionStorage.getItem(label);
+    let storedSwitchValue = sessionStorage.getItem(label);
+
     let switchRadios = [...document.getElementById(`switch-${label}`).children];
     switchRadios = switchRadios.filter(item => item.nodeName === 'INPUT');
 
@@ -17,6 +19,10 @@ export class Switch {
       sessionStorage.setItem(label, switchRadios[0].value);
       switchRadios[0].checked = true;
     } else {
+      storedSwitchValue = PathHelper.sanitizePath(
+        storedSwitchValue.toString().toLowerCase().trim()
+      );
+
       for (const switchRadio of switchRadios) {
         if (switchRadio.value === storedSwitchValue) {
           switchRadio.checked = true;

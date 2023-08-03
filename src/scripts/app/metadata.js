@@ -1,20 +1,51 @@
+import { ErrorOverlay } from '../components/overlay.js';
 import { FileHelper } from '../helpers/file-helper.js';
 import { StringHelper } from '../helpers/string-helper.js';
 import { TypeHelper } from '../helpers/type-helper.js';
+import { Stages } from '../data/stages.js';
+import { Configuration } from './configuration.js';
 
-const path = nw.require('path');
 const fs = nw.require('fs');
+const path = nw.require('path');
+
+const readAppDataFile = new Promise((resolve, reject) => {
+  const configuration = new Configuration();
+
+  FileHelper.parseJSONFile(configuration.configurationFilePath)
+    .then(result => {
+      resolve(result);
+    })
+    .catch(error => {
+      reject(error);
+    });
+});
 
 export class Metadata {
-  #baseContent = ['flexion', 'extension', 'sit-stand'];
-  #stages = ['concentric', 'eccentric'];
+  #stages = Object.values(Stages);
   #metadataRootFolder = '.metadata';
   #metadataFilename = 'data.json';
   #inputDataPath;
+  #baseContent;
 
   constructor(inputDataPath) {
     TypeHelper.checkStringNotNull(inputDataPath, { label: 'inputDataPath' });
     this.#inputDataPath = inputDataPath;
+
+    readAppDataFile
+      .then(value => {
+        this.#baseContent = value.analysis.map(item => item.label.trim().toLowerCase());
+      })
+      .catch(error => {
+        if (error) {
+          const errorOverlay = new ErrorOverlay({
+            message: 'Application data error',
+            details: error.message,
+            interact: true
+          });
+
+          errorOverlay.show();
+        }
+      });
   }
 
   get getBaseContent() {
@@ -57,8 +88,8 @@ export class Metadata {
 
     folders = new Set(folders.map(element => element.toLowerCase()));
 
-    for (const element of this.#baseContent) {
-      if (!folders.has(element)) {
+    for (const folder of folders) {
+      if (!(folder === this.#metadataRootFolder) && !this.#baseContent.includes(folder)) {
         return false;
       }
     }
@@ -66,24 +97,35 @@ export class Metadata {
     return true;
   }
 
-  async createMetadataFolderTree() {
+  async createMetadataFolderTree(analysisObject) {
+    TypeHelper.checkArray(analysisObject, { label: 'analysisObject' });
+
     await FileHelper.createFileOrDirectoryIfNotExists(this.getMetadataRootFolder, {
       hidden: true
     });
 
-    for (const folder of this.#baseContent) {
-      const metadataSubfolderPath = path.join(this.getMetadataRootFolder, folder);
-      await FileHelper.createFileOrDirectoryIfNotExists(metadataSubfolderPath, {
-        hidden: false
-      });
+    const analysisLabels = analysisObject.map(item => item.value);
 
-      const metadataFilePath = path.join(metadataSubfolderPath, this.#metadataFilename);
-      await FileHelper.createFileOrDirectoryIfNotExists(metadataFilePath, {
-        isDirectory: false,
-        hidden: false
-      });
+    for (const analysisLabel of analysisLabels) {
+      if (this.#baseContent.includes(analysisLabel)) {
+        const metadataSubfolderPath = path.join(
+          this.getMetadataRootFolder,
+          analysisLabel
+        );
+        await FileHelper.createFileOrDirectoryIfNotExists(metadataSubfolderPath, {
+          hidden: false
+        });
 
-      await FileHelper.initEmptyJSONFile(metadataFilePath);
+        const metadataFilePath = path.join(metadataSubfolderPath, this.#metadataFilename);
+        await FileHelper.createFileOrDirectoryIfNotExists(metadataFilePath, {
+          isDirectory: false,
+          hidden: false
+        });
+
+        await FileHelper.initEmptyJSONFile(metadataFilePath);
+      } else {
+        throw new Error(`Analysis ${analysisLabel} is not expected`);
+      }
     }
 
     return true;
@@ -197,9 +239,9 @@ export class Metadata {
     }
   }
 
-  async cleanParticipantMetadata(analysisType, participants) {
+  async cleanParticipantMetadata(analysisType, participantsToKeep) {
     TypeHelper.checkStringNotNull(analysisType, { label: 'analysisType' });
-    TypeHelper.checkArray(participants, { label: 'participants' });
+    TypeHelper.checkArray(participantsToKeep, { label: 'participantsToKeep' });
 
     const metadataFilePath = path.join(
       this.getMetadataRootFolder,
@@ -207,13 +249,13 @@ export class Metadata {
       this.#metadataFilename
     );
 
-    participants = participants.map(participant =>
+    participantsToKeep = participantsToKeep.map(participant =>
       StringHelper.formatParticipantName(participant)
     );
 
     const metadataFileJSON = await FileHelper.parseJSONFile(metadataFilePath);
     const cleanParticipants = Object.keys(metadataFileJSON).filter(
-      participant => !participants.includes(participant)
+      participant => !participantsToKeep.includes(participant)
     );
 
     for (const cleanParticipant of cleanParticipants) {

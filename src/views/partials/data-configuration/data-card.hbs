@@ -1,0 +1,22 @@
+<li class='item'>
+  <div class='content'>
+    <div class='icon'>
+      {{#if (eq type 'muscles')}}
+        <i class='fa-solid fa-dumbbell'></i>
+      {{else}}
+        <i class='fa-solid fa-list-ol icon-small'></i>
+      {{/if}}
+    </div>
+    <div class='infos'>
+      <div class='line-1'>
+        <span class='name'>
+          {{~data.label~}}
+        </span>
+      </div>
+    </div>
+  </div>
+  <div class='actions'>
+    <button type='button' id='edit'>Edit</button>
+    <button type='button' id='delete'>Delete</button>
+  </div>
+</li>

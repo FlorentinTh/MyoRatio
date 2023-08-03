@@ -1,0 +1,219 @@
+<h2>{{operation}} {{contentTitle~}}</h2>
+
+<div class='content-container'>
+  {{#if (eq contentTitle 'muscle')}}
+    <div class='group'>
+      <div class='label'>
+        <p>Muscle Label</p>
+      </div>
+      <div class='input-container'>
+        <span class='required'>*</span>
+        <input
+          type='text'
+          id='label'
+          class='input-text input-text-required'
+          placeholder='e.g. rectus femoris'
+        />
+      </div>
+    </div>
+  {{else}}
+    <div class='group'>
+      <div class='label'>
+        <p>Analysis Label</p>
+      </div>
+      <div class='input-container'>
+        <span class='required'>*</span>
+        <input
+          type='text'
+          id='label'
+          class='input-text input-text-required'
+          placeholder='e.g. extension'
+        />
+      </div>
+    </div>
+    <div class='group'>
+      <div class='label'>
+        <p class='stage-label'>
+          Concentric Stage Label
+          <i class='fa-solid fa-circle-question'></i>
+        </p>
+        <div class='tooltip-info' role='tooltip'>
+          Replace the default concentric stage label
+          <div class='arrow' data-popper-arrow></div>
+        </div>
+      </div>
+      <div class='input-container'>
+        <input
+          type='text'
+          id='concentric-label'
+          class='input-text'
+          placeholder='e.g. standing'
+        />
+      </div>
+    </div>
+    <div class='group'>
+      <div class='label'>
+        <p class='stage-type'>
+          Concentric stage type
+          <i class='fa-solid fa-circle-question'></i>
+        </p>
+        <div class='tooltip-info' role='tooltip'>
+          Is the concentric phase of the movement to be analyzed considered an "opening"
+          movement (e.g. extending the arm) ?
+          <div class='arrow' data-popper-arrow></div>
+        </div>
+      </div>
+      <div class='input-container'>
+        <div class='switch' id='switch-concentric-type'>
+          <input
+            type='radio'
+            id='radio-concentric-opening'
+            name='switch-concentric-type'
+            value='opening'
+            checked
+          />
+          <label for='radio-concentric-opening'>Opening</label>
+          <input
+            type='radio'
+            id='radio-concentric-closing'
+            name='switch-concentric-type'
+            value='closing'
+          />
+          <label for='radio-concentric-closing'>Closing</label>
+        </div>
+      </div>
+    </div>
+    <div class='group'>
+      <div class='label'>
+        <p class='stage-label'>
+          Eccentric Stage Label
+          <i class='fa-solid fa-circle-question'></i>
+        </p>
+        <div class='tooltip-info' role='tooltip'>
+          Replace the default eccentric stage label
+          <div class='arrow' data-popper-arrow></div>
+        </div>
+      </div>
+      <div class='input-container'>
+        <input
+          type='text'
+          id='eccentric-label'
+          class='input-text'
+          placeholder='e.g. standing'
+        />
+      </div>
+    </div>
+    <div class='group'>
+      <div class='label'>
+        <p class='stage-type'>
+          Eccentric stage type
+          <i class='fa-solid fa-circle-question'></i>
+        </p>
+        <div class='tooltip-info' role='tooltip'>
+          Is the eccentric phase of the movement to be analyzed considered a "closing"
+          movement (e.g. bending the arm) ?
+          <div class='arrow' data-popper-arrow></div>
+        </div>
+      </div>
+      <div class='input-container'>
+        <div class='switch' id='switch-eccentric-type'>
+          <input
+            type='radio'
+            id='radio-eccentric-opening'
+            name='switch-eccentric-type'
+            value='opening'
+          />
+          <label for='radio-eccentric-opening'>Opening</label>
+          <input
+            type='radio'
+            id='radio-eccentric-closing'
+            name='switch-eccentric-type'
+            value='closing'
+            checked
+          />
+          <label for='radio-eccentric-closing'>Closing</label>
+        </div>
+      </div>
+    </div>
+    <div class='group'>
+      <div class='label'>
+        <label>Antagonist Muscle</label>
+      </div>
+      <div class='input-container'>
+        <select id='select-antagonist'>
+        </select>
+      </div>
+    </div>
+    <div class='group'>
+      <div class='label'>
+        <label>Agonist Muscle</label>
+      </div>
+      <div class='input-container'>
+        <select id='select-agonist'>
+        </select>
+      </div>
+    </div>
+    <div class='group'>
+      <div class='label'>
+        <label>
+          Muscle for Angle Computation
+          <i class='fa-solid fa-circle-question'></i>
+        </label>
+      </div>
+      <div class='tooltip-info' role='tooltip'>
+        What muscle is used to produce the angle plot from IMU data?
+        <div class='arrow' data-popper-arrow></div>
+      </div>
+      <div class='input-container'>
+        <select id='select-angle'>
+        </select>
+      </div>
+    </div>
+    <div class='group'>
+      <div class='label'>
+        <p class='angle-type'>
+          Angle calculation method
+          <i class='fa-solid fa-circle-question'></i>
+        </p>
+        <div class='tooltip-info' role='tooltip'>
+          Most of the time, the standard method is the most accurate way of calculating
+          the angle. It's preferable to start by processing data using this method, and
+          only switch to the advanced method if you experience imprecision issues
+          <div class='arrow' data-popper-arrow></div>
+        </div>
+      </div>
+      <div class='input-container'>
+        <div class='switch' id='switch-angle-type'>
+          <input
+            type='radio'
+            id='radio-angle-standard'
+            name='switch-angle-type'
+            value='standard'
+            checked
+          />
+          <label for='radio-angle-standard'>Standard</label>
+          <input
+            type='radio'
+            id='radio-angle-advanced'
+            name='switch-angle-type'
+            value='advanced'
+          />
+          <label for='radio-angle-advanced'>Advanced</label>
+        </div>
+      </div>
+    </div>
+  {{/if}}
+</div>
+
+<span class='form-info'><strong>*</strong> fields are required</span>
+
+<div class='group no-margin'>
+  <div class='button-container'>
+    <button type='submit' disabled>Save</button>
+  </div>
+</div>
+<div class='group'>
+  <div class='button-container'>
+    <button type='reset'>Cancel</button>
+  </div>
+</div>
