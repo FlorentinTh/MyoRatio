@@ -49,10 +49,6 @@ input[type='text'] {
   margin-left: 50px;
 }
 
-.ss-placeholder {
-  font-style: italic;
-}
-
 .tooltip-info {
   z-index: 100;
   background: #232323ee;

@@ -61,6 +61,7 @@
 .ss-main .ss-values .ss-placeholder {
   color: #2323238e !important;
   padding-left: 10px !important;
+  font-style: italic !important;
 }
 
 .ss-option {
