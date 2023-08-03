@@ -1,75 +1,126 @@
-<div class="participant-card">
+<div class='participant-card'>
   <h3>{{~participant~}}</h3>
-  <div class="angle-auto-select">
+  <div class='angle-auto-select'>
     <span>Auto-select angles</span>
-      {{#if infos.invalid}}
-        <input type="checkbox" class="auto-switch" disabled>
+    {{#if infos.invalid}}
+      <input type='checkbox' class='auto-switch' disabled />
+    {{else}}
+      {{#if infos.auto_angles}}
+        <input type='checkbox' class='auto-switch' checked />
       {{else}}
-          {{#if infos.auto_angles}}
-            <input type="checkbox" class="auto-switch" checked>
-          {{else}}
-            <input type="checkbox" class="auto-switch">
-          {{/if}}
+        <input type='checkbox' class='auto-switch' />
       {{/if}}
+    {{/if}}
   </div>
 
-  <img src="{{~chart~}}" alt="chart-{{~participant~}}">
+  <img src='{{~chart~}}' alt='chart-{{~participant~}}' />
 
-  <div class="nav-btn-container">
-    <div class="nav-btn nav-prev">
-      <div class="icon-container disabled">
-        <i class="fa-solid fa-arrow-left-long"></i>
+  <div class='nav-btn-container'>
+    <div class='nav-btn nav-prev'>
+      <div class='icon-container disabled'>
+        <i class='fa-solid fa-arrow-left-long'></i>
       </div>
     </div>
-    <div class="nav-btn nav-next">
-      <div class="icon-container">
-        <i class="fa-solid fa-arrow-right-long"></i>
+    <div class='nav-btn nav-next'>
+      <div class='icon-container'>
+        <i class='fa-solid fa-arrow-right-long'></i>
       </div>
     </div>
   </div>
 
-  <div class="complexity-container">
+  <div class='complexity-container'>
     <span>Select a complexity:</span>
-    <div class="switch">
+    <div class='switch'>
       {{#if infos.invalid}}
-        <input type="radio" id="radio-opt1-{{~participant~}}" name="switch-complexity-{{~participant~}}" value="low" disabled>
+        <input
+          type='radio'
+          id='radio-opt1-{{~participant~}}'
+          name='switch-complexity-{{~participant~}}'
+          value='low'
+          disabled
+        />
       {{else}}
-        {{#if (eq infos.complexity "low")}}
-          <input type="radio" id="radio-opt1-{{~participant~}}" name="switch-complexity-{{~participant~}}" value="low" checked>
+        {{#if (eq infos.complexity 'low')}}
+          <input
+            type='radio'
+            id='radio-opt1-{{~participant~}}'
+            name='switch-complexity-{{~participant~}}'
+            value='low'
+            checked
+          />
         {{else}}
-          <input type="radio" id="radio-opt1-{{~participant~}}" name="switch-complexity-{{~participant~}}" value="low">
+          <input
+            type='radio'
+            id='radio-opt1-{{~participant~}}'
+            name='switch-complexity-{{~participant~}}'
+            value='low'
+          />
         {{/if}}
       {{/if}}
-      <label for="radio-opt1-{{~participant~}}">Low</label>
+      <label for='radio-opt1-{{~participant~}}'>Low</label>
       {{#if infos.invalid}}
-        <input type="radio" id="radio-opt2-{{~participant~}}" name="switch-complexity-{{~participant~}}" value="medium" disabled>
+        <input
+          type='radio'
+          id='radio-opt2-{{~participant~}}'
+          name='switch-complexity-{{~participant~}}'
+          value='medium'
+          disabled
+        />
       {{else}}
-        {{#if (eq infos.complexity "medium")}}
-          <input type="radio" id="radio-opt2-{{~participant~}}" name="switch-complexity-{{~participant~}}" value="medium" checked>
+        {{#if (eq infos.complexity 'medium')}}
+          <input
+            type='radio'
+            id='radio-opt2-{{~participant~}}'
+            name='switch-complexity-{{~participant~}}'
+            value='medium'
+            checked
+          />
         {{else}}
-          <input type="radio" id="radio-opt2-{{~participant~}}" name="switch-complexity-{{~participant~}}" value="medium">
+          <input
+            type='radio'
+            id='radio-opt2-{{~participant~}}'
+            name='switch-complexity-{{~participant~}}'
+            value='medium'
+          />
         {{/if}}
       {{/if}}
-      <label for="radio-opt2-{{~participant~}}">Medium</label>
+      <label for='radio-opt2-{{~participant~}}'>Medium</label>
       {{#if infos.invalid}}
-        <input type="radio" id="radio-opt3-{{~participant~}}" name="switch-complexity-{{~participant~}}" value="high" disabled>
+        <input
+          type='radio'
+          id='radio-opt3-{{~participant~}}'
+          name='switch-complexity-{{~participant~}}'
+          value='high'
+          disabled
+        />
       {{else}}
-        {{#if (eq infos.complexity "high")}}
-          <input type="radio" id="radio-opt3-{{~participant~}}" name="switch-complexity-{{~participant~}}" value="high" checked>
+        {{#if (eq infos.complexity 'high')}}
+          <input
+            type='radio'
+            id='radio-opt3-{{~participant~}}'
+            name='switch-complexity-{{~participant~}}'
+            value='high'
+            checked
+          />
         {{else}}
-          <input type="radio" id="radio-opt3-{{~participant~}}" name="switch-complexity-{{~participant~}}" value="high">
+          <input
+            type='radio'
+            id='radio-opt3-{{~participant~}}'
+            name='switch-complexity-{{~participant~}}'
+            value='high'
+          />
         {{/if}}
       {{/if}}
-      <label for="radio-opt3-{{~participant~}}">High</label>
+      <label for='radio-opt3-{{~participant~}}'>High</label>
     </div>
   </div>
 
-  <div class="invalid">
+  <div class='invalid'>
     <span>Invalid</span>
     {{#if infos.invalid}}
-      <input type="checkbox" class="invalid-switch" checked>
+      <input type='checkbox' class='invalid-switch' checked />
     {{else}}
-      <input type="checkbox" class="invalid-switch">
+      <input type='checkbox' class='invalid-switch' />
     {{/if}}
   </div>
 </div>

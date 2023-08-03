@@ -1,12 +1,12 @@
-<div id="error-overlay">
-  <div class="error-wrapper">
-    <i class="fa-solid fa-heart-circle-exclamation"></i>
+<div id='error-overlay'>
+  <div class='error-wrapper'>
+    <i class='fa-solid fa-heart-circle-exclamation'></i>
   </div>
-  <div class="error-msg">
-    <p class="message">{{ message }}</p>
-    <p class="details">Reason: {{ details }}</p>
+  <div class='error-msg'>
+    <p class='message'>{{message}}</p>
+    <p class='details'>Reason: {{details}}</p>
   </div>
   {{#if interact}}
-    <button type="submit" id="interact-btn">{{ interactBtnLabel }}</button>
+    <button type='submit' id='interact-btn'>{{interactBtnLabel}}</button>
   {{/if}}
 </div>
