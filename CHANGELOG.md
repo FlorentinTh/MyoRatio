@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.0.1](https://github.com/FlorentinTh/MyoRatio-GUI/compare/v3.0.0...v3.0.1) (2023-08-04)
+
+
+### Bug Fixes
+
+* **data-discovering:** fix some glich issues when loading the page ([633730b](https://github.com/FlorentinTh/MyoRatio-GUI/commit/633730b608623cd584c46dad564d95b698719b0c))
+* **participants-selection:** fix style import order that may lead to bug in certain conditions ([a96b8b2](https://github.com/FlorentinTh/MyoRatio-GUI/commit/a96b8b295452bd8468e18d0e0d9e2ee671fabc1f))
+
+
+### Refactors
+
+* **select elements:** move some select elements style to be use everywhere ([35de52e](https://github.com/FlorentinTh/MyoRatio-GUI/commit/35de52ed128889a5a6be7841aa3c2b4da3054b07))
+
+
+### Chore
+
+* **angles-selection:** add comments to remove code quality related warnings ([3976f78](https://github.com/FlorentinTh/MyoRatio-GUI/commit/3976f7846092ada52131dc0a3dd7e705fe065eb3))
+
 ## [3.0.0](https://github.com/FlorentinTh/MyoRatio-GUI/compare/v2.6.2...v3.0.0) (2023-08-03)
 
 
