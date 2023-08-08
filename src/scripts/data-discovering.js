@@ -229,7 +229,7 @@ if ('data-path' in sessionStorage) {
   } catch (error) {
     sessionStorage.removeItem('data-path');
     const errorOverlay = new ErrorOverlay({
-      message: `Internal error`,
+      message: `Data not found`,
       details: `cannot read root data folder content`,
       interact: true,
       redirect: 'data-discovering'
@@ -262,11 +262,19 @@ folderInput.addEventListener('change', async event => {
     sessionStorage.setItem('data-path', folder.path);
 
     try {
-      await enableSelectAnalysisData(folder.path);
+      const selectData = selectAnalysis.getData();
+
+      if (selectData.length <= 1) {
+        await enableSelectAnalysisData(folder.path);
+      }
     } catch (error) {
       sessionStorage.removeItem('data-path');
 
       const redirectConverter = !PlatformHelper.isMacOsPlatform() ? 'converter' : '';
+
+      if (!(redirectConverter === '')) {
+        sessionStorage.setItem('data-path', folder.path);
+      }
 
       const errorOverlay = new ErrorOverlay({
         message: `Data not found`,
@@ -613,6 +621,8 @@ submitButton.addEventListener('click', async () => {
                 });
 
                 errorOverlay.show();
+
+                return;
               }
             } else {
               loader.toggle();
