@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.0.3](https://github.com/FlorentinTh/MyoRatio-GUI/compare/v3.0.2...v3.0.3) (2023-08-08)
+
+
+### Bug Fixes
+
+* **data-discovering:** fix issue with input select not resetting properly with path from session ([20fed4e](https://github.com/FlorentinTh/MyoRatio-GUI/commit/20fed4e70487123c9e1aaf5b4a25f493ddcd86f8))
+
 ### [3.0.2](https://github.com/FlorentinTh/MyoRatio-GUI/compare/v3.0.1...v3.0.2) (2023-08-08)
 
 
