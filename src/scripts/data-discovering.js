@@ -143,7 +143,7 @@ folderInput.addEventListener('drop', () => {
   toggleDropAreaActive();
 });
 
-const toggleFolderPath = (path = null) => {
+const toggleFolderPath = (path = null, fromSession = false) => {
   if (!(folderMessage.querySelector('.folder-path') === null)) {
     folderMessage.querySelector('.folder-path').remove();
   }
@@ -153,6 +153,17 @@ const toggleFolderPath = (path = null) => {
     folderMessage.querySelector('#text').innerText = `or drag and drop the folder here`;
     folderInput.setAttribute('nwworkingdir', os.homedir());
   } else {
+    if (fromSession) {
+      const changeEvent = new Event('change');
+      folderInput.dispatchEvent(changeEvent);
+
+      const existingFile = new File([], '', {});
+      const dataTransfer = new DataTransfer();
+      dataTransfer.items.add(existingFile);
+
+      folderInput.files = dataTransfer.files;
+    }
+
     chooseButton.innerText = 'change folder';
     folderMessage.querySelector('#text').innerText = `selected folder path is`;
     folderInput.setAttribute('nwworkingdir', path);
@@ -189,30 +200,36 @@ const fetchParticipantIMUData = async (
   });
 };
 
-const enableSelectAnalysisData = async rootFolderPath => {
-  let folderContent;
+const enableSelectAnalysisData = async (rootFolderPath = null) => {
+  analysisSelectData = [{ text: analysisSelectPlaceholderText, placeholder: true }];
 
-  try {
-    folderContent = await FileHelper.listAllFiles(path.join(rootFolderPath, 'Analysis'));
-  } catch (error) {
-    throw new Error(error);
-  }
+  if (!(rootFolderPath === null)) {
+    let folderContent;
 
-  for (const analysis of appData.analysis) {
-    if (folderContent.includes(analysis.label)) {
-      analysisSelectData.push({
-        text: analysis.label,
-        value: analysis.label.toLowerCase()
-      });
+    try {
+      folderContent = await FileHelper.listAllFiles(
+        path.join(rootFolderPath, 'Analysis')
+      );
+    } catch (error) {
+      throw new Error(error);
     }
-  }
 
-  analysisSelectData = analysisSelectData.sort((a, b) => {
-    return a.text.localeCompare(b.text, undefined, {
-      sensitivity: 'base',
-      numeric: true
+    for (const analysis of appData.analysis) {
+      if (folderContent.includes(analysis.label)) {
+        analysisSelectData.push({
+          text: analysis.label,
+          value: analysis.label.toLowerCase()
+        });
+      }
+    }
+
+    analysisSelectData = analysisSelectData.sort((a, b) => {
+      return a.text.localeCompare(b.text, undefined, {
+        sensitivity: 'base',
+        numeric: true
+      });
     });
-  });
+  }
 
   selectAnalysis.setData(analysisSelectData);
   selectAnalysis.enable();
@@ -222,7 +239,7 @@ if ('data-path' in sessionStorage) {
   const dataPath = PathHelper.sanitizePath(
     sessionStorage.getItem('data-path').toString().trim()
   );
-  toggleFolderPath(dataPath);
+  toggleFolderPath(dataPath, true);
 
   try {
     await enableSelectAnalysisData(dataPath);
@@ -262,11 +279,7 @@ folderInput.addEventListener('change', async event => {
     sessionStorage.setItem('data-path', folder.path);
 
     try {
-      const selectData = selectAnalysis.getData();
-
-      if (selectData.length <= 1) {
-        await enableSelectAnalysisData(folder.path);
-      }
+      await enableSelectAnalysisData(folder.path);
     } catch (error) {
       sessionStorage.removeItem('data-path');
 
@@ -289,6 +302,13 @@ folderInput.addEventListener('change', async event => {
     }
   } else {
     toggleFolderPath();
+
+    await enableSelectAnalysisData();
+    selectAnalysis.disable();
+
+    if ('analysis' in sessionStorage) {
+      sessionStorage.removeItem('analysis');
+    }
 
     const sessionAnalysis = PathHelper.sanitizePath(
       sessionStorage.getItem('data-path').toString().toLowerCase().trim()
