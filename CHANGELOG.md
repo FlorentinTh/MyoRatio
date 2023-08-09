@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.1.0](https://github.com/FlorentinTh/MyoRatio-GUI/compare/v3.0.3...v3.1.0) (2023-08-09)
+
+
+### Features
+
+* **model:** add analysis and muscle models ([a549d05](https://github.com/FlorentinTh/MyoRatio-GUI/commit/a549d059ee78adb572513ff6a1540ddd6097a852))
+
+
+### Bug Fixes
+
+* **converter:** fix issue with input select not resetting properly ([39e3509](https://github.com/FlorentinTh/MyoRatio-GUI/commit/39e35090bf033db843ea5fa29a52a485e312a436))
+
+
+### Refactors
+
+* **stage:** move stage to model ([b7bb9eb](https://github.com/FlorentinTh/MyoRatio-GUI/commit/b7bb9ebf614720f7cdcdfdf083e503b33605aa4e))
+
+
+### Styling
+
+* **data-discovering:** formatting file ([9e38fcd](https://github.com/FlorentinTh/MyoRatio-GUI/commit/9e38fcd13703de91bfa27f764b2cf5f39d38837d))
+
 ### [3.0.3](https://github.com/FlorentinTh/MyoRatio-GUI/compare/v3.0.2...v3.0.3) (2023-08-08)
 
 
