@@ -80,7 +80,7 @@ folderInput.addEventListener('drop', () => {
   toggleDropAreaActive();
 });
 
-const toggleFolderPath = (path = null) => {
+const toggleFolderPath = (path = null, fromSession = false) => {
   if (!(folderMessage.querySelector('.folder-path') === null)) {
     folderMessage.querySelector('.folder-path').remove();
   }
@@ -89,7 +89,22 @@ const toggleFolderPath = (path = null) => {
     chooseButton.innerText = 'choose a folder';
     folderMessage.querySelector('#text').innerText = `or drag and drop the folder here`;
     folderInput.setAttribute('nwworkingdir', os.homedir());
+
+    if ('data-path' in sessionStorage) {
+      sessionStorage.removeItem('data-path');
+    }
   } else {
+    if (fromSession) {
+      const changeEvent = new Event('change');
+      folderInput.dispatchEvent(changeEvent);
+
+      const existingFile = new File([], '', {});
+      const dataTransfer = new DataTransfer();
+      dataTransfer.items.add(existingFile);
+
+      folderInput.files = dataTransfer.files;
+    }
+
     chooseButton.innerText = 'change folder';
     folderMessage.querySelector('#text').innerText = `selected folder path is`;
     folderInput.setAttribute('nwworkingdir', path);
@@ -105,7 +120,8 @@ if ('data-path' in sessionStorage) {
   dataPath = PathHelper.sanitizePath(
     sessionStorage.getItem('data-path').toString().trim()
   );
-  toggleFolderPath(PathHelper.sanitizePath(dataPath));
+
+  toggleFolderPath(dataPath, true);
   submitButton.removeAttribute('disabled');
 }
 
