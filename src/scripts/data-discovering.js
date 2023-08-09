@@ -239,6 +239,7 @@ if ('data-path' in sessionStorage) {
   const dataPath = PathHelper.sanitizePath(
     sessionStorage.getItem('data-path').toString().trim()
   );
+
   toggleFolderPath(dataPath, true);
 
   try {
