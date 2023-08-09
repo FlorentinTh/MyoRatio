@@ -629,6 +629,7 @@ submitButton.addEventListener('click', async () => {
 
                   errorOverlay.show();
                 } else {
+                  selectAnalysis.destroy();
                   router.switchPage('participants-selection');
                 }
               } catch (error) {
@@ -658,6 +659,7 @@ submitButton.addEventListener('click', async () => {
               errorOverlay.show();
             }
           } else {
+            selectAnalysis.destroy();
             router.switchPage('data-discovering');
           }
         } else {

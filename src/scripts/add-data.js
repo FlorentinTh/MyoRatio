@@ -445,6 +445,20 @@ const addNewAnalysis = async () => {
   await writeData(dataValidated);
 };
 
+const destroySlimSelect = () => {
+  if (!(selectAntagonist === null)) {
+    selectAntagonist.destroy();
+  }
+
+  if (!(selectAgonist === null)) {
+    selectAgonist.destroy();
+  }
+
+  if (!(selectAngle === null)) {
+    selectAngle.destroy();
+  }
+};
+
 const writeData = async data => {
   const messageLabel = setupType === 'muscles' ? setupType.slice(0, -1) : setupType;
   loader.toggle({ message: `Saving new ${messageLabel}...` });
@@ -478,10 +492,12 @@ const writeData = async data => {
     errorOverlay.show();
   }
 
+  destroySlimSelect();
   router.switchPage('data-configuration');
 };
 
 resetButton.addEventListener('click', event => {
+  destroySlimSelect();
   router.switchPage('data-configuration');
 });
 

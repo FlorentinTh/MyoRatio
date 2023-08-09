@@ -513,6 +513,22 @@ const getAnalysisData = () => {
   return new AnalysisModel(formData);
 };
 
+const destroySlimSelect = () => {
+  console.log('contentContainer' in elements);
+
+  if ('selectAntagonist' in elements) {
+    elements.selectAntagonist.destroy();
+  }
+
+  if ('selectAgonist' in elements) {
+    elements.selectAgonist.destroy();
+  }
+
+  if ('selectAngle' in elements) {
+    elements.selectAngle.destroy();
+  }
+};
+
 const updateData = async () => {
   let model;
 
@@ -570,10 +586,12 @@ const updateData = async () => {
     errorOverlay.show();
   }
 
+  destroySlimSelect();
   router.switchPage('data-configuration');
 };
 
 resetButton.addEventListener('click', event => {
+  destroySlimSelect();
   router.switchPage('data-configuration');
 });
 
