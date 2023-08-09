@@ -1,4 +1,4 @@
-export const Stages = {
+export const Stage = {
   CONCENTRIC: 'concentric',
   ECCENTRIC: 'eccentric'
 };

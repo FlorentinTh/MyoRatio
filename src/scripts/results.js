@@ -6,7 +6,7 @@ import { createPopper } from '@popperjs/core';
 import { Menu } from './components/menu.js';
 import { Router } from './routes/router.js';
 import { Metadata } from './app/metadata.js';
-import { Stages } from './data/stages.js';
+import { Stage } from './models/stage.js';
 import { PathHelper } from './helpers/path-helper';
 import { ErrorOverlay } from './components/overlay';
 import { FileHelper } from './helpers/file-helper';
@@ -190,7 +190,7 @@ const getRelevantRatioCoords = analysis => {
   let antagonist = appData.muscles.find(item => item.id === antagonistID).label;
   let agonist = appData.muscles.find(item => item.id === agonistID).label;
 
-  if (!(stage === Stages.CONCENTRIC)) {
+  if (!(stage === Stage.CONCENTRIC)) {
     antagonist = appData.muscles.find(item => item.id === agonistID).label;
     agonist = appData.muscles.find(item => item.id === antagonistID).label;
   }

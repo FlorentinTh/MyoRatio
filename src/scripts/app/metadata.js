@@ -2,7 +2,7 @@ import { ErrorOverlay } from '../components/overlay.js';
 import { FileHelper } from '../helpers/file-helper.js';
 import { StringHelper } from '../helpers/string-helper.js';
 import { TypeHelper } from '../helpers/type-helper.js';
-import { Stages } from '../data/stages.js';
+import { Stage } from '../models/stage.js';
 import { Configuration } from './configuration.js';
 
 const fs = nw.require('fs');
@@ -21,7 +21,7 @@ const readAppDataFile = new Promise((resolve, reject) => {
 });
 
 export class Metadata {
-  #stages = Object.values(Stages);
+  #stages = Object.values(Stage);
   #metadataRootFolder = '.metadata';
   #metadataFilename = 'data.json';
   #inputDataPath;

@@ -12,7 +12,7 @@ import { Loader } from './components/loader.js';
 import { ErrorOverlay } from './components/overlay';
 import { getAllParticipants } from './utils/participants';
 import { Metadata } from './app/metadata.js';
-import { Stages } from './data/stages.js';
+import { Stage } from './models/stage.js';
 import { PathHelper } from './helpers/path-helper.js';
 import { StringHelper } from './helpers/string-helper';
 import { Switch } from './utils/switch';
@@ -108,7 +108,7 @@ const sessionStage = PathHelper.sanitizePath(
   sessionStorage.getItem('stage').toString().toLowerCase().trim()
 );
 
-let stage = sessionStage === undefined ? Stages.CONCENTRIC : sessionStage;
+let stage = sessionStage === undefined ? Stage.CONCENTRIC : sessionStage;
 
 let participantItems;
 let isAllSelected = false;
