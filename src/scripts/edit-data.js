@@ -5,7 +5,6 @@ import content from '../views/partials/add-edit-data/content.hbs';
 import { createPopper } from '@popperjs/core';
 import SlimSelect from 'slim-select';
 import Swal from 'sweetalert2';
-import * as yup from 'yup';
 
 import { Menu } from './components/menu.js';
 import { Router } from './routes/router.js';
@@ -15,6 +14,8 @@ import { ErrorOverlay } from './components/overlay';
 import { StringHelper } from './helpers/string-helper';
 import { PathHelper } from './helpers/path-helper.js';
 import { Configuration } from './app/configuration.js';
+import { MuscleModel } from './models/muscle.js';
+import { AnalysisModel } from './models/analysis.js';
 
 const router = new Router();
 router.disableBackButton();
@@ -309,6 +310,10 @@ const getDataFromLabel = async updateDataLabel => {
 const displayData = async updateDataLabel => {
   data = await getDataFromLabel(updateDataLabel);
 
+  const contentContainer = document.querySelector('.content-container');
+  contentContainer.id = data.id;
+  elements.contentContainer = contentContainer;
+
   const labelInput = document.getElementById('label');
   labelInput.value = data.label.toLowerCase();
   elements.labelInput = labelInput;
@@ -451,38 +456,16 @@ const triggerErrorPopup = (title, text) => {
     });
 };
 
-const getMuscleData = async () => {
-  const schema = yup.object().shape({
-    label: yup.string().trim().required()
-  });
-
+const getMuscleData = () => {
   const formData = {
+    id: elements.contentContainer.id,
     label: StringHelper.capitalize(elements.labelInput.value.trim().toLowerCase())
   };
-  return { schema, formData };
+
+  return new MuscleModel(formData);
 };
 
-const getAnalysisData = async () => {
-  const schema = yup.object().shape({
-    label: yup.string().trim().required(),
-    stages: yup.object({
-      concentric: yup.object({
-        label: yup.string().trim(),
-        opening: yup.boolean().required()
-      }),
-      eccentric: yup.object({
-        label: yup.string().trim(),
-        opening: yup.boolean().required()
-      })
-    }),
-    muscles: yup.object({
-      antagonist: yup.string().trim().required(),
-      agonist: yup.string().trim().required(),
-      angle: yup.string().trim().required()
-    }),
-    is_angle_advanced: yup.boolean().required()
-  });
-
+const getAnalysisData = () => {
   let concentricLabelValue = elements.concentricLabelInput.value
     .toLowerCase()
     .replace(/^-|-$/g, '');
@@ -499,6 +482,7 @@ const getAnalysisData = async () => {
   }
 
   const formData = {
+    id: elements.contentContainer.id,
     label: StringHelper.capitalize(
       elements.labelInput.value.toLowerCase().replace(/^-|-$/g, '')
     ),
@@ -526,22 +510,24 @@ const getAnalysisData = async () => {
       .id.includes('advanced')
   };
 
-  return { schema, formData };
+  return new AnalysisModel(formData);
 };
 
 const updateData = async () => {
-  let schema, formData;
+  let model;
 
   if (setupType === 'muscles') {
-    ({ schema, formData } = await getMuscleData());
+    model = getMuscleData();
   } else {
-    ({ schema, formData } = await getAnalysisData());
+    model = getAnalysisData();
   }
 
+  let dataValidated;
+
   try {
-    await schema.validate(formData);
+    dataValidated = await model.validate();
   } catch (error) {
-    triggerErrorPopup('Invalid form', `Reason: ${error.toString().split(':')[1]}`);
+    triggerErrorPopup('Invalid form', error.toString());
     return;
   }
 
@@ -552,10 +538,10 @@ const updateData = async () => {
     const itemsToKeep = appData[setupType].filter(item => item.label !== data.label);
     const existingItems = new Set(itemsToKeep.map(item => item.label));
 
-    if (!existingItems.has(formData.label)) {
+    if (!existingItems.has(dataValidated.label)) {
       appData[setupType] = appData[setupType].map(item => {
         if (item.label === data.label) {
-          return { ...item, ...formData };
+          return { ...item, ...dataValidated };
         }
 
         return item;

@@ -6,7 +6,6 @@ import { createPopper } from '@popperjs/core';
 import SlimSelect from 'slim-select';
 import Swal from 'sweetalert2';
 import { v4 as uuidv4 } from 'uuid';
-import * as yup from 'yup';
 
 import { Menu } from './components/menu.js';
 import { Router } from './routes/router.js';
@@ -16,6 +15,8 @@ import { ErrorOverlay } from './components/overlay';
 import { StringHelper } from './helpers/string-helper';
 import { PathHelper } from './helpers/path-helper';
 import { Configuration } from './app/configuration';
+import { AnalysisModel } from './models/analysis.js';
+import { MuscleModel } from './models/muscle.js';
 
 const router = new Router();
 router.disableBackButton();
@@ -331,48 +332,26 @@ const triggerErrorPopup = (title, text) => {
 };
 
 const addNewMuscle = async () => {
-  const schema = yup.object().shape({
-    id: yup.string().trim().required(),
-    label: yup.string().trim().required()
-  });
-
   const formData = { id: uuidv4() };
 
   const labelInput = document.getElementById('label');
   formData.label = StringHelper.capitalize(labelInput.value.trim().toLowerCase());
 
+  const muscleModel = new MuscleModel(formData);
+
+  let dataValidated;
+
   try {
-    await schema.validate(formData);
+    dataValidated = await muscleModel.validate();
   } catch (error) {
-    triggerErrorPopup('Invalid form', `Reason: ${error.toString().split(':')[1]}`);
+    triggerErrorPopup('Invalid form', error.toString());
     return;
   }
 
-  await writeData(formData);
+  await writeData(dataValidated);
 };
 
 const addNewAnalysis = async () => {
-  const schema = yup.object().shape({
-    id: yup.string().trim().required(),
-    label: yup.string().trim().required(),
-    stages: yup.object({
-      concentric: yup.object({
-        label: yup.string().trim(),
-        opening: yup.boolean().required()
-      }),
-      eccentric: yup.object({
-        label: yup.string().trim(),
-        opening: yup.boolean().required()
-      })
-    }),
-    muscles: yup.object({
-      antagonist: yup.string().trim().required(),
-      agonist: yup.string().trim().required(),
-      angle: yup.string().trim().required()
-    }),
-    is_angle_advanced: yup.boolean().required()
-  });
-
   const formData = { id: uuidv4() };
 
   const labelInput = document.getElementById('label');
@@ -452,14 +431,18 @@ const addNewAnalysis = async () => {
     formData.muscles.angle = angleMuscle;
   }
 
+  const analysisModel = new AnalysisModel(formData);
+
+  let dataValidated;
+
   try {
-    await schema.validate(formData);
+    dataValidated = await analysisModel.validate();
   } catch (error) {
-    triggerErrorPopup('Invalid form', `Reason: ${error.toString().split(':')[1]}`);
+    triggerErrorPopup('Invalid form', error.toString());
     return;
   }
 
-  await writeData(formData);
+  await writeData(dataValidated);
 };
 
 const writeData = async data => {

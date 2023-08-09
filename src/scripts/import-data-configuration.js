@@ -10,6 +10,8 @@ import { Loader } from './components/loader.js';
 import { FileHelper } from './helpers/file-helper';
 import { ErrorOverlay } from './components/overlay';
 import { Configuration } from './app/configuration.js';
+import { MuscleModel } from './models/muscle.js';
+import { AnalysisModel } from './models/analysis.js';
 
 const os = nw.require('os');
 
@@ -150,35 +152,12 @@ const initPageContent = async () => {
 };
 
 const validateImportedFileContent = async fileContent => {
-  const muscleSchema = yup.object().shape({
-    id: yup.string().trim().required(),
-    label: yup.string().trim().required()
-  });
-
-  const analysisSchema = yup.object().shape({
-    id: yup.string().trim().required(),
-    label: yup.string().trim().required(),
-    stages: yup.object({
-      concentric: yup.object({
-        label: yup.string().trim(),
-        opening: yup.boolean().required()
-      }),
-      eccentric: yup.object({
-        label: yup.string().trim(),
-        opening: yup.boolean().required()
-      })
-    }),
-    muscles: yup.object({
-      antagonist: yup.string().trim().required(),
-      agonist: yup.string().trim().required(),
-      angle: yup.string().trim().required()
-    }),
-    is_angle_advanced: yup.boolean().required()
-  });
+  const muscleModel = new MuscleModel({});
+  const analysisModel = new AnalysisModel({});
 
   const configSchema = yup.object({
-    analysis: yup.array().of(analysisSchema).required(),
-    muscles: yup.array().of(muscleSchema).required()
+    analysis: yup.array().of(analysisModel.schema).required(),
+    muscles: yup.array().of(muscleModel.schema).required()
   });
 
   try {
