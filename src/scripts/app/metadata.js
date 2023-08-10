@@ -86,6 +86,7 @@ export class Metadata {
       throw new Error(error);
     }
 
+    folders = folders.filter(item => item.toUpperCase() !== '.DS_STORE');
     folders = new Set(folders.map(element => element.toLowerCase()));
 
     for (const folder of folders) {
