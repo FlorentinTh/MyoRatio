@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.1.1](https://github.com/FlorentinTh/MyoRatio-GUI/compare/v3.1.0...v3.1.1) (2023-08-10)
+
+
+### Bug Fixes
+
+* **app:** move from slim-select to choices that should fix macOs issue ([fb5c339](https://github.com/FlorentinTh/MyoRatio-GUI/commit/fb5c3391a4bd4138cd0968ecc73b901d654c0f3e))
+* **data-discovering:** adapt error interact button according to converter availability ([c4d4ca0](https://github.com/FlorentinTh/MyoRatio-GUI/commit/c4d4ca0947d6122fee7c6c7e03f1887de5a9da41))
+* **metadata:** fix issue that may occurs on macOs when data where moved from windows ([ba7d458](https://github.com/FlorentinTh/MyoRatio-GUI/commit/ba7d4589d8c10b284f803de826e960901b7f1bda))
+* **slim-select:** add destroy method for slim-select objects that should fix issue on macOs ([a152be2](https://github.com/FlorentinTh/MyoRatio-GUI/commit/a152be2403141353f60d6afcb56678a2ed155c9c))
+
+
+### Styling
+
+* **main:** remove useless css ([0b7f5de](https://github.com/FlorentinTh/MyoRatio-GUI/commit/0b7f5de7dcae1e5bb8bd8acb0d544ce1fa83af17))
+
 ## [3.1.0](https://github.com/FlorentinTh/MyoRatio-GUI/compare/v3.0.3...v3.1.0) (2023-08-09)
 
 
