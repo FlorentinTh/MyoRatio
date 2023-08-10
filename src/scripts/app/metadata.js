@@ -97,35 +97,28 @@ export class Metadata {
     return true;
   }
 
-  async createMetadataFolderTree(analysisObject) {
-    TypeHelper.checkArray(analysisObject, { label: 'analysisObject' });
+  async createMetadataFolderTree(analysis) {
+    TypeHelper.checkStringNotNull(analysis, { label: 'analysis' });
 
     await FileHelper.createFileOrDirectoryIfNotExists(this.getMetadataRootFolder, {
       hidden: true
     });
 
-    const analysisLabels = analysisObject.map(item => item.value);
+    if (this.#baseContent.includes(analysis)) {
+      const metadataSubfolderPath = path.join(this.getMetadataRootFolder, analysis);
+      await FileHelper.createFileOrDirectoryIfNotExists(metadataSubfolderPath, {
+        hidden: false
+      });
 
-    for (const analysisLabel of analysisLabels) {
-      if (this.#baseContent.includes(analysisLabel)) {
-        const metadataSubfolderPath = path.join(
-          this.getMetadataRootFolder,
-          analysisLabel
-        );
-        await FileHelper.createFileOrDirectoryIfNotExists(metadataSubfolderPath, {
-          hidden: false
-        });
+      const metadataFilePath = path.join(metadataSubfolderPath, this.#metadataFilename);
+      await FileHelper.createFileOrDirectoryIfNotExists(metadataFilePath, {
+        isDirectory: false,
+        hidden: false
+      });
 
-        const metadataFilePath = path.join(metadataSubfolderPath, this.#metadataFilename);
-        await FileHelper.createFileOrDirectoryIfNotExists(metadataFilePath, {
-          isDirectory: false,
-          hidden: false
-        });
-
-        await FileHelper.initEmptyJSONFile(metadataFilePath);
-      } else {
-        throw new Error(`Analysis ${analysisLabel} is not expected`);
-      }
+      await FileHelper.initEmptyJSONFile(metadataFilePath);
+    } else {
+      throw new Error(`Analysis ${analysis} is not expected`);
     }
 
     return true;

@@ -3,8 +3,8 @@ import '../styles/add-edit-data.css';
 import content from '../views/partials/add-edit-data/content.hbs';
 
 import { createPopper } from '@popperjs/core';
-import SlimSelect from 'slim-select';
 import Swal from 'sweetalert2';
+import Choices from 'choices.js';
 
 import { Menu } from './components/menu.js';
 import { Router } from './routes/router.js';
@@ -73,12 +73,20 @@ const isRequiredInputValid = () => {
       elements.selectAgonist !== null &&
       elements.selectAngle !== null
     ) {
-      requiredInputs[elements.selectAntagonist.selectEl.id] =
-        elements.selectAntagonist.getSelected()[0];
-      requiredInputs[elements.selectAgonist.selectEl.id] =
-        elements.selectAgonist.getSelected()[0];
-      requiredInputs[elements.selectAngle.selectEl.id] =
-        elements.selectAngle.getSelected()[0];
+      if (!(elements.selectAntagonist.getValue() === undefined)) {
+        requiredInputs[elements.selectAntagonist.passedElement.element.id] =
+          elements.selectAntagonist.getValue().value;
+      }
+
+      if (!(elements.selectAgonist.getValue() === undefined)) {
+        requiredInputs[elements.selectAgonist.passedElement.element.id] =
+          elements.selectAgonist.getValue().value;
+      }
+
+      if (!(elements.selectAngle.getValue() === undefined)) {
+        requiredInputs[elements.selectAngle.passedElement.element.id] =
+          elements.selectAngle.getValue().value;
+      }
     }
   }
 
@@ -225,68 +233,57 @@ const displayContent = () => {
 
     for (const muscle of muscles) {
       muscleSelectData.push({
-        text: muscle.label,
-        value: muscle.id
+        value: muscle.id,
+        label: muscle.label
       });
     }
 
-    elements.selectAntagonist = new SlimSelect({
-      select: '#select-antagonist',
-      settings: {
-        openPosition: 'down',
-        hideSelected: true,
-        searchHighlight: true
-      },
-      events: {
-        afterChange: event => {
-          if (isRequiredInputValid()) {
-            submitButton.removeAttribute('disabled');
-          } else {
-            submitButton.setAttribute('disabled', '');
-          }
-        }
+    const selectConfig = {
+      placeholder: true,
+      placeholderValue: 'Choose a muscle',
+      searchPlaceholderValue: 'Search muscles',
+      noResultsText: 'No muscle found',
+      noChoicesText: 'No muscle to choose from',
+      addItems: false,
+      removeItems: false,
+      itemSelectText: ''
+    };
+
+    elements.selectAntagonist = new Choices('#select-antagonist', selectConfig);
+    elements.selectAntagonist.setChoices(muscleSelectData);
+    elements.selectAntagonist.enable();
+
+    elements.selectAntagonist.passedElement.element.addEventListener('addItem', event => {
+      if (isRequiredInputValid()) {
+        submitButton.removeAttribute('disabled');
+      } else {
+        submitButton.setAttribute('disabled', '');
       }
     });
 
-    elements.selectAgonist = new SlimSelect({
-      select: '#select-agonist',
-      settings: {
-        openPosition: 'down',
-        hideSelected: true,
-        searchHighlight: true
-      },
-      events: {
-        afterChange: event => {
-          if (isRequiredInputValid()) {
-            submitButton.removeAttribute('disabled');
-          } else {
-            submitButton.setAttribute('disabled', '');
-          }
-        }
+    elements.selectAgonist = new Choices('#select-agonist', selectConfig);
+    elements.selectAgonist.setChoices(muscleSelectData);
+    elements.selectAgonist.enable();
+
+    elements.selectAgonist.passedElement.element.addEventListener('addItem', event => {
+      if (isRequiredInputValid()) {
+        submitButton.removeAttribute('disabled');
+      } else {
+        submitButton.setAttribute('disabled', '');
       }
     });
 
-    elements.selectAngle = new SlimSelect({
-      select: '#select-angle',
-      settings: {
-        openPosition: 'down',
-        hideSelected: true,
-        searchHighlight: true
-      },
-      events: {
-        afterChange: event => {
-          if (isRequiredInputValid()) {
-            submitButton.removeAttribute('disabled');
-          } else {
-            submitButton.setAttribute('disabled', '');
-          }
-        }
+    elements.selectAngle = new Choices('#select-angle', selectConfig);
+    elements.selectAngle.setChoices(muscleSelectData);
+    elements.selectAngle.enable();
+
+    elements.selectAngle.passedElement.element.addEventListener('addItem', event => {
+      if (isRequiredInputValid()) {
+        submitButton.removeAttribute('disabled');
+      } else {
+        submitButton.setAttribute('disabled', '');
       }
     });
-
-    elements.selectAntagonist.setData(muscleSelectData);
-    elements.selectAgonist.setData(muscleSelectData);
-    elements.selectAngle.setData(muscleSelectData);
   }
 };
 
@@ -379,9 +376,13 @@ const displayData = async updateDataLabel => {
       ).checked = true;
     }
 
-    elements.selectAntagonist.setSelected(data.muscles.antagonist);
-    elements.selectAgonist.setSelected(data.muscles.agonist);
-    elements.selectAngle.setSelected(data.muscles.angle);
+    elements.selectAntagonist.setChoiceByValue(data.muscles.antagonist);
+    elements.selectAgonist.setChoiceByValue(data.muscles.agonist);
+    elements.selectAngle.setChoiceByValue(data.muscles.angle);
+  } else {
+    if (isRequiredInputValid()) {
+      submitButton.removeAttribute('disabled');
+    }
   }
 };
 
@@ -501,9 +502,9 @@ const getAnalysisData = () => {
       }
     },
     muscles: {
-      antagonist: elements.selectAntagonist.getSelected()[0],
-      agonist: elements.selectAgonist.getSelected()[0],
-      angle: elements.selectAngle.getSelected()[0]
+      antagonist: elements.selectAntagonist.getValue().value,
+      agonist: elements.selectAgonist.getValue().value,
+      angle: elements.selectAngle.getValue().value
     },
     is_angle_advanced: elements.angleMethodSwitchRadios
       .find(item => item.checked)
@@ -511,22 +512,6 @@ const getAnalysisData = () => {
   };
 
   return new AnalysisModel(formData);
-};
-
-const destroySlimSelect = () => {
-  console.log('contentContainer' in elements);
-
-  if ('selectAntagonist' in elements) {
-    elements.selectAntagonist.destroy();
-  }
-
-  if ('selectAgonist' in elements) {
-    elements.selectAgonist.destroy();
-  }
-
-  if ('selectAngle' in elements) {
-    elements.selectAngle.destroy();
-  }
 };
 
 const updateData = async () => {
@@ -586,12 +571,10 @@ const updateData = async () => {
     errorOverlay.show();
   }
 
-  destroySlimSelect();
   router.switchPage('data-configuration');
 };
 
 resetButton.addEventListener('click', event => {
-  destroySlimSelect();
   router.switchPage('data-configuration');
 });
 

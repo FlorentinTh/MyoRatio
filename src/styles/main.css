@@ -1,8 +1,15 @@
 @import url('./utils/reset.css');
 @import url('./utils/media-queries.css');
+@import url('choices.js/public/assets/styles/base.css');
+@import url('choices.js/public/assets/styles/choices.css');
+@import url('./components/custom-choices.css');
 @import url('@fortawesome/fontawesome-free/css/all.css');
-@import url('slim-select/styles');
-@import url('./utils/slimselect-overrides.css');
+
+a,
+a:focus,
+a:visited {
+  font-weight: normal;
+}
 
 body.hide-overflow {
   overflow: hidden;
@@ -318,12 +325,13 @@ ul.list > li.item > .content .icon i.icon-small {
 
 select {
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   border: 1px solid #232323;
   background-color: #ededed;
   color: #2323238e;
   border-radius: 4px;
   font-size: 1em;
+  appearance: none;
 }
 
 @keyframes fade-in {

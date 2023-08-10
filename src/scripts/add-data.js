@@ -3,8 +3,8 @@ import '../styles/add-edit-data.css';
 import content from '../views/partials/add-edit-data/content.hbs';
 
 import { createPopper } from '@popperjs/core';
-import SlimSelect from 'slim-select';
 import Swal from 'sweetalert2';
+import Choices from 'choices.js';
 import { v4 as uuidv4 } from 'uuid';
 
 import { Menu } from './components/menu.js';
@@ -52,8 +52,6 @@ if ('setup' in sessionStorage) {
   );
 }
 
-const muscleSelectPlaceholderText = 'Choose a muscle';
-
 let selectAntagonist = null;
 let selectAgonist = null;
 let selectAngle = null;
@@ -74,9 +72,11 @@ const isRequiredInputValid = () => {
 
   if (setupType === 'analysis') {
     if (selectAntagonist !== null && selectAgonist !== null && selectAngle !== null) {
-      requiredInputs[selectAntagonist.selectEl.id] = selectAntagonist.getSelected()[0];
-      requiredInputs[selectAgonist.selectEl.id] = selectAgonist.getSelected()[0];
-      requiredInputs[selectAngle.selectEl.id] = selectAngle.getSelected()[0];
+      requiredInputs[selectAntagonist.passedElement.element.id] =
+        selectAntagonist.getValue().value;
+      requiredInputs[selectAgonist.passedElement.element.id] =
+        selectAgonist.getValue().value;
+      requiredInputs[selectAngle.passedElement.element.id] = selectAngle.getValue().value;
     }
   }
 
@@ -99,7 +99,7 @@ const isRequiredInputValid = () => {
       return false;
     }
 
-    if (selectValues.includes(muscleSelectPlaceholderText)) {
+    if (selectValues.includes('placeholder')) {
       return false;
     }
 
@@ -209,72 +209,69 @@ const displayContent = async () => {
       });
     }
 
-    const muscleSelectData = [{ text: muscleSelectPlaceholderText, placeholder: true }];
+    const muscleSelectData = [
+      {
+        value: 'placeholder',
+        label: 'Choose an analysis',
+        placeholder: true,
+        disabled: true,
+        selected: true
+      }
+    ];
 
     for (const muscle of muscles) {
       muscleSelectData.push({
-        text: muscle.label,
-        value: muscle.id
+        value: muscle.id,
+        label: muscle.label
       });
     }
 
-    selectAntagonist = new SlimSelect({
-      select: '#select-antagonist',
-      settings: {
-        openPosition: 'down',
-        hideSelected: true,
-        searchHighlight: true
-      },
-      events: {
-        afterClose: () => {
-          if (isRequiredInputValid()) {
-            submitButton.removeAttribute('disabled');
-          } else {
-            submitButton.setAttribute('disabled', '');
-          }
-        }
+    const selectConfig = {
+      placeholder: true,
+      placeholderValue: 'Choose a muscle',
+      searchPlaceholderValue: 'Search muscles',
+      noResultsText: 'No muscle found',
+      noChoicesText: 'No muscle to choose from',
+      addItems: false,
+      removeItems: false,
+      itemSelectText: ''
+    };
+
+    selectAntagonist = new Choices('#select-antagonist', selectConfig);
+    selectAntagonist.setChoices(muscleSelectData);
+    selectAntagonist.enable();
+
+    selectAntagonist.passedElement.element.addEventListener('addItem', event => {
+      if (isRequiredInputValid()) {
+        submitButton.removeAttribute('disabled');
+      } else {
+        submitButton.setAttribute('disabled', '');
       }
     });
 
-    selectAgonist = new SlimSelect({
-      select: '#select-agonist',
-      settings: {
-        openPosition: 'down',
-        hideSelected: true,
-        searchHighlight: true
-      },
-      events: {
-        afterClose: () => {
-          if (isRequiredInputValid()) {
-            submitButton.removeAttribute('disabled');
-          } else {
-            submitButton.setAttribute('disabled', '');
-          }
-        }
+    selectAgonist = new Choices('#select-agonist', selectConfig);
+    selectAgonist.setChoices(muscleSelectData);
+    selectAgonist.enable();
+
+    selectAgonist.passedElement.element.addEventListener('addItem', event => {
+      if (isRequiredInputValid()) {
+        submitButton.removeAttribute('disabled');
+      } else {
+        submitButton.setAttribute('disabled', '');
       }
     });
 
-    selectAngle = new SlimSelect({
-      select: '#select-angle',
-      settings: {
-        openPosition: 'down',
-        hideSelected: true,
-        searchHighlight: true
-      },
-      events: {
-        afterClose: () => {
-          if (isRequiredInputValid()) {
-            submitButton.removeAttribute('disabled');
-          } else {
-            submitButton.setAttribute('disabled', '');
-          }
-        }
+    selectAngle = new Choices('#select-angle', selectConfig);
+    selectAngle.setChoices(muscleSelectData);
+    selectAngle.enable();
+
+    selectAngle.passedElement.element.addEventListener('addItem', event => {
+      if (isRequiredInputValid()) {
+        submitButton.removeAttribute('disabled');
+      } else {
+        submitButton.setAttribute('disabled', '');
       }
     });
-
-    selectAntagonist.setData(muscleSelectData);
-    selectAgonist.setData(muscleSelectData);
-    selectAngle.setData(muscleSelectData);
   }
 };
 
@@ -400,9 +397,9 @@ const addNewAnalysis = async () => {
 
   formData.stages.eccentric.opening = eccentricChecked.value === 'opening';
 
-  const antagonistMuscle = selectAntagonist.getSelected()[0];
-  const agonistMuscle = selectAgonist.getSelected()[0];
-  const angleMuscle = selectAngle.getSelected()[0];
+  const antagonistMuscle = selectAntagonist.getValue().value;
+  const agonistMuscle = selectAgonist.getValue().value;
+  const angleMuscle = selectAngle.getValue().value;
 
   const angleMethodChecked = [...angleMethodSwitch].find(
     item => item.type === 'radio' && item.checked
@@ -410,21 +407,21 @@ const addNewAnalysis = async () => {
 
   formData.is_angle_advanced = angleMethodChecked.value === 'advanced';
 
-  if (antagonistMuscle === muscleSelectPlaceholderText) {
+  if (antagonistMuscle === 'placeholder') {
     triggerErrorPopup('Invalid form', 'You must select an antagonist muscle');
     return;
   } else {
     formData.muscles.antagonist = antagonistMuscle;
   }
 
-  if (agonistMuscle === muscleSelectPlaceholderText) {
+  if (agonistMuscle === 'placeholder') {
     triggerErrorPopup('Invalid form', 'You must select an agonist muscle');
     return;
   } else {
     formData.muscles.agonist = agonistMuscle;
   }
 
-  if (angleMuscle === muscleSelectPlaceholderText) {
+  if (angleMuscle === 'placeholder') {
     triggerErrorPopup('Invalid form', 'You must select a muscle for angle computation');
     return;
   } else {
@@ -443,20 +440,6 @@ const addNewAnalysis = async () => {
   }
 
   await writeData(dataValidated);
-};
-
-const destroySlimSelect = () => {
-  if (!(selectAntagonist === null)) {
-    selectAntagonist.destroy();
-  }
-
-  if (!(selectAgonist === null)) {
-    selectAgonist.destroy();
-  }
-
-  if (!(selectAngle === null)) {
-    selectAngle.destroy();
-  }
 };
 
 const writeData = async data => {
@@ -492,12 +475,10 @@ const writeData = async data => {
     errorOverlay.show();
   }
 
-  destroySlimSelect();
   router.switchPage('data-configuration');
 };
 
 resetButton.addEventListener('click', event => {
-  destroySlimSelect();
   router.switchPage('data-configuration');
 });
 

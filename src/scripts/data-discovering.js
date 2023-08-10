@@ -1,8 +1,8 @@
 import '../styles/components/folder-input.css';
 import '../styles/components/popup.css';
 
-import SlimSelect from 'slim-select';
 import Swal from 'sweetalert2';
+import Choices from 'choices.js';
 
 import { Menu } from './components/menu.js';
 import { Router } from './routes/router.js';
@@ -96,34 +96,38 @@ const submitButton = document.querySelector('button[type="submit"]');
 
 folderInput.setAttribute('nwworkingdir', os.homedir());
 
-const analysisSelectPlaceholderText = 'Choose an analysis';
-let analysisSelectData = [{ text: analysisSelectPlaceholderText, placeholder: true }];
+let analysisSelectData = [
+  {
+    value: 'placeholder',
+    label: 'Choose an analysis',
+    placeholder: true,
+    disabled: true,
+    selected: true
+  }
+];
 
-const selectAnalysis = new SlimSelect({
-  select: '#select-analysis',
-  settings: {
-    placeholderText: 'Choose an analysis',
-    openPosition: 'down',
-    hideSelected: true,
-    searchHighlight: true
-  },
-  events: {
-    afterClose: () => {
-      const selectedValue = selectAnalysis.getSelected()[0];
+const selectAnalysis = new Choices('#select-analysis', {
+  placeholder: true,
+  placeholderValue: 'Choose an analysis',
+  searchPlaceholderValue: 'Search analysis',
+  noResultsText: 'No analysis found',
+  noChoicesText: 'No analysis to choose from',
+  addItems: false,
+  removeItems: false,
+  itemSelectText: ''
+});
 
-      if (!(selectedValue === analysisSelectPlaceholderText)) {
-        sessionStorage.setItem('analysis', selectedValue);
+selectAnalysis.setChoices(analysisSelectData);
 
-        if (submitButton.disabled) {
-          submitButton.removeAttribute('disabled');
-        }
-      }
+selectAnalysis.passedElement.element.addEventListener('addItem', event => {
+  if (!(event.detail.value === 'placeholder')) {
+    sessionStorage.setItem('analysis', event.detail.value);
+
+    if (submitButton.disabled) {
+      submitButton.removeAttribute('disabled');
     }
   }
 });
-
-selectAnalysis.setData([{ text: 'Choose an analysis', placeholder: true }]);
-selectAnalysis.disable();
 
 const toggleDropAreaActive = () => {
   dropArea.classList.toggle('is-active');
@@ -201,7 +205,15 @@ const fetchParticipantIMUData = async (
 };
 
 const enableSelectAnalysisData = async (rootFolderPath = null) => {
-  analysisSelectData = [{ text: analysisSelectPlaceholderText, placeholder: true }];
+  analysisSelectData = [
+    {
+      value: 'placeholder',
+      label: 'Choose an analysis',
+      placeholder: true,
+      disabled: true,
+      selected: true
+    }
+  ];
 
   if (!(rootFolderPath === null)) {
     let folderContent;
@@ -217,21 +229,15 @@ const enableSelectAnalysisData = async (rootFolderPath = null) => {
     for (const analysis of appData.analysis) {
       if (folderContent.includes(analysis.label)) {
         analysisSelectData.push({
-          text: analysis.label,
-          value: analysis.label.toLowerCase()
+          value: analysis.label.toLowerCase(),
+          label: analysis.label
         });
       }
     }
-
-    analysisSelectData = analysisSelectData.sort((a, b) => {
-      return a.text.localeCompare(b.text, undefined, {
-        sensitivity: 'base',
-        numeric: true
-      });
-    });
   }
 
-  selectAnalysis.setData(analysisSelectData);
+  selectAnalysis.clearChoices();
+  selectAnalysis.setChoices(analysisSelectData);
   selectAnalysis.enable();
 };
 
@@ -264,7 +270,9 @@ if ('data-path' in sessionStorage) {
     if (
       !(analysisSelectData.find(item => item.value === selectedAnalysis) === undefined)
     ) {
-      selectAnalysis.setSelected(selectedAnalysis);
+      selectAnalysis.clearChoices();
+      selectAnalysis.setChoices(analysisSelectData);
+      selectAnalysis.setChoiceByValue(selectedAnalysis);
       submitButton.removeAttribute('disabled');
     } else {
       sessionStorage.removeItem('analysis');
@@ -305,6 +313,7 @@ folderInput.addEventListener('change', async event => {
     toggleFolderPath();
 
     await enableSelectAnalysisData();
+    selectAnalysis.setChoiceByValue('placeholder');
     selectAnalysis.disable();
 
     if ('analysis' in sessionStorage) {
@@ -405,9 +414,7 @@ submitButton.addEventListener('click', async () => {
 
       if (isBaseFolderContentCompliant) {
         try {
-          const selectData = selectAnalysis
-            .getData()
-            .filter(item => item.value !== analysisSelectPlaceholderText);
+          const selectData = selectAnalysis.getValue().value;
           isMetadataFolderInit = await metadata.createMetadataFolderTree(selectData);
         } catch (error) {
           loader.toggle();
@@ -629,7 +636,6 @@ submitButton.addEventListener('click', async () => {
 
                   errorOverlay.show();
                 } else {
-                  selectAnalysis.destroy();
                   router.switchPage('participants-selection');
                 }
               } catch (error) {
@@ -659,7 +665,6 @@ submitButton.addEventListener('click', async () => {
               errorOverlay.show();
             }
           } else {
-            selectAnalysis.destroy();
             router.switchPage('data-discovering');
           }
         } else {

@@ -151,8 +151,8 @@
     "@popperjs/core": "^2.11.8",
     "chart.js": "^3.9.1",
     "chartjs-plugin-crosshair": "^1.2.0",
+    "choices.js": "^10.2.0",
     "dayjs": "^1.11.9",
-    "slim-select": "^2.6.0",
     "sweetalert2": "^11.7.16",
     "uuid": "^9.0.0",
     "yup": "^1.2.0"
