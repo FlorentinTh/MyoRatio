@@ -294,6 +294,10 @@ folderInput.addEventListener('change', async event => {
 
       const redirectConverter = !PlatformHelper.isMacOsPlatform() ? 'converter' : '';
 
+      const redirectConverterInteract = !PlatformHelper.isMacOsPlatform()
+        ? 'Go to converter'
+        : 'I Understand!';
+
       if (!(redirectConverter === '')) {
         sessionStorage.setItem('data-path', folder.path);
       }
@@ -303,7 +307,7 @@ folderInput.addEventListener('change', async event => {
         details: `please ensure that the HPF data are converted properly`,
         interact: true,
         redirect: redirectConverter,
-        interactBtnLabel: 'Go to converter'
+        interactBtnLabel: redirectConverterInteract
       });
 
       errorOverlay.show();
