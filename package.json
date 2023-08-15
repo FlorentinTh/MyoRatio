@@ -44,7 +44,7 @@
   "window": {
     "title": "MyoRatio",
     "icon": "src/assets/icons/app.png",
-    "height": 720,
+    "height": 780,
     "width": 1280,
     "resizable": true,
     "position": "center"
