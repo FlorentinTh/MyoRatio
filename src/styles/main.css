@@ -34,8 +34,9 @@ main.content {
 }
 
 main.content.open {
-  transform: translateX(250px);
+  transform: translate3d(250px, 0, 0);
   box-shadow: 0 0 50px rgb(0 0 0 / 20%);
+  will-change: transform;
 }
 
 main.content section.wrapper {
