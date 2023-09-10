@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.2.0](https://github.com/FlorentinTh/MyoRatio-GUI/compare/v3.1.1...v3.2.0) (2023-09-10)
+
+
+### Bug Fixes
+
+* **angles-preview:** try fix laggy menu opening transition ([f854610](https://github.com/FlorentinTh/MyoRatio-GUI/commit/f854610148f7e8df29ee1b7db66d8541d528a9df))
+* **application:** update default application window height ([d54fd6b](https://github.com/FlorentinTh/MyoRatio-GUI/commit/d54fd6bf85d4fad33d9da599dd33a99e6eb81817))
+* **data-discovering:** fix issue where submit button disable state was not properly handled ([68ce168](https://github.com/FlorentinTh/MyoRatio-GUI/commit/68ce1680f74775b14b61a72a5923519d9a66fba5))
+
 ### [3.1.1](https://github.com/FlorentinTh/MyoRatio-GUI/compare/v3.1.0...v3.1.1) (2023-08-10)
 
 
