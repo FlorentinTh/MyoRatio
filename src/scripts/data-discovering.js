@@ -313,6 +313,14 @@ folderInput.addEventListener('change', async event => {
       errorOverlay.show();
       return;
     }
+
+    if ('analysis' in sessionStorage) {
+      sessionStorage.removeItem('analysis');
+    }
+
+    if (!submitButton.disabled) {
+      submitButton.setAttribute('disabled', '');
+    }
   } else {
     toggleFolderPath();
 
