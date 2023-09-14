@@ -77,7 +77,7 @@ const getChartFiles = async participant => {
       .filter(file => {
         const fileArray = file.split('.');
 
-        if (fileArray[fileArray.length - 1] === 'svg') {
+        if (fileArray[fileArray.length - 1] === 'png') {
           const fileArray = file.split('_');
 
           if (fileArray.includes('plot')) {
