@@ -34,6 +34,7 @@ const analysisType = PathHelper.sanitizePath(
 const analysisTitle = document.querySelector('.analysis h3');
 const gridContainer = document.querySelector('.participant-card-container');
 const submitButton = document.querySelector('button[type="submit"]');
+const resetButton = document.querySelector('button[type="reset"]');
 
 analysisTitle.innerText += ` ${analysisType}`;
 
@@ -392,4 +393,8 @@ submitButton.addEventListener('click', async () => {
       }, 800);
     }
   }
+});
+
+resetButton.addEventListener('click', event => {
+  router.switchPage('participants-selection');
 });
