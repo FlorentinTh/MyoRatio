@@ -247,8 +247,10 @@ const chartPointOnClickHandler = (event, element, plot) => {
     }
 
     if (!('selected-points' in sessionStorage)) {
-      sessionStorage.setItem('selected-points', autoAngles.join(';'));
-      autoAngles = [];
+      if (autoAngles.length > 0) {
+        sessionStorage.setItem('selected-points', autoAngles.join(';'));
+        autoAngles = [];
+      }
     }
   }
 
@@ -530,6 +532,8 @@ const processAutoAngles = async (participant, override) => {
     formattedPoints.push({ x: Number(point.x), y: Number(point.y) });
     autoAngles.push(`${Number(point.x)},${Number(point.y)}`);
   }
+
+  sessionStorage.setItem('selected-points', autoAngles.join(';'));
 
   const formattedPointsIndexes = [];
 
