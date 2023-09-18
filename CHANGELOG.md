@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.3.0](https://github.com/FlorentinTh/MyoRatio-GUI/compare/v3.2.0...v3.3.0) (2023-09-18)
+
+
+### Features
+
+* **angles-preview:** add a reset button to go to the previous page without saving when not required ([69622f4](https://github.com/FlorentinTh/MyoRatio-GUI/commit/69622f4582283fb1e6549d0d44f32d26387d4894))
+* **participant-selection:** add rolling waiting message for reports generation & compilation ([58e2997](https://github.com/FlorentinTh/MyoRatio-GUI/commit/58e2997ae673044f76e9fe90cfdf15bddb74feed))
+
+
+### Bug Fixes
+
+* **angle-preview:** now search for PNG files instead of SVG to fix laggy menu interaction ([23918d4](https://github.com/FlorentinTh/MyoRatio-GUI/commit/23918d4ec0c2a71a8f860f884d26e5a1e2f881e6))
+* **angles-selection:** fix issue with auto-angles selection ([d3798b5](https://github.com/FlorentinTh/MyoRatio-GUI/commit/d3798b5cbc9b04f2c66d297bab6c1d96ba1ae9e0))
+
+
+### Refactors
+
+* **index:** remove useless lines of code ([0bb0102](https://github.com/FlorentinTh/MyoRatio-GUI/commit/0bb010200abe4202ba1a1c476328e24d7dc4c0a8))
+
 ## [3.2.0](https://github.com/FlorentinTh/MyoRatio-GUI/compare/v3.1.1...v3.2.0) (2023-09-10)
 
 
