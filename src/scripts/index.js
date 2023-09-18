@@ -120,7 +120,6 @@ const initApplication = async () => {
           }
         }
       } catch (error) {
-        console.log(error);
         loader.toggle();
 
         const errorOverlay = new ErrorOverlay({
