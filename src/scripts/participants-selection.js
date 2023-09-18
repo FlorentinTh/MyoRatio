@@ -296,8 +296,36 @@ const checkSelectedParticipantsAllNotCompleted = () => {
   return totalNotCompleted;
 };
 
+const rollWaitingMessage = (overlay, messages, index) => {
+  overlay.loaderMessage.innerText = messages[0];
+  overlay.loaderMessage.innerText += `\n ${messages[index]}`;
+
+  if (index === messages.length - 1) {
+    index = 1;
+  } else {
+    index++;
+  }
+
+  setTimeout(rollWaitingMessage, 10000, overlay, messages, index);
+};
+
 const exportResultsRequests = async () => {
-  loader.toggle({ message: 'Writing reports...' });
+  loader.toggle();
+
+  const messages = [
+    'Writing reports...',
+    `It may take some times!`,
+    `Hold on, we are working on it!`,
+    `Almost there!`,
+    `Just a few more steps`
+  ];
+
+  loader.loaderMessage.innerText = messages[0];
+  const messageIndex = 1;
+
+  setTimeout(() => {
+    rollWaitingMessage(loader, messages, messageIndex);
+  }, 2500);
 
   try {
     const request = await fetchXLSXReport();
@@ -315,7 +343,10 @@ const exportResultsRequests = async () => {
       errorOverlay.show();
       return;
     } else {
-      loader.toggle({ message: 'Compiling results...' });
+      loader.toggle();
+
+      messages[0] = 'Compiling results...';
+      loader.loaderMessage.innerText = messages[0];
 
       try {
         const request = await fetchXLSXSummary();
