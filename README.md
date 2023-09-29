@@ -17,8 +17,6 @@
   </a>
 </p>
 
-___
-
 ## Documentation
 
 [French](docs/guide-utilisateur.pdf) & [English](docs/user-guide.pdf) user guides can be found under the docs folder.
