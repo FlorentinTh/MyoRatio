@@ -1,15 +1,35 @@
-# MyoRatio-GUI
+<p align="center">
+  <img src="./src/assets/icons/app.png" alt="MyoRatio" height="200px"/>
+</p>
 
-![Release Date](https://img.shields.io/github/release-date/florentinth/MyoRatio-GUI?style=flat-square) [![Release](https://img.shields.io/github/release/FlorentinTh/MyoRatio-GUI?style=flat-square)](https://github.com/FlorentinTh/MyoRatio-GUI/releases)
-![Platforms](https://img.shields.io/badge/platforms-win--32%20%7C%20win--64%20%7C%20osx--64%20-lightgrey?style=flat-square) ![License](https://img.shields.io/github/license/florentinth/MyoRatio-GUI?style=flat-square)
+<div align="center">
+  <h1>MyoRatio Application</h1>
+</div>
 
-MyoRatio Application
+<p align="center">
+  <a href="https://github.com/FlorentinTh/MyoRatio-GUI/releases">
+    <img src="https://img.shields.io/github/release/FlorentinTh/MyoRatio-GUI?style=for-the-badge" alt="npm version" />
+  </a>
+  <img src="https://img.shields.io/github/release-date/florentinth/MyoRatio-GUI?style=for-the-badge" alt="Release Date" />
+  <img src="https://img.shields.io/badge/platforms-windows%20%26%20macOS%20-lightseagreen?style=for-the-badge" alt="Platforms" />
+  <a href="https://github.com/FlorentinTh/MyoRatio-GUI/blob/main/LICENSE">
+    <img src="https://img.shields.io/github/license/florentinth/MyoRatio-GUI?style=for-the-badge" alt="License" />
+  </a>
+</p>
+
+___
 
 ## Documentation
 
 [French](docs/guide-utilisateur.pdf) & [English](docs/user-guide.pdf) user guides can be found under the docs folder.
 
-## Prerequisites
+## Authors
+
+- [**Florentin Thullier**](https://github.com/FlorentinTh) - 2022
+
+## For Contributors
+
+### Prerequisites
 
 - [Download and install node.js](https://nodejs.org/) (minimum required version is 18 or later) to build the GUI and the final application. It comes with npm but you can also download and install [yarn](https://yarnpkg.com/getting-started/install) or [pnpm](https://pnpm.io/installation) according to your preferences.
 
@@ -19,13 +39,12 @@ MyoRatio Application
 
 - [Download and install the latest Windows SDK](https://developer.microsoft.com/en-US/windows/downloads/windows-sdk/) to sign the final release installer before distribution. **(Windows only)**
 
-## Related Project
+### Related Project
 
 - [MyoRatio-API](https://github.com/FlorentinTh/MyoRatio-API)
 
-## Build the Release Application
 
-#### 1. Clone the Repositories {#sec-1}
+### Project Setup
 
 ```sh
 $/> mkdir MyoRatio
@@ -37,9 +56,7 @@ $/> git clone https://github.com/FlorentinTh/MyoRatio-API.git
 $/> git clone https://github.com/FlorentinTh/MyoRatio-GUI.git
 ```
 
-#### 2. Build the API
-
-##### 2.1. Setup project: {#sec-2-1}
+### API Setup
 
 ```sh
 $/> cd MyoRatio-API
@@ -57,20 +74,7 @@ $/> poetry self add 'poethepoet[poetry_plugin]'
 $ mv .env.example .env
 ```
 
-##### 2.2. Release the API: {#sec-2-2}
-```sh
-# Windows:
-> poetry poe build-win
-
-# macOS:
-$ poetry poe build-mac
-```
-
-> Release folder will be generated under ```MyoRatio-API/dist```
-
-#### 3. Build the application release
-
-##### 3.1. Setup project: {#sec-3-1}
+### GUI Setup
 
 ```sh
 $/> cd ../MyoRatio-GUI
@@ -82,36 +86,19 @@ $/> cd ../MyoRatio-GUI
 # macOS:
 $ mv env.app.json.example env.app.json
 $ mv env.build.json.example env.build.json
-```
 
-##### 3.2. Install project dependencies:  {#sec-3-2}
-
-```sh
-# npm:
-$/> npm install
-
-# yarn:
-$/> yarn install
-
-#pnpm:
-$/> pnpm install
+# Install project dependencies:
+$/> (npm | yarn | pnpm) install
 ```
 
 > **Important!** On macOS you also need to install the ```create-dmg``` package:
 
 ```sh
 $ npm install -D create-dmg@6.0.0
-
-# or:
-$ yarn add -D create-dmg@6.0.0
-
-# or:
-$ pnpm add -D create-dmg@6.0.0
+# or
+$ (yarn | pnpm) add -D create-dmg@6.0.0
 ```
-
-##### 3.3. Generate an SSL certificate (Windows only):  {sec-3-3}
-
-*This section is required only for the Windows build. You can use WSL to benefit from the availability of the openssl command line tool*
+> **Important!** On windows it is required to generate an SSL certificate to sign the installer. You can use WSL to benefit from the availability of the openssl command line tool
 
 ```sh
 # Create a new base folder to store your certificate files:
@@ -132,59 +119,22 @@ $ openssl pkcs12 -export -inkey ./.certs/key.pem -in ./.certs/certificate.pem -o
 
 > **IMPORTANT!** Please update the ```env.build.json``` file according to the answer provided while creating the SSL certificate
 
-##### 3.4. Release the application: {sec-3-4}
-
+### Run the Application
 ```sh
-## Windows:
-> npm run build:win && npm run publish:win
-
-# or
-> yarn run build:win && yarn run publish:win
-
-# or
-> pnpm run build:win && pnpm run publish:win
-
-
-## macOS:
-> npm run build:mac && npm run publish:mac
-
-# or
-> yarn run build:mac && yarn run publish:mac
-
-# or
-> pnpm run build:mac && pnpm run publish:mac
-```
-
-> The resulting file is located under the folder of your current architecture inside```./MyoRatio-GUI/release```
-
-## For Contributors
-
-> **Ensure you followed [section 1](#sec-1), [section 2.1](#sec-2-1), [section 3.1](#sec-3-1) & [section 3.2](#sec-3-2).**
-
-
-#### Serve the API:
-
-```sh
+# serve the API
+$/> cd ../MyoRatio-API
 $/> poetry run serve [port]
 ```
 
 > Parameter ```[port]``` is optionnal. By default it will be  **3300** only if available.
 
-
-#### Start the GUI:
-
 ```sh
-$/> npm run start
-
-# or
-$/> yarn run start
-
-# or
-$/> pnpm run start
-
+# start the GUI
+$/> cd ../MyoRatio-GUI
+$/> (npm | yarn | pnpm) run start
 ```
 
-#### Submitting changes to the code:
+### Submitting Changes
 
 > **Your commits should follow the [conventional commits specification](https://www.conventionalcommits.org/en/v1.0.0/) !**
 
@@ -197,16 +147,10 @@ $/> poetry poe commit
 - For the GUI, you can use the following command to proceed your commits:
 
 ```sh
-$/> npm run commit
-
-# or
-$/> yarn run commit
-
-# or
-$/> pnpm run commit
+$/> (npm | yarn | pnpm) run commit
 ```
 
-#### Release a New Version:
+### Publish Version
 
 To release a new version you can install the ```standard-version``` version package globally such as:
 
@@ -218,15 +162,11 @@ $/> yarn global add standard-version
 
 # or
 $/> pnpm add -g standard-version
-```
 
-##### Releasing a new API version:
-```sh
+# release the API
 $/> poetry poe release && poetry poe publish
-```
 
-##### Releasing a new GUI version:
-```sh
+# release the GUI
 $/> npm run release && npm run publish
 
 # or
@@ -236,9 +176,28 @@ $/> yarn run release && yarn run publish
 $/> pnpm run release && pnpm run publish
 ```
 
-## Authors
 
-- [**Florentin Thullier**](https://github.com/FlorentinTh) - 2022
+### Release Installers
+
+```sh
+# build the API
+$/> cd ../MyoRatio-API
+## Windows:
+> poetry poe build-win
+## macOS:
+$ poetry poe build-mac
+
+# build the GUI
+$/> cd ../MyoRatio-GUI
+## Windows:
+> (npm | yarn | pnpm) run build:win && (npm | yarn | pnpm) run publish:win
+## macOS:
+> (npm | yarn | pnpm) run build:mac && (npm | yarn | pnpm) run publish:mac
+
+```
+
+> The resulting file is located under the folder of your current architecture inside```./MyoRatio-GUI/release```
+
 
 ## License
 
