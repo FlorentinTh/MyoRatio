@@ -3,7 +3,7 @@
 </p>
 
 <div align="center">
-  <h1>MyoRatio Application</h1>
+  <h1>MyoRatio</h1>
 </div>
 
 <p align="center">
