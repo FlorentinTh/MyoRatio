@@ -2,6 +2,37 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.4.0](https://github.com/FlorentinTh/MyoRatio-GUI/compare/v3.3.0...v3.4.0) (2023-10-04)
+
+
+### Features
+
+* **updater:** add new updater feature ([dd89bc5](https://github.com/FlorentinTh/MyoRatio-GUI/commit/dd89bc5f580a24f0191ac1d62ac6d170286035fe))
+
+
+### Bug Fixes
+
+* **configuration:** fix minor issues with usage of choices.js dependency ([bb5b879](https://github.com/FlorentinTh/MyoRatio-GUI/commit/bb5b879f93ba26b4332067e30908d27f53296d10))
+
+
+### Styling
+
+* **readme:** clean readme ([60dd397](https://github.com/FlorentinTh/MyoRatio-GUI/commit/60dd3978dd60ecf0429aa3478f0da614f8c5f386))
+* **readme:** update main title ([e5b5a6d](https://github.com/FlorentinTh/MyoRatio-GUI/commit/e5b5a6d00dcaa11dec05c619be1b7518efe30539))
+
+
+### Documentation
+
+* **docs:** add both french and english user-guide documentations ([d5984b4](https://github.com/FlorentinTh/MyoRatio-GUI/commit/d5984b4ab71d6a1c7d1e1b35aa1fca958e5feb00))
+* **docs:** update documentation according to previous new feature (updater) ([5fb3be7](https://github.com/FlorentinTh/MyoRatio-GUI/commit/5fb3be7d3750479dc90fdedb4c9270ea51e904c1))
+* **readme:** update readme ([178184c](https://github.com/FlorentinTh/MyoRatio-GUI/commit/178184c246a10bd567d05f2c37edb08dd699c72e))
+* **readme:** update README.md to include link to user-guide files ([b60e7b0](https://github.com/FlorentinTh/MyoRatio-GUI/commit/b60e7b02f9b758d2c36ce5e774fdd60cbc7b4efd))
+
+
+### Chore
+
+* **project:** project rename ([7db666d](https://github.com/FlorentinTh/MyoRatio-GUI/commit/7db666d60c8f59eb5119f954e17da94bf7de7330))
+
 ## [3.3.0](https://github.com/FlorentinTh/MyoRatio-GUI/compare/v3.2.0...v3.3.0) (2023-09-18)
 
 
