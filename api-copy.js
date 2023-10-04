@@ -27,15 +27,8 @@ const APISourceFolder = path.join(APIPath, 'dist', 'MyoRatioAPI');
 const targetFolder = 'bin/MyoRatioAPI';
 
 if (fs.existsSync(targetFolder)) {
-  fs.remove(targetFolder, error => {
-    if (error) {
-      throw new Error(error);
-    }
-
-    recursiveCopy(APISourceFolder, targetFolder);
-  });
-} else {
-  recursiveCopy(APISourceFolder, targetFolder);
+  fs.removeSync(targetFolder);
 }
 
+recursiveCopy(APISourceFolder, targetFolder);
 console.log('--> API successfully copied to bin folder');
