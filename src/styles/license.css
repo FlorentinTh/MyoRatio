@@ -1,7 +1,38 @@
 @import url('./main.css');
+@import url('./components/popup.css');
 
 main.content section.wrapper h2 {
-  margin-bottom: 25px;
+  margin-bottom: 15px;
+}
+
+main.content section.wrapper .update {
+  margin-bottom: 35px;
+}
+
+main.content section.wrapper .update button {
+  color: #ededed;
+  font-size: 0.8em;
+  padding: 10px 20px;
+  border: 1px solid #16a085;
+  background-color: #16a084e4;
+  border-radius: 30px;
+  background-image: linear-gradient(to left, #16a085, #16a085);
+  background-size: 0 100%;
+  background-repeat: no-repeat;
+  transition: ease-out 0.4s;
+  text-transform: uppercase;
+}
+
+main.content section.wrapper .update button:hover {
+  background-size: 100% 100%;
+  cursor: pointer;
+}
+
+main.content section.wrapper .update button:disabled {
+  pointer-events: none;
+  cursor: default;
+  background-color: #bdbdbd;
+  border-color: #bdbdbd;
 }
 
 main.content section.wrapper a {

@@ -19,6 +19,7 @@ import { MutexHelper } from './helpers/mutex-helper.js';
 import { StringHelper } from './helpers/string-helper.js';
 import { ObjectHelper } from './helpers/object-helper.js';
 import { Configuration } from './app/configuration.js';
+import { Updater } from './app/updater.js';
 
 const os = nw.require('os');
 const path = nw.require('path');
@@ -27,7 +28,16 @@ const router = new Router();
 router.disableBackButton();
 
 SessionStore.clear({
-  keep: ['data-path', 'analysis', 'require-setup', 'locked-participant']
+  keep: [
+    'data-path',
+    'analysis',
+    'require-setup',
+    'locked-participant',
+    'update-available',
+    'notify-update',
+    'update-available',
+    'notify-update'
+  ]
 });
 
 if ('locked-participant' in sessionStorage) {
@@ -114,10 +124,11 @@ const selectAnalysis = new Choices('#select-analysis', {
   noChoicesText: 'No analysis to choose from',
   addItems: false,
   removeItems: false,
-  itemSelectText: ''
+  itemSelectText: '',
+  allowHTML: true
 });
 
-selectAnalysis.setChoices(analysisSelectData);
+await selectAnalysis.setChoices(analysisSelectData);
 
 selectAnalysis.passedElement.element.addEventListener('addItem', event => {
   if (!(event.detail.value === 'placeholder')) {
@@ -128,6 +139,92 @@ selectAnalysis.passedElement.element.addEventListener('addItem', event => {
     }
   }
 });
+
+let isUpdateAvailable = false;
+let notifyUpdate = false;
+
+if ('update-available' in sessionStorage) {
+  isUpdateAvailable =
+    PathHelper.sanitizePath(
+      sessionStorage.getItem('update-available').toString().toLowerCase().trim()
+    ) === 'true';
+}
+
+if ('notify-update' in sessionStorage) {
+  notifyUpdate =
+    PathHelper.sanitizePath(
+      sessionStorage.getItem('notify-update').toString().toLowerCase().trim()
+    ) === 'true';
+}
+
+if (isUpdateAvailable && notifyUpdate) {
+  Swal.fire({
+    title: 'New Version Available',
+    text: 'An update of MyoRatio is available, do you want to update right now?',
+    icon: 'info',
+    background: '#ededed',
+    customClass: {
+      confirmButton: 'button-popup cancel',
+      cancelButton: 'button-popup confirm'
+    },
+    buttonsStyling: false,
+    padding: '0 0 35px 0',
+    allowOutsideClick: false,
+    showCancelButton: true,
+    showDenyButton: false,
+    confirmButtonText: `Download and Update`,
+    cancelButtonText: `Later`
+  })
+    .then(async result => {
+      if (!result.isConfirmed) {
+        sessionStorage.setItem('notify-update', false);
+        router.switchPage('data-discovering');
+      } else {
+        const updater = new Updater(AppVersion);
+        await updater.updateApp();
+      }
+    })
+    .catch(error => {
+      throw new Error(error);
+    });
+} else {
+  let newVersionInstalled = false;
+
+  if ('new-version-installed' in localStorage) {
+    newVersionInstalled =
+      PathHelper.sanitizePath(
+        localStorage.getItem('new-version-installed').toString().toLowerCase().trim()
+      ) === 'true';
+  }
+
+  if (newVersionInstalled) {
+    Swal.fire({
+      title: 'New version installed',
+      text: `MyoRatio was successfully updated to v${AppVersion}`,
+      icon: 'info',
+      background: '#ededed',
+      customClass: {
+        confirmButton: 'button-popup cancel'
+      },
+      buttonsStyling: false,
+      padding: '0 0 35px 0',
+      allowOutsideClick: false,
+      showCancelButton: false,
+      showDenyButton: false,
+      confirmButtonText: `Confirm`
+    })
+      .then(async result => {
+        if (result.isConfirmed) {
+          localStorage.removeItem('new-version-installed');
+          await FileHelper.removeUpdateFiles(configuration.homeConfigurationFolderPath);
+          Swal.close();
+        }
+      })
+      .catch(error => {
+        throw new Error(error);
+      });
+  }
+}
 
 const toggleDropAreaActive = () => {
   dropArea.classList.toggle('is-active');
@@ -237,7 +334,7 @@ const enableSelectAnalysisData = async (rootFolderPath = null) => {
   }
 
   selectAnalysis.clearChoices();
-  selectAnalysis.setChoices(analysisSelectData);
+  await selectAnalysis.setChoices(analysisSelectData);
   selectAnalysis.enable();
 };
 
@@ -271,7 +368,7 @@ if ('data-path' in sessionStorage) {
       !(analysisSelectData.find(item => item.value === selectedAnalysis) === undefined)
     ) {
       selectAnalysis.clearChoices();
-      selectAnalysis.setChoices(analysisSelectData);
+      await selectAnalysis.setChoices(analysisSelectData);
       selectAnalysis.setChoiceByValue(selectedAnalysis);
       submitButton.removeAttribute('disabled');
     } else {

@@ -822,6 +822,8 @@ if (!(participants?.length > 0)) {
 }
 
 changeButton.addEventListener('click', () => {
-  SessionStore.clear({ keep: ['data-path', 'analysis', 'require-setup'] });
+  SessionStore.clear({
+    keep: ['data-path', 'analysis', 'require-setup', 'update-available', 'notify-update']
+  });
   router.switchPage('data-discovering');
 });

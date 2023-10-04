@@ -26,7 +26,16 @@
     "publish": "git push --follow-tags"
   },
   "author": "Florentin Thullier <fthullie@uqac.ca>",
-  "license": "SEE LICENSE IN <LICENSE>",
+  "homepage": "https://github.com/FlorentinTh/MyoRatio-GUI#readme",
+  "man": [
+    "./docs/user-guide.pdf",
+    "./docs/guide-utilisateur.pdf"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/FlorentinTh/MyoRatio-GUI.git"
+  },
+  "license": "SEE IN LICENSE",
   "pre-commit": [
     "lint"
   ],
@@ -153,6 +162,7 @@
     "chartjs-plugin-crosshair": "^1.2.0",
     "choices.js": "^10.2.0",
     "dayjs": "^1.11.9",
+    "semver": "^7.5.4",
     "sweetalert2": "^11.7.16",
     "uuid": "^9.0.0",
     "yup": "^1.2.0"

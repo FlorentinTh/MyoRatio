@@ -20,7 +20,12 @@
       <span><a href='copyright.html'>GRIMN & LIARA Lab.</a></span>
     </div>
     <div class='version'>
-      <span><a href='license.html'>Version {{version}}</a></span>
+      <span class='app-version'><a href='license.html'>Version {{version}}</a></span>
+      {{#if isUpdateAvailable}}
+        {{#unless notifyUpdate}}
+          <span class='update-notification'><i class='fa-solid fa-bell'></i></span>
+        {{/unless}}
+      {{/if}}
     </div>
   </div>
 </nav>

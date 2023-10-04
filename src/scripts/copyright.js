@@ -16,7 +16,14 @@ menu.init();
 menu.setItemActive('copyright');
 
 SessionStore.clear({
-  keep: ['data-path', 'analysis', 'require-setup', 'locked-participant']
+  keep: [
+    'data-path',
+    'analysis',
+    'require-setup',
+    'locked-participant',
+    'update-available',
+    'notify-update'
+  ]
 });
 
 if ('locked-participant' in sessionStorage) {

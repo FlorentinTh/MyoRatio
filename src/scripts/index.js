@@ -9,6 +9,7 @@ import { ErrorOverlay } from './components/overlay.js';
 import { NetHelper } from './helpers/net-helper.js';
 import { FileHelper } from './helpers/file-helper.js';
 import { Configuration } from './app/configuration.js';
+import { Updater } from './app/updater.js';
 
 const fs = nw.require('fs');
 const path = nw.require('path');
@@ -96,6 +97,14 @@ const initApplication = async () => {
         const appDataFileJSON = await FileHelper.parseJSONFile(
           configuration.configurationFilePath
         );
+
+        const updater = new Updater(AppVersion);
+        const isUpdateAvailable = await updater.checkUpdateAvailable();
+
+        if (isUpdateAvailable) {
+          sessionStorage.setItem('update-available', true);
+          sessionStorage.setItem('notify-update', true);
+        }
 
         if (appDataFileJSON.muscles.length <= 0) {
           sessionStorage.setItem('require-setup', true);

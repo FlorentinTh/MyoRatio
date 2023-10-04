@@ -1239,7 +1239,16 @@ submitButton.addEventListener('click', async () => {
 
         errorOverlay.show();
       } else {
-        SessionStore.clear({ keep: ['data-path', 'analysis', 'stage', 'require-setup'] });
+        SessionStore.clear({
+          keep: [
+            'data-path',
+            'analysis',
+            'stage',
+            'require-setup',
+            'update-available',
+            'notify-update'
+          ]
+        });
 
         setTimeout(() => {
           router.switchPage('participants-selection');
@@ -1278,6 +1287,15 @@ submitButton.addEventListener('click', async () => {
 
 resetButton.addEventListener('click', async () => {
   await mutexUnlock();
-  SessionStore.clear({ keep: ['data-path', 'analysis', 'stage', 'require-setup'] });
+  SessionStore.clear({
+    keep: [
+      'data-path',
+      'analysis',
+      'stage',
+      'require-setup',
+      'update-available',
+      'notify-update'
+    ]
+  });
   router.switchPage('participants-selection');
 });

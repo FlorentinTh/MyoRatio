@@ -176,4 +176,25 @@ export class FileHelper {
       throw new Error(error);
     }
   }
+
+  static async removeUpdateFiles(inputPath) {
+    TypeHelper.checkStringNotNull(inputPath, { label: 'inputPath' });
+
+    try {
+      const content = await fs.promises.readdir(inputPath);
+
+      for (const file of content) {
+        const filePath = path.resolve(inputPath, file);
+        const stat = await fs.promises.stat(filePath);
+
+        if (stat.isFile()) {
+          if (/^Update_+/.test(file)) {
+            await fs.promises.unlink(filePath);
+          }
+        }
+      }
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
 }

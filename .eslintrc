@@ -9,7 +9,9 @@
     "Atomics": "readonly",
     "SharedArrayBuffer": "readonly",
     "nw": "readonly",
-    "AppVersion": "readonly"
+    "AppName": "readonly",
+    "AppVersion": "readonly",
+    "RepositoryUrl": "readonly"
   },
   "parserOptions": {
     "sourceType": "module",

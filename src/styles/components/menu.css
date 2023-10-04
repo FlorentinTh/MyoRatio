@@ -147,13 +147,30 @@ nav .bottom .version span a:hover {
 
 nav .bottom .version {
   margin-top: 5px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: baseline;
 }
 
 nav .bottom .version span {
   color: #ededed;
-  font-style: italic;
   font-size: 0.8em;
 }
+
+nav .bottom .version span.app-version {
+  font-style: italic;
+}
+
+nav .bottom .version span.update-notification {
+  background-color: #16a085;
+  margin-left: 6px;
+  width: 36px;
+  height: 22px;
+  border-radius: 15px;
+}
+
+
 
 nav .bottom .logos a img {
   height: 2.5em;

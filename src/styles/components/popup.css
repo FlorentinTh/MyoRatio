@@ -16,8 +16,19 @@ div:has(.button-popup) {
   width: 250px;
 }
 
+.button-popup:disabled {
+  pointer-events: none;
+  cursor: default;
+  background-color: #bdbdbd;
+  border-color: #bdbdbd;
+}
+
 .button-popup:not(:last-child) {
   margin-bottom: 10px;
+}
+
+.button-popup:focus {
+  outline: none;
 }
 
 .confirm {

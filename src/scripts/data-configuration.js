@@ -39,7 +39,15 @@ menu.init(additionalMenuButtons);
 menu.setItemActive('data-configuration');
 
 SessionStore.clear({
-  keep: ['data-path', 'analysis', 'require-setup', 'locked-participant', 'setup']
+  keep: [
+    'data-path',
+    'analysis',
+    'require-setup',
+    'locked-participant',
+    'setup',
+    'update-available',
+    'notify-update'
+  ]
 });
 
 const configuration = new Configuration();

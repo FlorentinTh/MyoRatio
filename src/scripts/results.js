@@ -20,7 +20,15 @@ const router = new Router();
 router.disableBackButton();
 
 SessionStore.clear({
-  keep: ['data-path', 'analysis', 'stage', 'require-setup', 'participant-result']
+  keep: [
+    'data-path',
+    'analysis',
+    'stage',
+    'require-setup',
+    'participant-result',
+    'update-available',
+    'notify-update'
+  ]
 });
 
 const menu = new Menu();

@@ -13,7 +13,28 @@ export class Menu {
 
   constructor() {
     const menuContainer = document.querySelector('.menu-container');
-    menuContainer.insertAdjacentHTML('afterbegin', menuTemplate({ version: AppVersion }));
+
+    let isUpdateAvailable = false;
+    let notifyUpdate = false;
+
+    if ('update-available' in sessionStorage) {
+      isUpdateAvailable =
+        PathHelper.sanitizePath(
+          sessionStorage.getItem('update-available').toString().toLowerCase().trim()
+        ) === 'true';
+    }
+
+    if ('notify-update' in sessionStorage) {
+      notifyUpdate =
+        PathHelper.sanitizePath(
+          sessionStorage.getItem('notify-update').toString().toLowerCase().trim()
+        ) === 'true';
+    }
+
+    menuContainer.insertAdjacentHTML(
+      'afterbegin',
+      menuTemplate({ version: AppVersion, isUpdateAvailable, notifyUpdate })
+    );
 
     this.#toggleNavButton = document.querySelector('.toggle-nav-btn');
     this.#additionalButtons = null;
