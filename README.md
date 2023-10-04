@@ -7,13 +7,13 @@
 </div>
 
 <p align="center">
-  <a href="https://github.com/FlorentinTh/MyoRatio-GUI/releases">
-    <img src="https://img.shields.io/github/release/FlorentinTh/MyoRatio-GUI?style=for-the-badge" alt="npm version" />
+  <a href="https://github.com/FlorentinTh/MyoRatio/releases">
+    <img src="https://img.shields.io/github/release/FlorentinTh/MyoRatio?style=for-the-badge" alt="npm version" />
   </a>
-  <img src="https://img.shields.io/github/release-date/florentinth/MyoRatio-GUI?style=for-the-badge" alt="Release Date" />
+  <img src="https://img.shields.io/github/release-date/florentinth/MyoRatio?style=for-the-badge" alt="Release Date" />
   <img src="https://img.shields.io/badge/platforms-windows%20%26%20macOS%20-lightseagreen?style=for-the-badge" alt="Platforms" />
-  <a href="https://github.com/FlorentinTh/MyoRatio-GUI/blob/main/LICENSE">
-    <img src="https://img.shields.io/github/license/florentinth/MyoRatio-GUI?style=for-the-badge" alt="License" />
+  <a href="https://github.com/FlorentinTh/MyoRatio/blob/main/LICENSE">
+    <img src="https://img.shields.io/github/license/florentinth/MyoRatio?style=for-the-badge" alt="License" />
   </a>
 </p>
 
@@ -45,13 +45,13 @@
 ### Project Setup
 
 ```sh
-$/> mkdir MyoRatio
+$/> mkdir MyoRatioApp
 
-$/> cd MyoRatio
+$/> cd MyoRatioApp
 
 $/> git clone https://github.com/FlorentinTh/MyoRatio-API.git
 
-$/> git clone https://github.com/FlorentinTh/MyoRatio-GUI.git
+$/> git clone https://github.com/FlorentinTh/MyoRatio.git
 ```
 
 ### API Setup
@@ -75,7 +75,7 @@ $ mv .env.example .env
 ### GUI Setup
 
 ```sh
-$/> cd ../MyoRatio-GUI
+$/> cd ../MyoRatio
 
 # Windows:
 > ren env.app.json.example env.app.json
@@ -128,7 +128,7 @@ $/> poetry run serve [port]
 
 ```sh
 # start the GUI
-$/> cd ../MyoRatio-GUI
+$/> cd ../MyoRatio
 $/> (npm | yarn | pnpm) run start
 ```
 
@@ -186,7 +186,7 @@ $/> cd ../MyoRatio-API
 $ poetry poe build-mac
 
 # build the GUI
-$/> cd ../MyoRatio-GUI
+$/> cd ../MyoRatio
 ## Windows:
 > (npm | yarn | pnpm) run build:win && (npm | yarn | pnpm) run publish:win
 ## macOS:
@@ -194,7 +194,7 @@ $/> cd ../MyoRatio-GUI
 
 ```
 
-> The resulting file is located under the folder of your current architecture inside```./MyoRatio-GUI/release```
+> The resulting file is located under the folder of your current architecture inside```./MyoRatio/release```
 
 
 ## License
