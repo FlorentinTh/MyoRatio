@@ -234,11 +234,12 @@ const displayContent = async () => {
       noChoicesText: 'No muscle to choose from',
       addItems: false,
       removeItems: false,
-      itemSelectText: ''
+      itemSelectText: '',
+      allowHTML: true
     };
 
     selectAntagonist = new Choices('#select-antagonist', selectConfig);
-    selectAntagonist.setChoices(muscleSelectData);
+    await selectAntagonist.setChoices(muscleSelectData);
     selectAntagonist.enable();
 
     selectAntagonist.passedElement.element.addEventListener('addItem', event => {
@@ -250,7 +251,7 @@ const displayContent = async () => {
     });
 
     selectAgonist = new Choices('#select-agonist', selectConfig);
-    selectAgonist.setChoices(muscleSelectData);
+    await selectAgonist.setChoices(muscleSelectData);
     selectAgonist.enable();
 
     selectAgonist.passedElement.element.addEventListener('addItem', event => {
@@ -262,7 +263,7 @@ const displayContent = async () => {
     });
 
     selectAngle = new Choices('#select-angle', selectConfig);
-    selectAngle.setChoices(muscleSelectData);
+    await selectAngle.setChoices(muscleSelectData);
     selectAngle.enable();
 
     selectAngle.passedElement.element.addEventListener('addItem', event => {

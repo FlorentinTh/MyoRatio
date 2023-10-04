@@ -119,7 +119,7 @@ const isRequiredInputValid = () => {
   }
 };
 
-const displayContent = () => {
+const displayContent = async () => {
   const contentTitle = setupType === 'muscles' ? setupType.slice(0, -1) : setupType;
   contentWrapper.insertAdjacentHTML(
     'beforeend',
@@ -246,11 +246,12 @@ const displayContent = () => {
       noChoicesText: 'No muscle to choose from',
       addItems: false,
       removeItems: false,
-      itemSelectText: ''
+      itemSelectText: '',
+      allowHTML: true
     };
 
     elements.selectAntagonist = new Choices('#select-antagonist', selectConfig);
-    elements.selectAntagonist.setChoices(muscleSelectData);
+    await elements.selectAntagonist.setChoices(muscleSelectData);
     elements.selectAntagonist.enable();
 
     elements.selectAntagonist.passedElement.element.addEventListener('addItem', event => {
@@ -262,7 +263,7 @@ const displayContent = () => {
     });
 
     elements.selectAgonist = new Choices('#select-agonist', selectConfig);
-    elements.selectAgonist.setChoices(muscleSelectData);
+    await elements.selectAgonist.setChoices(muscleSelectData);
     elements.selectAgonist.enable();
 
     elements.selectAgonist.passedElement.element.addEventListener('addItem', event => {
@@ -386,7 +387,7 @@ const displayData = async updateDataLabel => {
   }
 };
 
-displayContent();
+await displayContent();
 
 const submitButton = document.querySelector('button[type="submit"]');
 const resetButton = document.querySelector('button[type="reset"]');
