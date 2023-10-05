@@ -156,7 +156,7 @@
     "webpack-dev-server": "^4.13.3"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-free": "^6.4.0",
+    "@fortawesome/fontawesome-free": "^6.4.2",
     "@popperjs/core": "^2.11.8",
     "chart.js": "^3.9.1",
     "chartjs-plugin-crosshair": "^1.2.0",
