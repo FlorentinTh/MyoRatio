@@ -11,6 +11,11 @@ updates:
     allow:
       - dependency-name: "*"
         dependency-type: "production"
+    ignore:
+      - dependency-name: "chart.js"
+        versions: ["^4.0.0"]
+      - dependency-name: "chartjs-plugin-crosshair"
+        versions: ["^2.0.0"]
     labels:
       - "dependencies"
     assignees:
