@@ -1,0 +1,17 @@
+version: 2
+
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "friday"
+      time: "05:00"
+      timezone: "America/New_York"
+    allow:
+      - dependency-name: "*"
+        dependency-type: "production"
+    labels:
+      - "dependencies"
+    assignees:
+      - "FlorentinTh"
