@@ -7,8 +7,11 @@
 </div>
 
 <p align="center">
+  <a href="https://github.com/FlorentinTh/MyoRatio/actions/workflows/github-code-scanning/codeql">
+    <img src="https://img.shields.io/github/actions/workflow/status/FlorentinTh/MyoRatio/github-code-scanning%2Fcodeql?style=for-the-badge&label=CodeQL
+" alt="CodeQL" />
   <a href="https://github.com/FlorentinTh/MyoRatio/releases">
-    <img src="https://img.shields.io/github/release/FlorentinTh/MyoRatio?style=for-the-badge" alt="npm version" />
+    <img src="https://img.shields.io/github/release/FlorentinTh/MyoRatio?style=for-the-badge" alt="Latest Version" />
   </a>
   <img src="https://img.shields.io/github/release-date/florentinth/MyoRatio?style=for-the-badge" alt="Release Date" />
   <img src="https://img.shields.io/badge/platforms-windows%20%26%20macOS%20-lightseagreen?style=for-the-badge" alt="Platforms" />
