@@ -8,7 +8,7 @@
 
 <p align="center">
   <a href="https://github.com/FlorentinTh/MyoRatio/actions/workflows/github-code-scanning/codeql">
-    <img src="https://img.shields.io/github/actions/workflow/status/FlorentinTh/MyoRatio/github-code-scanning%2Fcodeql?style=for-the-badge&label=CodeQL
+    <img src="https://img.shields.io/github/actions/workflow/status/FlorentinTh/MyoRatio/github-code-scanning/codeql?style=for-the-badge&label=CodeQL
 " alt="CodeQL" />
   <a href="https://github.com/FlorentinTh/MyoRatio/releases">
     <img src="https://img.shields.io/github/release/FlorentinTh/MyoRatio?style=for-the-badge" alt="Latest Version" />
