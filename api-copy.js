@@ -1,23 +1,6 @@
-const fs = require('fs-extra');
+const fs = require('node:fs');
+const fse = require('fs-extra');
 const path = require('path');
-
-const recursiveCopy = (source, target) => {
-  if (fs.lstatSync(source).isDirectory()) {
-    if (!fs.existsSync(target)) {
-      fs.mkdirSync(target);
-    }
-
-    const files = fs.readdirSync(source);
-
-    files.forEach(file => {
-      const sourcePath = path.join(source, file);
-      const targetPath = path.join(target, file);
-      recursiveCopy(sourcePath, targetPath);
-    });
-  } else {
-    fs.copyFileSync(source, target);
-  }
-};
 
 const envBuildFile = fs.readFileSync(path.normalize('./env.build.json'));
 const envBuildData = JSON.parse(envBuildFile);
@@ -27,15 +10,16 @@ const APISourceFolder = path.join(APIPath, 'dist', 'MyoRatioAPI');
 const targetFolder = 'bin/MyoRatioAPI';
 
 if (fs.existsSync(targetFolder)) {
-  fs.remove(targetFolder, error => {
-    if (error) {
-      throw new Error(error);
-    }
-
-    recursiveCopy(APISourceFolder, targetFolder);
-  });
-} else {
-  recursiveCopy(APISourceFolder, targetFolder);
+  fs.rmSync(targetFolder, { recursive: true, force: true });
 }
 
-console.log('--> API successfully copied to bin folder');
+fse
+  .copy(APISourceFolder, targetFolder)
+  .then(() => {
+    console.log('--> API successfully copied to bin folder');
+    process.exit(0);
+  })
+  .catch(error => {
+    console.error(error);
+    process.exit(-1);
+  });
