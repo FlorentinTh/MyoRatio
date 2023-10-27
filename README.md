@@ -9,8 +9,10 @@
 <p align="center">
   <a href="https://github.com/FlorentinTh/MyoRatio/actions/workflows/github-code-scanning/codeql">
     <img src="https://img.shields.io/github/actions/workflow/status/FlorentinTh/MyoRatio/github-code-scanning/codeql?style=for-the-badge&label=CodeQL" alt="CodeQL" />
-  <a href="https://github.com/FlorentinTh/MyoRatio/releases">
-    <img src="https://img.shields.io/github/release/FlorentinTh/MyoRatio?style=for-the-badge" alt="Latest Version" />
+  <a href="https://github.com/FlorentinTh/MyoRatio/actions/workflows/release.yml">
+    <img src="https://img.shields.io/github/actions/workflow/status/FlorentinTh/MyoRatio/workflows/release?style=for-the-badge&label=Release" alt="Release" />
+  <a href="https://github.com/FlorentinTh/MyoRatio/releases/latest">
+    <img src="https://img.shields.io/github/v/tag/FlorentinTh/MyoRatio?style=for-the-badge" />
   </a>
   <img src="https://img.shields.io/github/release-date/florentinth/MyoRatio?style=for-the-badge" alt="Release Date" />
   <img src="https://img.shields.io/badge/platforms-windows%20%26%20macOS%20-lightseagreen?style=for-the-badge" alt="Platforms" />
@@ -44,93 +46,81 @@
 - [MyoRatio-API](https://github.com/FlorentinTh/MyoRatio-API)
 
 
-### Project Setup
+### Application & API Projects Setup
 
 ```sh
+# Create new root directory
 $/> mkdir MyoRatioApp
 
+# Move inside the new directory
 $/> cd MyoRatioApp
 
+# Clone API project
 $/> git clone https://github.com/FlorentinTh/MyoRatio-API.git
 
+# Clone application project
 $/> git clone https://github.com/FlorentinTh/MyoRatio.git
 ```
 
-### API Setup
+### API Initialization
 
 ```sh
 $/> cd MyoRatio-API
 
+# Configure Poetry
 $/> poetry config virtualenvs.in-project true --local
 
+# Install project dependencies
 $/> poetry install
 
+# Install Poetry plugin
 $/> poetry self add 'poethepoet[poetry_plugin]'
 
-# Windows:
+# Rename environment configuration file (Windows)
 > ren .env.example .env
 
-# macOS:
+# Rename environment configuration file (macOS)
 $ mv .env.example .env
+
+# Generate API secret key
+$/> poetry poe secret
 ```
 
-### GUI Setup
+### Application Initialization
 
 ```sh
+# Move inside application directory
 $/> cd ../MyoRatio
 
-# Windows:
+# Rename environment configuration files (Windows)
 > ren env.app.json.example env.app.json
 > ren env.build.json.example env.build.json
 
-# macOS:
+# Rename environment configuration files (macOS)
 $ mv env.app.json.example env.app.json
 $ mv env.build.json.example env.build.json
 
-# Install project dependencies:
+# Install project dependencies
 $/> (npm | yarn | pnpm) install
+
+# Fetch API secret key
+$/> (npm | yarn | pnpm) run secret
 ```
-
-> **Important!** On macOS you also need to install the ```create-dmg``` package:
-
-```sh
-$ npm install -D create-dmg@6.0.0
-# or
-$ (yarn | pnpm) add -D create-dmg@6.0.0
-```
-> **Important!** On windows it is required to generate an SSL certificate to sign the installer. You can use WSL to benefit from the availability of the openssl command line tool
-
-```sh
-# Create a new base folder to store your certificate files:
-$ mkdir ./.certs
-
-# Generate a private key:
-$ openssl genrsa -out ./.certs/key.pem 4096
-
-# Generate a new Certificate Signing Request (CSR):
-$ openssl req -new -sha256 -key ./.certs/key.pem -out ./.certs/csr.csr
-
-# Generate a  new certificate (valid 1 year):
-$ openssl req -x509 -sha256 -days 365 -key ./.certs/key.pem -in ./.certs/csr.csr -out ./.certs/certificate.pem
-
-# Convert your certificate:
-$ openssl pkcs12 -export -inkey ./.certs/key.pem -in ./.certs/certificate.pem -out ./.certs/certificate.pfx
-```
-
-> **IMPORTANT!** Please update the ```env.build.json``` file according to the answer provided while creating the SSL certificate
 
 ### Run the Application
 ```sh
 # serve the API
 $/> cd ../MyoRatio-API
+
 $/> poetry run serve [port]
 ```
 
 > Parameter ```[port]``` is optionnal. By default it will be  **3300** only if available.
 
 ```sh
-# start the GUI
+# start the application
 $/> cd ../MyoRatio
+
 $/> (npm | yarn | pnpm) run start
 ```
 
@@ -156,10 +146,8 @@ To release a new version you can install the ```standard-version``` version pack
 
 ```sh
 $/> npm install -g standard-version
-
 # or
 $/> yarn global add standard-version
-
 # or
 $/> pnpm add -g standard-version
 
@@ -168,30 +156,70 @@ $/> poetry poe release && poetry poe publish
 
 # release the GUI
 $/> npm run release && npm run publish
-
 # or
 $/> yarn run release && yarn run publish
-
 # or
 $/> pnpm run release && pnpm run publish
 ```
 
+> **NOTE:** once the publish command is completed, a github action workflow will be triggered and the release will be automatically created in the remote repository populated with the installers for both platforms.
 
-### Release Installers
+### Manually Release Installers
+
+If you want to manually create the release installer, follow these instructions:
+
+> **NOTE:** for the macOS platform you will need to install the ```create-dmg``` package on the application project.
 
 ```sh
-# build the API
+# Move to the application project folder
+$ cd ../MyoRatio
+
+# Install the required dependency
+$ npm install -D create-dmg@6.0.0
+# or
+$ (yarn | pnpm) add -D create-dmg@6.0.0
+```
+
+> **IMPORTANT:** on windows it is required to generate an SSL certificate to sign the installer. You can use WSL to benefit from the availability of the openssl command line tool:
+
+```sh
+# Create a new base folder to store your certificate files
+$ mkdir ./.certs
+
+# Generate a private key
+$ openssl genrsa -out ./.certs/key.pem 4096
+
+# Generate a new Certificate Signing Request (CSR)
+$ openssl req -new -sha256 -key ./.certs/key.pem -out ./.certs/csr.csr -subj "/C=<your_country_code>/ST=<your_state>/L=<your_location>/O=<your_organization>/OU=<your_organization_unit>/CN=<your_common_name>"
+
+# Generate a new certificate (valid 1 year)
+$ openssl req -x509 -sha256 -days 365 -key ./.certs/key.pem -in ./.certs/csr.csr -out ./.certs/certificate.pem
+
+# Convert your certificate into PFX
+$ openssl pkcs12 -export -inkey ./.certs/key.pem -in ./.certs/certificate.pem -out ./.certs/certificate.pfx -password pass:<your_cert_passphrase>
+
+# [OPTIONAL] Convert your PFX certficate into Base64
+$ openssl base64 -in ./.certs/certificate.pfx -out ./.certs/certificate.txt
+```
+
+> **IMPORTANT:** once the PFX certificate is generated Please update the ```env.build.json``` file according to the passphrase provided in the command respectively.
+
+```sh
+# Move to the API project directory
 $/> cd ../MyoRatio-API
-## Windows:
+
+# Build the API (Windows)
 > poetry poe build-win
-## macOS:
+
+# Build the API (macOS)
 $ poetry poe build-mac
 
-# build the GUI
+# Move to the application project directory
 $/> cd ../MyoRatio
-## Windows:
+
+# Build the application (Windows):
 > (npm | yarn | pnpm) run build:win && (npm | yarn | pnpm) run publish:win
-## macOS:
+# Build the application (macOS):
 > (npm | yarn | pnpm) run build:mac && (npm | yarn | pnpm) run publish:mac
 
 ```
