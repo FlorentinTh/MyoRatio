@@ -10,11 +10,11 @@
   <a href="https://github.com/FlorentinTh/MyoRatio/actions/workflows/github-code-scanning/codeql">
     <img src="https://img.shields.io/github/actions/workflow/status/FlorentinTh/MyoRatio/github-code-scanning/codeql?style=for-the-badge&label=CodeQL" alt="CodeQL" />
   <a href="https://github.com/FlorentinTh/MyoRatio/actions/workflows/release.yml">
-    <img src="https://img.shields.io/github/actions/workflow/status/FlorentinTh/MyoRatio/workflows/release?style=for-the-badge&label=Release" alt="Release" />
+    <img src="https://img.shields.io/github/actions/workflow/status/FlorentinTh/MyoRatio/release.yml?style=for-the-badge&label=Release" alt="Release" />
+  <img src="https://img.shields.io/github/release-date/florentinth/MyoRatio?style=for-the-badge" alt="Release Date" />
   <a href="https://github.com/FlorentinTh/MyoRatio/releases/latest">
     <img src="https://img.shields.io/github/v/tag/FlorentinTh/MyoRatio?style=for-the-badge" />
   </a>
-  <img src="https://img.shields.io/github/release-date/florentinth/MyoRatio?style=for-the-badge" alt="Release Date" />
   <img src="https://img.shields.io/badge/platforms-windows%20%26%20macOS%20-lightseagreen?style=for-the-badge" alt="Platforms" />
   <a href="https://github.com/FlorentinTh/MyoRatio/blob/main/LICENSE">
     <img src="https://img.shields.io/github/license/florentinth/MyoRatio?style=for-the-badge" alt="License" />
@@ -190,13 +190,13 @@ $ mkdir ./.certs
 $ openssl genrsa -out ./.certs/key.pem 4096
 
 # Generate a new Certificate Signing Request (CSR)
-$ openssl req -new -sha256 -key ./.certs/key.pem -out ./.certs/csr.csr -subj "/C=<your_country_code>/ST=<your_state>/L=<your_location>/O=<your_organization>/OU=<your_organization_unit>/CN=<your_common_name>"
+$ openssl req -new -sha256 -key ./.certs/key.pem -out ./.certs/csr.csr -subj "/C=your_country_code/ST=your_state/L=your_location/O=your_organization/OU=your_organization_unit/CN=your_common_name"
 
 # Generate a new certificate (valid 1 year)
 $ openssl req -x509 -sha256 -days 365 -key ./.certs/key.pem -in ./.certs/csr.csr -out ./.certs/certificate.pem
 
 # Convert your certificate into PFX
-$ openssl pkcs12 -export -inkey ./.certs/key.pem -in ./.certs/certificate.pem -out ./.certs/certificate.pfx -password pass:<your_cert_passphrase>
+$ openssl pkcs12 -export -inkey ./.certs/key.pem -in ./.certs/certificate.pem -out ./.certs/certificate.pfx -password pass:your_cert_passphrase
 
 # [OPTIONAL] Now using powershell, you can convert your PFX certficate into Base64
 > [System.Convert]::ToBase64String([System.IO.File]::ReadAllBytes('.\certificate.pfx')) > '.\.certs\certificate.txt'
