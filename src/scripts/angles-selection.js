@@ -78,9 +78,8 @@ let requestConfiguration;
 
 try {
   await configuration.load();
-  requestConfiguration = await configuration.getRequestConfigurationByAnalysis(
-    analysisType
-  );
+  requestConfiguration =
+    await configuration.getRequestConfigurationByAnalysis(analysisType);
 } catch (error) {
   const errorOverlay = new ErrorOverlay({
     message: `Data configuration error`,
