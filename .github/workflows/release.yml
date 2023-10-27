@@ -1,0 +1,184 @@
+name: release
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    permissions:
+      contents: write
+    strategy:
+      matrix:
+        os:
+          - windows-latest
+          - macos-latest
+        node-version:
+          - 20.5.0
+        python-version:
+          - 3.10.11
+    defaults:
+      run:
+        shell: bash
+
+    name: Build installer (${{ matrix.os }})
+
+    steps:
+      - name: Checkout API
+        uses: actions/checkout@v4
+        with:
+          repository: FlorentinTh/MyoRatio-API
+          path: './api'
+
+      - name: Set up python v${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install and configure poetry
+        uses: snok/install-poetry@v1
+        with:
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+          installer-parallel: true
+
+      - name: Install API dependencies
+        working-directory: ./api
+        run: |
+          poetry install --no-interaction
+          poetry self add 'poethepoet[poetry_plugin]'
+
+      - name: Rename API .env file
+        working-directory: ./api
+        run: mv .env.example .env
+
+      - name: Build macOs API
+        working-directory: ./api
+        run: |
+          source $VENV
+          poetry poe build-mac
+        if: matrix.os == 'macos-latest'
+
+      - name: Build Windows API
+        working-directory: ./api
+        run: |
+          source $VENV
+          poetry poe build-win
+        if: matrix.os == 'windows-latest'
+
+      - name: Export Windows SignTool
+        run: echo "C:\\Program Files (x86)\\Windows Kits\\10\\bin\\10.0.17763.0\\x86" >> $GITHUB_PATH
+        if: matrix.os == 'windows-latest'
+
+      - name: Checkout application
+        uses: actions/checkout@v4
+        with:
+          path: './app'
+
+      - name: Set up node v${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Rename application .env files
+        working-directory: ./app
+        run: |
+          mv env.app.json.example env.app.json
+          mv env.build.json.example env.build.json
+
+      - name: Update build configuration
+        working-directory: ./app
+        run: |
+          echo $(jq --arg a "../api" '.API_PATH = ($a)' env.build.json) > env.build.json
+          echo $(jq --arg a "${{ secrets.CERT_PWD }}" '.CERT_PWD = ($a)' env.build.json) > env.build.json
+
+      - name: Install application project dependencies
+        working-directory: ./app
+        run: npm ci
+
+      - name: Install application dedicated macOS dependency
+        working-directory: ./app
+        run: npm i -g create-dmg@6.0.0
+        if: matrix.os == 'macos-latest'
+
+      - name: Create Windows certificate from secret
+        working-directory: ./app
+        run: |
+          mkdir ./.certs
+          echo ${{ secrets.CERT_B64 }} > ./.certs/certificate.txt
+        if: matrix.os == 'windows-latest'
+
+      - name: Convert Windows certificate from base64 to PFX
+        working-directory: ./app
+        shell: powershell
+        run: |
+          $BASE64_STR = get-content './.certs/certificate.txt'
+          $BYTES = [Convert]::FromBase64String($BASE64_STR)
+          [IO.File]::WriteAllBytes('./.certs/certificate.pfx', $BYTES)
+        if: matrix.os == 'windows-latest'
+
+      - name: Build macOs application
+        working-directory: ./app
+        run: npm run build:mac && npm run publish:mac
+        if: matrix.os == 'macos-latest'
+
+      - name: Read package.json
+        id: package_json_properties
+        uses: ActionsTools/read-json-action@v1.0.5
+        with:
+          file_path: "./app/package.json"
+
+      - name: Upload macOs installer
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{steps.package_json_properties.outputs.name}}_${{steps.package_json_properties.outputs.version}}_macx64.dmg
+          path: ./app/release/macx64/${{steps.package_json_properties.outputs.name}}_${{steps.package_json_properties.outputs.version}}_macx64.dmg
+        if: matrix.os == 'macos-latest'
+
+      - name: Upload macOs installer checksum
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{steps.package_json_properties.outputs.name}}_${{steps.package_json_properties.outputs.version}}_macx64.sha256sum
+          path: ./app/release/macx64/${{steps.package_json_properties.outputs.name}}_${{steps.package_json_properties.outputs.version}}_macx64.sha256sum
+        if: matrix.os == 'macos-latest'
+
+      - name: Build Windows application
+        working-directory: ./app
+        run: npm run build:win && npm run publish:win
+        if: matrix.os == 'windows-latest'
+
+      - name: Upload Windows installer
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{steps.package_json_properties.outputs.name}}_${{steps.package_json_properties.outputs.version}}_winx64.exe
+          path: ./app/release/winx64/${{steps.package_json_properties.outputs.name}}_${{steps.package_json_properties.outputs.version}}_winx64.exe
+        if: matrix.os == 'windows-latest'
+
+      - name: Upload Windows installer checksum
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{steps.package_json_properties.outputs.name}}_${{steps.package_json_properties.outputs.version}}_winx64.sha256sum
+          path: ./app/release/winx64/${{steps.package_json_properties.outputs.name}}_${{steps.package_json_properties.outputs.version}}_winx64.sha256sum
+        if: matrix.os == 'windows-latest'
+
+      - name: Generate release changelog
+        working-directory: ./app
+        run: node release-changelog.js
+
+      - name: Create or update release for macOs platform
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "./app/release/macx64/*.dmg,./app/release/macx64/*.sha256sum"
+          bodyFile: "./app/CHANGELOG.md.tmp"
+          allowUpdates: true
+        if: matrix.os == 'macos-latest'
+
+      - name: Create or update release for Windows platform
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "./app/release/winx64/*.exe,./app/release/winx64/*.sha256sum"
+          bodyFile: "./app/CHANGELOG.md.tmp"
+          allowUpdates: true
+        if: matrix.os == 'windows-latest'
