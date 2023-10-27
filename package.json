@@ -141,7 +141,7 @@
     "html-webpack-plugin": "^5.5.1",
     "innosetup-compiler": "^6.2.0",
     "mini-css-extract-plugin": "^2.7.5",
-    "nw": "^0.80.0-sdk",
+    "nw": "^0.81.0-3",
     "path-browserify": "^1.0.1",
     "pre-commit": "^1.2.2",
     "prettier": "^3.0.0",
