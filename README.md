@@ -180,7 +180,7 @@ $ npm install -D create-dmg@6.0.0
 $ (yarn | pnpm) add -D create-dmg@6.0.0
 ```
 
-> **IMPORTANT:** on windows it is required to generate an SSL certificate to sign the installer. You can use WSL to benefit from the availability of the openssl command line tool:
+> **IMPORTANT:** on windows it is required to generate an SSL certificate to sign the installer. You can use [WSL](https://learn.microsoft.com/en-us/windows/wsl/install) to benefit from the availability of the openssl command line tool:
 
 ```sh
 # Create a new base folder to store your certificate files
@@ -198,8 +198,8 @@ $ openssl req -x509 -sha256 -days 365 -key ./.certs/key.pem -in ./.certs/csr.csr
 # Convert your certificate into PFX
 $ openssl pkcs12 -export -inkey ./.certs/key.pem -in ./.certs/certificate.pem -out ./.certs/certificate.pfx -password pass:<your_cert_passphrase>
 
-# [OPTIONAL] Convert your PFX certficate into Base64
-$ openssl base64 -in ./.certs/certificate.pfx -out ./.certs/certificate.txt
+# [OPTIONAL] Now using powershell, you can convert your PFX certficate into Base64
+> [System.Convert]::ToBase64String([System.IO.File]::ReadAllBytes('.\certificate.pfx')) > '.\.certs\certificate.txt'
 ```
 
 > **IMPORTANT:** once the PFX certificate is generated Please update the ```env.build.json``` file according to the passphrase provided in the command respectively.
