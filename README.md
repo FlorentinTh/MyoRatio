@@ -49,7 +49,7 @@
 
 ### Application & API Projects Setup
 
-```powershell
+```sh
 # Create new root directory
 $/> mkdir MyoRatioApp
 
@@ -65,7 +65,7 @@ $/> git clone https://github.com/FlorentinTh/MyoRatio.git
 
 ### API Initialization
 
-```powershell
+```sh
 $/> cd MyoRatio-API
 
 # Configure Poetry
@@ -89,7 +89,7 @@ $/> poetry poe secret
 
 ### Application Initialization
 
-```powershell
+```sh
 # Move inside application directory
 $/> cd ../MyoRatio
 
@@ -109,7 +109,7 @@ $/> (npm | yarn | pnpm) run secret
 ```
 
 ### Run the Application
-```powershell
+```sh
 # serve the API
 $/> cd ../MyoRatio-API
 
@@ -119,7 +119,7 @@ $/> poetry run serve [port]
 > [!NOTE]
 > Parameter ```[port]``` is optionnal. By default it will be  **3300** only if available.
 
-```powershell
+```sh
 # start the application
 $/> cd ../MyoRatio
 
@@ -133,13 +133,13 @@ $/> (npm | yarn | pnpm) run start
 
 - For the API, you can use the following command to proceed your commits:
 
-```powershell
+```sh
 $/> poetry poe commit
 ```
 
 - For the GUI, you can use the following command to proceed your commits:
 
-```powershell
+```sh
 $/> (npm | yarn | pnpm) run commit
 ```
 
@@ -147,7 +147,7 @@ $/> (npm | yarn | pnpm) run commit
 
 To release a new version you can install the ```standard-version``` version package globally such as:
 
-```powershell
+```sh
 $/> npm install -g standard-version
 # or
 $/> yarn global add standard-version
@@ -174,7 +174,7 @@ If you want to manually create the release installer, follow these instructions:
 > [!IMPORTANT]
 > For the macOS platform you will need to install the ```create-dmg``` package on the application project.
 
-```powershell
+```sh
 # Move to the application project folder
 $ cd ../MyoRatio
 
@@ -187,7 +187,7 @@ $ (yarn | pnpm) add -D create-dmg@6.0.0
 > [!IMPORTANT]
 > On windows it is required to generate an SSL certificate to sign the installer. You can use [WSL](https://learn.microsoft.com/en-us/windows/wsl/install) to benefit from the availability of the openssl command line tool:
 
-```powershell
+```sh
 # Create a new base folder to store your certificate files
 $ mkdir ./.certs
 
@@ -195,13 +195,13 @@ $ mkdir ./.certs
 $ openssl genrsa -out ./.certs/key.pem 4096
 
 # Generate a new Certificate Signing Request (CSR)
-$ openssl req -new -sha256 -key ./.certs/key.pem -out ./.certs/csr.csr -subj "/C=your_country_code/ST=your_state/L=your_location/O=your_organization/OU=your_organization_unit/CN=your_common_name"
+$ openssl req -new -sha256 -key ./.certs/key.pem -out ./.certs/csr.csr -subj "/C=<your_country_code>/ST=<your_state>/L=<your_location>/O=<your_organization>/OU=<your_organization_unit>/CN=<your_common_name>"
 
 # Generate a new certificate (valid 1 year)
 $ openssl req -x509 -sha256 -days 365 -key ./.certs/key.pem -in ./.certs/csr.csr -out ./.certs/certificate.pem
 
 # Convert your certificate into PFX
-$ openssl pkcs12 -export -inkey ./.certs/key.pem -in ./.certs/certificate.pem -out ./.certs/certificate.pfx -password pass:your_cert_passphrase
+$ openssl pkcs12 -export -inkey ./.certs/key.pem -in ./.certs/certificate.pem -out ./.certs/certificate.pfx -password pass:<your_cert_passphrase>
 
 # [OPTIONAL] Now using powershell, you can convert your PFX certficate into Base64
 > [System.Convert]::ToBase64String([System.IO.File]::ReadAllBytes('.\certificate.pfx')) > '.\.certs\certificate.txt'
@@ -210,7 +210,7 @@ $ openssl pkcs12 -export -inkey ./.certs/key.pem -in ./.certs/certificate.pem -o
 > [!WARNING]
 > once the PFX certificate is generated Please update the ```env.build.json``` file according to the passphrase provided in the command respectively.
 
-```powershell
+```sh
 # Move to the API project directory
 $/> cd ../MyoRatio-API
 
