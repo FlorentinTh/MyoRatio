@@ -1,24 +1,24 @@
 <p align="center">
-  <img src="./src/assets/icons/app.png" alt="MyoRatio" height="200px"/>
+<img src="./src/assets/icons/app.png" alt="MyoRatio" height="200px"/>
 </p>
 
 <div align="center">
-  <h1>MyoRatio</h1>
+<h1>MyoRatio</h1>
 </div>
 
 <p align="center">
-  <a href="https://github.com/FlorentinTh/MyoRatio/actions/workflows/github-code-scanning/codeql">
-    <img src="https://img.shields.io/github/actions/workflow/status/FlorentinTh/MyoRatio/github-code-scanning/codeql?style=for-the-badge&label=CodeQL" alt="CodeQL" />
-  <a href="https://github.com/FlorentinTh/MyoRatio/actions/workflows/release.yml">
-    <img src="https://img.shields.io/github/actions/workflow/status/FlorentinTh/MyoRatio/release.yml?style=for-the-badge&label=Release" alt="Release" />
-  <img src="https://img.shields.io/github/release-date/florentinth/MyoRatio?style=for-the-badge" alt="Release Date" />
-  <a href="https://github.com/FlorentinTh/MyoRatio/releases/latest">
-    <img src="https://img.shields.io/github/v/tag/FlorentinTh/MyoRatio?style=for-the-badge" />
-  </a>
-  <img src="https://img.shields.io/badge/platforms-windows%20%26%20macOS%20-lightseagreen?style=for-the-badge" alt="Platforms" />
-  <a href="https://github.com/FlorentinTh/MyoRatio/blob/main/LICENSE">
-    <img src="https://img.shields.io/github/license/florentinth/MyoRatio?style=for-the-badge" alt="License" />
-  </a>
+<a href="https://github.com/FlorentinTh/MyoRatio/actions/workflows/github-code-scanning/codeql">
+<img src="https://img.shields.io/github/actions/workflow/status/FlorentinTh/MyoRatio/github-code-scanning/codeql?style=for-the-badge&label=CodeQL" alt="CodeQL" />
+<a href="https://github.com/FlorentinTh/MyoRatio/actions/workflows/release.yml">
+<img src="https://img.shields.io/github/actions/workflow/status/FlorentinTh/MyoRatio/release.yml?style=for-the-badge&label=Release" alt="Release" />
+<img src="https://img.shields.io/github/release-date/florentinth/MyoRatio?style=for-the-badge" alt="Release Date" />
+<a href="https://github.com/FlorentinTh/MyoRatio/releases/latest">
+<img src="https://img.shields.io/github/v/tag/FlorentinTh/MyoRatio?style=for-the-badge" />
+</a>
+<img src="https://img.shields.io/badge/platforms-windows%20%26%20macOS%20-lightseagreen?style=for-the-badge" alt="Platforms" />
+<a href="https://github.com/FlorentinTh/MyoRatio/blob/main/LICENSE">
+<img src="https://img.shields.io/github/license/florentinth/MyoRatio?style=for-the-badge" alt="License" />
+</a>
 </p>
 
 ## Documentation
@@ -48,7 +48,7 @@
 
 ### Application & API Projects Setup
 
-```sh
+```powershell
 # Create new root directory
 $/> mkdir MyoRatioApp
 
@@ -64,7 +64,7 @@ $/> git clone https://github.com/FlorentinTh/MyoRatio.git
 
 ### API Initialization
 
-```sh
+```powershell
 $/> cd MyoRatio-API
 
 # Configure Poetry
@@ -88,7 +88,7 @@ $/> poetry poe secret
 
 ### Application Initialization
 
-```sh
+```powershell
 # Move inside application directory
 $/> cd ../MyoRatio
 
@@ -108,7 +108,7 @@ $/> (npm | yarn | pnpm) run secret
 ```
 
 ### Run the Application
-```sh
+```powershell
 # serve the API
 $/> cd ../MyoRatio-API
 
@@ -117,7 +117,7 @@ $/> poetry run serve [port]
 
 > Parameter ```[port]``` is optionnal. By default it will be  **3300** only if available.
 
-```sh
+```powershell
 # start the application
 $/> cd ../MyoRatio
 
@@ -130,13 +130,13 @@ $/> (npm | yarn | pnpm) run start
 
 - For the API, you can use the following command to proceed your commits:
 
-```sh
+```powershell
 $/> poetry poe commit
 ```
 
 - For the GUI, you can use the following command to proceed your commits:
 
-```sh
+```powershell
 $/> (npm | yarn | pnpm) run commit
 ```
 
@@ -144,7 +144,7 @@ $/> (npm | yarn | pnpm) run commit
 
 To release a new version you can install the ```standard-version``` version package globally such as:
 
-```sh
+```powershell
 $/> npm install -g standard-version
 # or
 $/> yarn global add standard-version
@@ -170,7 +170,7 @@ If you want to manually create the release installer, follow these instructions:
 
 > **NOTE:** for the macOS platform you will need to install the ```create-dmg``` package on the application project.
 
-```sh
+```powershell
 # Move to the application project folder
 $ cd ../MyoRatio
 
@@ -182,7 +182,7 @@ $ (yarn | pnpm) add -D create-dmg@6.0.0
 
 > **IMPORTANT:** on windows it is required to generate an SSL certificate to sign the installer. You can use [WSL](https://learn.microsoft.com/en-us/windows/wsl/install) to benefit from the availability of the openssl command line tool:
 
-```sh
+```powershell
 # Create a new base folder to store your certificate files
 $ mkdir ./.certs
 
@@ -204,7 +204,7 @@ $ openssl pkcs12 -export -inkey ./.certs/key.pem -in ./.certs/certificate.pem -o
 
 > **IMPORTANT:** once the PFX certificate is generated Please update the ```env.build.json``` file according to the passphrase provided in the command respectively.
 
-```sh
+```powershell
 # Move to the API project directory
 $/> cd ../MyoRatio-API
 
