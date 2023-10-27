@@ -1,4 +1,26 @@
-<div align="center"><img src="./src/assets/icons/app.png" alt="MyoRatio" height="200px" /><br /><h1>MyoRatio</h1><a href="https://github.com/FlorentinTh/MyoRatio/actions/workflows/github-code-scanning/codeql"><img src="https://img.shields.io/github/actions/workflow/status/FlorentinTh/MyoRatio/github-code-scanning/codeql?style=for-the-badge&label=CodeQL" alt="CodeQL" /></a>&nbsp;<a href="https://github.com/FlorentinTh/MyoRatio/actions/workflows/release.yml"><img src="https://img.shields.io/github/actions/workflow/status/FlorentinTh/MyoRatio/release.yml?style=for-the-badge&label=Release" alt="Release" /></a>&nbsp;<a href="#"><img src="https://img.shields.io/github/release-date/florentinth/MyoRatio?style=for-the-badge" alt="Release Date" /></a>&nbsp;<a href="https://github.com/FlorentinTh/MyoRatio/releases/latest"><img src="https://img.shields.io/github/v/tag/FlorentinTh/MyoRatio?style=for-the-badge" /></a>&nbsp;<a href="#"><img src="https://img.shields.io/badge/platforms-windows%20%26%20macOS%20-lightseagreen?style=for-the-badge" alt="Platforms" /></a>&nbsp;<a href="https://github.com/FlorentinTh/MyoRatio/blob/main/LICENSE"><img src="https://img.shields.io/github/license/florentinth/MyoRatio?style=for-the-badge" alt="License"/></a></div><br />
+<div align="center">
+  <img src="./src/assets/icons/app.png" alt="MyoRatio" height="200px" /><br />
+  <h1>MyoRatio</h1>
+  <a href="https://github.com/FlorentinTh/MyoRatio/actions/workflows/github-code-scanning/codeql">
+    <img src="https://img.shields.io/github/actions/workflow/status/FlorentinTh/MyoRatio/github-code-scanning/codeql?style=for-the-badge&label=CodeQL" alt="CodeQL" />
+  </a>
+  <a href="https://github.com/FlorentinTh/MyoRatio/actions/workflows/release.yml">
+    <img src="https://img.shields.io/github/actions/workflow/status/FlorentinTh/MyoRatio/release.yml?style=for-the-badge&label=Release" alt="Release" />
+  </a>
+  <a href="#">
+    <img src="https://img.shields.io/github/release-date/florentinth/MyoRatio?style=for-the-badge" alt="Release Date" />
+  </a>
+  <a href="https://github.com/FlorentinTh/MyoRatio/releases/latest">
+    <img src="https://img.shields.io/github/v/tag/FlorentinTh/MyoRatio?style=for-the-badge" />
+  </a>
+  <a href="#">
+    <img src="https://img.shields.io/badge/platforms-windows%20%26%20macOS%20-lightseagreen?style=for-the-badge" alt="Platforms" />
+  </a>
+  <a href="https://github.com/FlorentinTh/MyoRatio/blob/main/LICENSE">
+    <img src="https://img.shields.io/github/license/florentinth/MyoRatio?style=for-the-badge" alt="License"/>
+  </a>
+</div>
+<br />
 
 ## Documentation
 
@@ -94,6 +116,7 @@ $/> cd ../MyoRatio-API
 $/> poetry run serve [port]
 ```
 
+> [!NOTE]
 > Parameter ```[port]``` is optionnal. By default it will be  **3300** only if available.
 
 ```powershell
@@ -105,6 +128,7 @@ $/> (npm | yarn | pnpm) run start
 
 ### Submitting Changes
 
+> [!IMPORTANT]
 > **Your commits should follow the [conventional commits specification](https://www.conventionalcommits.org/en/v1.0.0/) !**
 
 - For the API, you can use the following command to proceed your commits:
@@ -206,6 +230,7 @@ $/> cd ../MyoRatio
 
 ```
 
+> [!NOTE]
 > The resulting file is located under the folder of your current architecture inside```./MyoRatio/release```
 
 
