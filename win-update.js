@@ -1,18 +1,17 @@
 const fs = require('fs');
 const readline = require('readline');
 const path = require('path');
-
 const pkg = require('./package.json');
-const APP_VERSION = JSON.stringify(pkg.version);
 
-const fileName = 'winx64-installer.iss';
-const inputPath = path.normalize(`./${fileName}`);
-const outputPath = path.normalize(`./${fileName}.lock`);
+const APP_VERSION = JSON.stringify(pkg.version);
+const FILENAME = 'winx64-installer.iss';
+
+const inputPath = path.normalize(`./${FILENAME}`);
+const outputPath = path.normalize(`./${FILENAME}.lock`);
 
 const readStream = fs.createReadStream(inputPath);
 const writeStream = fs.createWriteStream(outputPath);
 
-// deepcode ignore MissingClose
 const lineReader = readline.createInterface({
   input: readStream,
   output: writeStream,
@@ -29,6 +28,7 @@ lineReader.on('line', line => {
 });
 
 lineReader.on('close', () => {
+  lineReader.close();
   readStream.close();
   writeStream.close();
 });
