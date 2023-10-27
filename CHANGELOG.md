@@ -2,6 +2,58 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.4.1](https://github.com/FlorentinTh/MyoRatio-GUI/compare/v3.4.0...v3.4.1) (2023-10-27)
+
+
+### Reverts
+
+* Revert "Delete CNAME" ([67e31ed](https://github.com/FlorentinTh/MyoRatio-GUI/commit/67e31ed4c269f320ba0669cec38f40fcc72497c8))
+
+
+### Refactors
+
+* **license:** add a new reference entry for the new dependency packages in license file ([d6b6017](https://github.com/FlorentinTh/MyoRatio-GUI/commit/d6b601752cca44d9b7db846a2dfe86e8354cbdc1))
+
+
+### Styling
+
+* **eslint:** fix few issues regarding new eslint version rules ([4997aee](https://github.com/FlorentinTh/MyoRatio-GUI/commit/4997aee7bd205c2a1cf9f9274ca25c31381403bb))
+* **stylelint:** fix few issues regarding new stylelint version rules ([e608e69](https://github.com/FlorentinTh/MyoRatio-GUI/commit/e608e696fe00f40f79ddf6e9d9a6c16ff1d5e28b))
+
+
+### Chore
+
+* **dependabot:** add dependabot configuration ([7dabb44](https://github.com/FlorentinTh/MyoRatio-GUI/commit/7dabb44808fc7afa0c18c0b9497bf6320b9f319b))
+* **dependabot:** allow dependabot to verify for new versions of nw.js ([3b73442](https://github.com/FlorentinTh/MyoRatio-GUI/commit/3b73442642a4df6e7902a7c536b1c750247689ff))
+* **dependencies:** udpate nw.js to latest version ([fc9f612](https://github.com/FlorentinTh/MyoRatio-GUI/commit/fc9f612795c2807ee84f59886c6076107ca88597))
+* **dependencies:** update chart.js and chartjs-plugin-crosshair dependencies to latest versions ([06efa1a](https://github.com/FlorentinTh/MyoRatio-GUI/commit/06efa1addf97fd5d15b11b0dfc06587dccd2ef54))
+* **dependencies:** update dependencies ([bc164f5](https://github.com/FlorentinTh/MyoRatio-GUI/commit/bc164f55d9530b4ef01c69d52765b1d870036720))
+* **dependencies:** update dependencies ([1790263](https://github.com/FlorentinTh/MyoRatio-GUI/commit/17902638c2fece1a743db84c00304dfbc5ec2025))
+* **dependencies:** update project dependencies to latest versions ([387500d](https://github.com/FlorentinTh/MyoRatio-GUI/commit/387500da1f598f0ff88b6b7b0c47c90babffefa8))
+* **dependencies:** update sweetalert2 to latest version ([f8b07a9](https://github.com/FlorentinTh/MyoRatio-GUI/commit/f8b07a911e51618e995a2f807003b58ad1adb3f4))
+* **project:** add code of conduct and contributing guidelines ([faf27ff](https://github.com/FlorentinTh/MyoRatio-GUI/commit/faf27ff0b386858b5419905dd2a6a84c09b12577))
+* **project:** add security guidelines in SECURITY.md ([eec4984](https://github.com/FlorentinTh/MyoRatio-GUI/commit/eec498478991239d2d42ef4fa0f58e6447ad0503))
+
+
+### CI
+
+* **workflows:** new release workflow to automate the creation of releases when new tags are pushed ([bcccf0c](https://github.com/FlorentinTh/MyoRatio-GUI/commit/bcccf0c3514187de6e0aa06bf8e72c3940f7bb27))
+
+
+### Documentation
+
+* **readme:** fix issue in README related to the path for CodeQL badge ([f7c2630](https://github.com/FlorentinTh/MyoRatio-GUI/commit/f7c2630c814d84c2d5366ee1f3c2b72ce623dc94))
+* **readme:** update README to add CodeQL badge ([465aaa1](https://github.com/FlorentinTh/MyoRatio-GUI/commit/465aaa1fe34a982584b43e3bac8a20108422dedd))
+* **readme:** update README.md file ([1cada17](https://github.com/FlorentinTh/MyoRatio-GUI/commit/1cada178146123dabadf1ebd99a8fd95ef8208cc))
+* **readme:** yet another fix in README related to the path for CodeQL badge ([64a2cc2](https://github.com/FlorentinTh/MyoRatio-GUI/commit/64a2cc25ef2d1cb848f0243076ebb5fa9df8a712))
+
+
+### Build System
+
+* **api-copy:** fix issue with api-copy script on macOs platforms ([8cef71d](https://github.com/FlorentinTh/MyoRatio-GUI/commit/8cef71dcac9043f20234d1852c79188214164a7a))
+* **dependabot:** remove ignored dependencies check ([473d100](https://github.com/FlorentinTh/MyoRatio-GUI/commit/473d100e8e435295418425ae90c0718d9187d5cc))
+* **win-update:** fix minor issue related to missing close warning ([589a723](https://github.com/FlorentinTh/MyoRatio-GUI/commit/589a7231114918e0b96922f8775da625f09293d9))
+
 ## [3.4.0](https://github.com/FlorentinTh/MyoRatio-GUI/compare/v3.3.0...v3.4.0) (2023-10-04)
 
 
