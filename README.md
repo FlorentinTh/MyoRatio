@@ -6,8 +6,7 @@
   <h1>MyoRatio</h1>
 </div>
 
-<div align="center">
-  <a href="https://github.com/FlorentinTh/MyoRatio/actions/workflows/github-code-scanning/codeql">
+<div align="center"><a href="https://github.com/FlorentinTh/MyoRatio/actions/workflows/github-code-scanning/codeql">
     <img src="https://img.shields.io/github/actions/workflow/status/FlorentinTh/MyoRatio/github-code-scanning/codeql?style=for-the-badge&label=CodeQL" alt="CodeQL" />
   <a href="https://github.com/FlorentinTh/MyoRatio/actions/workflows/release.yml">
   <img src="https://img.shields.io/github/actions/workflow/status/FlorentinTh/MyoRatio/release.yml?style=for-the-badge&label=Release" alt="Release" />
@@ -18,10 +17,7 @@
   <img src="https://img.shields.io/badge/platforms-windows%20%26%20macOS%20-lightseagreen?style=for-the-badge" alt="Platforms" />
   <a href="https://github.com/FlorentinTh/MyoRatio/blob/main/LICENSE">
     <img src="https://img.shields.io/github/license/florentinth/MyoRatio?style=for-the-badge" alt="License" />
-  </a>
-</div>
-
-<div></div>
+  </a></div>
 
 ## Documentation
 
