@@ -1,6 +1,5 @@
 .list-container {
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow: hidden auto;
   max-height: 480px;
   width: 100%;
   height: 100%;
