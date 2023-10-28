@@ -119,16 +119,23 @@ jobs:
           [IO.File]::WriteAllBytes('./.certs/certificate.pfx', $BYTES)
         if: matrix.os == 'windows-latest'
 
-      - name: Build macOs application
-        working-directory: ./app
-        run: npm run build:mac && npm run publish:mac
-        if: matrix.os == 'macos-latest'
-
       - name: Read package.json
         id: package_json_properties
         uses: ActionsTools/read-json-action@v1.0.5
         with:
           file_path: "./app/package.json"
+
+      - name: Build macOs application
+        working-directory: ./app
+        run: npm run build:mac && npm run publish:mac
+        if: matrix.os == 'macos-latest'
+
+      - name: Build macOs application update
+        working-directory: ./app
+        run: |
+          sudo pkgbuild --component ./dist/${{steps.package_json_properties.outputs.name}}_${{steps.package_json_properties.outputs.version}}_macx64/MyoRatio.app --install-location /Applications ./release/macx64/${{steps.package_json_properties.outputs.name}}_Update_${{steps.package_json_properties.outputs.version}}_macx64.pkg
+          shasum -a 256 ./release/macx64/${{steps.package_json_properties.outputs.name}}_Update_${{steps.package_json_properties.outputs.version}}_macx64.pkg > ./release/macx64/${{steps.package_json_properties.outputs.name}}_Update_${{steps.package_json_properties.outputs.version}}_macx64.sha256sum
+        if: matrix.os == 'macos-latest'
 
       - name: Upload macOs installer
         uses: actions/upload-artifact@v3
@@ -144,12 +151,26 @@ jobs:
           path: ./app/release/macx64/${{steps.package_json_properties.outputs.name}}_${{steps.package_json_properties.outputs.version}}_macx64.sha256sum
         if: matrix.os == 'macos-latest'
 
+      - name: Upload macOs update
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{steps.package_json_properties.outputs.name}}_${{steps.package_json_properties.outputs.version}}_macx64.dmg
+          path: ./app/release/macx64/${{steps.package_json_properties.outputs.name}}_Update_${{steps.package_json_properties.outputs.version}}_macx64.pkg
+        if: matrix.os == 'macos-latest'
+
+      - name: Upload macOs update checksum
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{steps.package_json_properties.outputs.name}}_${{steps.package_json_properties.outputs.version}}_macx64.sha256sum
+          path: ./app/release/macx64/${{steps.package_json_properties.outputs.name}}_Update_${{steps.package_json_properties.outputs.version}}_macx64.sha256sum
+        if: matrix.os == 'macos-latest'
+
       - name: Build Windows application
         working-directory: ./app
         run: npm run build:win && npm run publish:win
         if: matrix.os == 'windows-latest'
 
-      - name: Upload Windows installer
+      - name: Upload Windows artifacts
         uses: actions/upload-artifact@v3
         with:
           name: ${{steps.package_json_properties.outputs.name}}_${{steps.package_json_properties.outputs.version}}_winx64.exe
@@ -170,7 +191,7 @@ jobs:
       - name: Create or update release for macOs platform
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "./app/release/macx64/*.dmg,./app/release/macx64/*.sha256sum"
+          artifacts: "./app/release/macx64/*.dmg,./app/release/macx64/*.pkg,./app/release/macx64/*.sha256sum"
           bodyFile: "./app/CHANGELOG.md.tmp"
           allowUpdates: true
         if: matrix.os == 'macos-latest'
