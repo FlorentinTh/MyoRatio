@@ -1,8 +1,9 @@
+---
+---
 @import "{{ site.theme }}";
 
 .page-header {
-  a:first-of-type {
+  .project-tagline, a {
     visibility: hidden;
   }
 }
-
