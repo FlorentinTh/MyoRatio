@@ -1,6 +1,6 @@
-const fs = require('fs');
+const { createReadStream, createWriteStream } = require('node:fs');
+const path = require('node:path');
 const readline = require('readline');
-const path = require('path');
 
 const FILENAME = 'CHANGELOG.md';
 const FILE_HEADER_END_LINE = 4;
@@ -8,8 +8,8 @@ const FILE_HEADER_END_LINE = 4;
 const inputPath = path.normalize(`./${FILENAME}`);
 const outputPath = path.normalize(`./${FILENAME}.tmp`);
 
-const readStream = fs.createReadStream(inputPath);
-const writeStream = fs.createWriteStream(outputPath);
+const readStream = createReadStream(inputPath);
+const writeStream = createWriteStream(outputPath);
 
 const lineReader = readline.createInterface({
   input: readStream,

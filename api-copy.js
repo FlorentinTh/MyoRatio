@@ -1,16 +1,28 @@
-const fs = require('node:fs');
+const { readFileSync, existsSync, rmSync } = require('node:fs');
 const fse = require('fs-extra');
-const path = require('path');
+const path = require('node:path');
 
-const envBuildFile = fs.readFileSync(path.normalize('./env.build.json'));
+let envBuildFile;
+try {
+  envBuildFile = readFileSync(path.normalize('./env.build.json'), { encoding: 'utf8' });
+} catch (error) {
+  console.error(error);
+  process.exit(-1);
+}
+
 const envBuildData = JSON.parse(envBuildFile);
 const APIPath = path.normalize(envBuildData.API_PATH);
 
 const APISourceFolder = path.join(APIPath, 'dist', 'MyoRatioAPI');
 const targetFolder = 'bin/MyoRatioAPI';
 
-if (fs.existsSync(targetFolder)) {
-  fs.rmSync(targetFolder, { recursive: true, force: true });
+if (existsSync(targetFolder)) {
+  try {
+    rmSync(targetFolder, { recursive: true, force: true });
+  } catch (error) {
+    console.error(error);
+    process.exit(-1);
+  }
 }
 
 fse

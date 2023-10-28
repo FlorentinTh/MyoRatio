@@ -1,13 +1,26 @@
-const path = require('path');
-const fs = require('fs');
+const path = require('node:path');
+const { readFileSync, writeFileSync } = require('node:fs');
 
-const envBuildFile = fs.readFileSync(path.normalize('./env.build.json'));
+let envBuildFile;
+try {
+  envBuildFile = readFileSync(path.normalize('./env.build.json'), { encoding: 'utf8' });
+} catch (error) {
+  console.error(error);
+  process.exit(-1);
+}
+
 const envBuildData = JSON.parse(envBuildFile);
-
 const APIPath = path.normalize(envBuildData.API_PATH);
-const APIEnvFile = fs.readFileSync(path.join(APIPath, '.env'));
-const APIEnvData = APIEnvFile.toString();
 
+let APIEnvFile;
+try {
+  APIEnvFile = readFileSync(path.join(APIPath, '.env'), { encoding: 'utf8' });
+} catch (error) {
+  console.error(error);
+  process.exit(-1);
+}
+
+const APIEnvData = APIEnvFile.toString();
 const lines = APIEnvData.split(/\r\n|\r|\n/g);
 
 let APIKeyLine = null;
@@ -25,12 +38,25 @@ if (!(APIKeyLine === null)) {
 }
 
 const envAppFilePath = path.normalize('./env.app.json');
-const envAppFile = fs.readFileSync(envAppFilePath);
+
+let envAppFile;
+try {
+  envAppFile = readFileSync(envAppFilePath, { encoding: 'utf8' });
+} catch (error) {
+  console.error(error);
+  process.exit(-1);
+}
+
 let envAppData = JSON.parse(envAppFile);
 
 envAppData.API_KEY = key;
 envAppData = JSON.stringify(envAppData, null, 2);
 
-fs.writeFileSync(envAppFilePath, envAppData, 'utf8');
+try {
+  writeFileSync(envAppFilePath, envAppData, { encoding: 'utf8' });
+} catch (error) {
+  console.error(error);
+  process.exit(-1);
+}
 
 console.log('--> Secret successfully retrieved from API');
