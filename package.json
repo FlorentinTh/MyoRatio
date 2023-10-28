@@ -41,8 +41,8 @@
   ],
   "standard-version": {
     "scripts": {
-      "postbump": "node win-update.js",
-      "precommit": "git add winx64-installer.iss"
+      "postbump": "node win-update.js && node docs-update.js",
+      "precommit": "git add winx64-installer.iss docs/README.md"
     }
   },
   "config": {
