@@ -1,4 +1,14 @@
-<div align="center">
+<p align="center">
+  <img src="./src/assets/icons/app.png" alt="MyoRatio" height="200px" />
+</p>
+
+<span align="center">
+
+[![CodeQL](https://img.shields.io/github/actions/workflow/status/FlorentinTh/MyoRatio/github-code-scanning/codeql?style=for-the-badge&label=CodeQL)](https://github.com/FlorentinTh/MyoRatio/actions/workflows/github-code-scanning/codeql) [![Release](https://img.shields.io/github/actions/workflow/status/FlorentinTh/MyoRatio/release.yml?style=for-the-badge&label=Release)](https://github.com/FlorentinTh/MyoRatio/actions/workflows/release.yml) [![Release Date](https://img.shields.io/github/release-date/florentinth/MyoRatio?style=for-the-badge)](#) [![Tag](https://img.shields.io/github/v/tag/FlorentinTh/MyoRatio?style=for-the-badge)](https://github.com/FlorentinTh/MyoRatio/releases/latest) [![macOs](https://img.shields.io/badge/compatible-macOs?style=for-the-badge&logo=apple&label=macOs&color=lightseagreen)](#) [![Windows](https://img.shields.io/badge/compatible-windows?style=for-the-badge&logo=windows&label=windows&color=lightseagreen)](#) [![License](https://img.shields.io/github/license/florentinth/MyoRatio?style=for-the-badge&color=blue)](https://github.com/FlorentinTh/MyoRatio/blob/main/LICENSE)
+
+</span>
+
+<!-- <div align="center">
   <img src="./src/assets/icons/app.png" alt="MyoRatio" height="200px" /><br />
   <h1>MyoRatio</h1>
   <a href="https://github.com/FlorentinTh/MyoRatio/actions/workflows/github-code-scanning/codeql">
@@ -20,7 +30,7 @@
     <img src="https://img.shields.io/github/license/florentinth/MyoRatio?style=for-the-badge" alt="License"/>
   </a>
 </div>
-<br />
+<br /> -->
 
 ## Documentation
 
