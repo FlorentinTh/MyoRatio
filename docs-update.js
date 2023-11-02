@@ -3,7 +3,7 @@ const { join } = require('node:path');
 const pkg = require('./package.json');
 const { unlinkSync, renameSync } = require('node:fs');
 
-const APP_VERSION = JSON.stringify(pkg.version);
+const APP_VERSION = '4.0.0'; // JSON.stringify(pkg.version);
 const FILENAME = 'README.md';
 
 const inputFilePath = join('./docs', FILENAME);
@@ -14,18 +14,26 @@ readFile(inputFilePath, { encoding: 'utf8' })
     const markdownLines = content.split(/\r\n|\r|\n/g);
 
     for (let i = 0; i < markdownLines.length; i++) {
-      if (markdownLines[i].includes('download/v')) {
-        const replacedTag = markdownLines[i].replace(
-          /v\d+(\.\d+){1,2}/,
-          `v${APP_VERSION.replace(/"/g, '')}`
-        );
+      if (markdownLines[i].startsWith('[![macOs Download]')) {
+        const downloadButtons = markdownLines[i]
+          .split(/(?=\[!)/g)
+          .map(item => item.trim());
 
-        const newLine = replacedTag.replace(
-          /_\d+(\.\d+){1,2}_/,
-          `_${APP_VERSION.replace(/"/g, '')}_`
-        );
+        for (let j = 0; j < downloadButtons.length; j++) {
+          const replacedTag = downloadButtons[j].replace(
+            /v\d+(\.\d+){1,2}/,
+            `v${APP_VERSION.replace(/"/g, '')}`
+          );
 
-        markdownLines[i] = newLine;
+          const newButton = replacedTag.replace(
+            /_\d+(\.\d+){1,2}_/,
+            `_${APP_VERSION.replace(/"/g, '')}_`
+          );
+
+          downloadButtons[j] = newButton;
+        }
+
+        markdownLines[i] = downloadButtons.join(' ');
       }
     }
 
